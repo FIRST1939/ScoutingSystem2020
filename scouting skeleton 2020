@@ -140,13 +140,13 @@ class lowGoalCounterClass:
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def takenNeg5(self):
-        if self.shotsMissed  >= self.shotsMade+5:
+        if self.shotsMissed  >0:
 #            self.shotsMade -= 5
             self.shotsMissed -=5
 #            self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
         else:
-           self.shotsMissed = self.shotsMade
+           self.shotsMissed = 0
            self.takenDisplayLabel["text"]=str(self.shotsMissed)
     
     def madePlus1(self):
@@ -169,7 +169,7 @@ class lowGoalCounterClass:
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def takenNeg1(self):
-        if self.shotsMissed  > self.shotsMade:
+        if self.shotsMissed  > 0:
 #            self.shotsMade -= 1
             self.shotsMissed -=1
 #            self.madeDisplayLabel["text"]=str(self.shotsMade)
@@ -318,13 +318,13 @@ class highGoalCounterClass:
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def takenNeg5(self):
-        if self.shotsMissed  >= self.outerShotsMade + self.innerShotsMade +5:
+        if self.shotsMissed  >0:
 #            self.shotsMade -= 5
             self.shotsMissed -=5
 #            self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
         else:
-           self.shotsMissed = self.innerShotsMade + self.outerShotsMade
+           self.shotsMissed = 0
            self.takenDisplayLabel["text"]=str(self.shotsMissed)
                 
     def takenPlus1(self):
@@ -334,7 +334,7 @@ class highGoalCounterClass:
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def takenNeg1(self):
-        if self.shotsMissed  > self.innerShotsMade + self.outerShotsMade:
+        if self.shotsMissed  > 0:
 #            self.shotsMade -= 1
             self.shotsMissed -=1
 #            self.madeDisplayLabel["text"]=str(self.shotsMade)
@@ -477,7 +477,7 @@ shooterPos.current(0)
 shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 
-teleTakenLBL = Label(tele, text='Shots Taken')
+teleTakenLBL = Label(tele, text='Shots Missed')
 teleTakenLBL.grid(column=1, row=0, columnspan=5)
 
 teleMadeLBL = Label(tele, text='Shots Made')
@@ -493,35 +493,42 @@ teleEnter.grid(row=8, column=13, ipady=13, ipadx=80)
 
 #End Game
 
-fell_State = BooleanVar(False)
-fell = Checkbutton(endGame, text='Fell Off Bar?', var=fell_State)
-fell.grid(column= 0, row= 0, columnspan=5)
+climbingLBL = Label(endGame, text='Climbing')
+climbingLBL.grid(column=2, row=0, ipady=10, padx=20)
 
-buddy_State = BooleanVar(False)
-buddy = Checkbutton(endGame, text='Buddy Climb?', var=buddy_State)
-buddy.grid(column= 0, row= 4, columnspan=5)
+fellOffBar_State = BooleanVar(False)
+fellOffBar = Checkbutton(endGame, text='Fell Off Bar?', var=fellOffBar_State)
+fellOffBar.grid(column= 0, row= 1, pady=10)
+
+buddyClimb_State = BooleanVar(False)
+buddyClimb = Checkbutton(endGame, text='Buddy Climb?', var=buddyClimb_State)
+buddyClimb.grid(column= 3, row= 1, columnspan=4)
 
 hitOpponent_State = BooleanVar(False)
 hitOpponent = Checkbutton(endGame, text='Hit Opponent While Climbing?', var=hitOpponent_State)
-hitOpponent.grid(column= 0, row= 7, columnspan=5)
+hitOpponent.grid(column= 0, row= 3, pady=10)
 
 leveledBar_State = BooleanVar(False)
 leveledBar = Checkbutton(endGame, text='Leveled the Bar?', var=leveledBar_State)
-leveledBar.grid(column= 0, row= 10, columnspan=5)
+leveledBar.grid(column= 3, row= 3, columnspan=4)
 
-barLevelLBL = Label(endGame, text='What Level Stage Climb?')
-barLevelLBL.grid(column=20, row=0, ipady=23)
+barLevelLBL = Label(endGame, text='Where was the bar during the climb?')
+barLevelLBL.grid(column=0, row=5, ipady=23)
 barLevel = ttk.Combobox(endGame)
 barLevel['values']= ("When It Was Leveled", "Middle Of The Bar", "High Side Of The Bar", "Low Side Of The Bar", "No Climb")
 barLevel.current(0)
-barLevel.grid(column= 20, row= 3, columnspan=5)
+barLevel.grid(column= 3, row= 5, columnspan=4)
 barLevel.config(width= 15)
 
 climbFrom = IntVar()
-aLocation = Radiobutton(endGame, text = 'Bar', value = 1, var=climbFrom)
-aLocation.grid(row=10, column=15)
-bLocation = Radiobutton(endGame, text='Rung', value = 2, var=climbFrom)
-bLocation.grid(row=10, column=18)
+climbFromLBL = Label(endGame, text='Where on the bar did they climb?')
+climbFromLBL.grid(column=0, row=7, ipady=23)
+barClimb = Radiobutton(endGame, text = 'Bar', value = 1, var=climbFrom)
+barClimb.grid(row=7, column=3)
+rungClimb = Radiobutton(endGame, text='Rung', value = 2, var=climbFrom)
+rungClimb.grid(row=7, column=5)
+
+formattingLabel = Label(endGame, text='                                ').grid(row=2, column=2, padx=20)
 
 
 window.mainloop()
