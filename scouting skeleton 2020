@@ -376,7 +376,7 @@ tab_control.add(auto, text='Auto')
 tab_control.add(reference, text='Reference Image')
 tab_control.add(tele, text='TeleOp')
 tab_control.add(endGame, text='End Game')
-tab_control.add(postMatch, text='Post-Match')
+tab_control.add(postMatch, text='PostMatch')
 tab_control.pack(expand=1, fill='both')
 
 #Prematch Screen
@@ -530,5 +530,26 @@ rungClimb.grid(row=7, column=5)
 
 formattingLabel = Label(endGame, text='                                ').grid(row=2, column=2, padx=20)
 
+#PostGame
+
+deadbot_State = BooleanVar(False)
+deadbot = Checkbutton(postMatch, text='Deadbot?', var=deadbot_State)
+deadbot.grid(column= 0, row= 0)
+
+recoveredFromDead_State = BooleanVar(False)
+recoveredFromDead = Checkbutton(postMatch, text='Recovered from dead?', var=recoveredFromDead_State)
+recoveredFromDead.grid(column= 2, row= 0)
+
+tippedOver_State = BooleanVar(False)
+tippedOver = Checkbutton(postMatch, text='Tipped Over?', var=tippedOver_State)
+tippedOver.grid(column= 0, row= 2)
+
+yellowCard_State = BooleanVar(False)
+yellowCard = Checkbutton(postMatch, text='Yellow Card?', var=yellowCard_State)
+yellowCard.grid(column= 0, row= 3)
+
+redCard_State = BooleanVar(False)
+redCard = Checkbutton(postMatch, text='Red Card?', var=redCard_State)
+redCard.grid(column= 2, row= 3)
 
 window.mainloop()
