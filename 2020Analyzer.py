@@ -3,7 +3,7 @@
 """
 Created on Thu Jan 17 19:06:04 2019
                                     
-@author: Saketh
+@author: Saketh, Sriram
 """
 
 import tbaUtils
@@ -12,6 +12,7 @@ import numpy as np
 from pprint import pprint
 from tkinter import filedialog
 import matplotlib.pyplot as plt
+#change makeMatchList so the year is the current year using datetime module.
 def makeMatchList(event, year = 2019):
 #def makeMatchList(event, year = 2018):
 
