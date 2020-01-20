@@ -530,7 +530,7 @@ rungClimb.grid(row=7, column=5)
 
 formattingLabel = Label(endGame, text='                                ').grid(row=2, column=2, padx=20)
 
-#PostGame
+#Post Match
 
 deadbot_State = BooleanVar(False)
 deadbot = Checkbutton(postMatch, text='Deadbot?', var=deadbot_State)
@@ -551,5 +551,17 @@ yellowCard.grid(column= 0, row= 3)
 redCard_State = BooleanVar(False)
 redCard = Checkbutton(postMatch, text='Red Card?', var=redCard_State)
 redCard.grid(column= 2, row= 3)
+
+comments= Text(postMatch, width=80, height=4)
+comments.grid(column=2, row=4, columnspan=2)
+commentsLBL = Label(postMatch, text='Comments:')
+commentsLBL.grid(column=1, row=4, ipady=21)
+
+dontUseThisData_State = BooleanVar(False)
+dontUseThisData = Checkbutton(postMatch, text="Don't use this data", var=dontUseThisData_State)
+dontUseThisData.grid(column= 0, row= 5)
+
+send = Button(postMatch, text='Send to database', command=reinitscreen)
+send.grid(row=5, column=2, ipady=13, ipadx=80)
 
 window.mainloop()
