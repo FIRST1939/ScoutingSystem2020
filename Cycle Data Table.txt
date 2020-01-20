@@ -1,0 +1,17 @@
+﻿Create table `IRmatchCycle` (
+         `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		 `cycle` int(10) NOT NULL Default 1,
+         `matchNo` varchar(10) NOT NULL,
+         `teamNo` varchar(7) NOT NULL,
+         `shooterPosition` varchar(2) NOT NULL,
+		 `lowGoalMisses` tinyInt(1) unsigned NOT NULL Default 0,
+         `highGoalMisses` tinyInt(1) unsigned NOT NULL Default 0,
+         `lowGoalMakes` tinyInt(1) unsigned NOT NULL Default 0,
+         `outerGoalMakes` tinyInt(1) unsigned NOT NULL Default 0,
+         `innerGoalMakes` tinyInt(1) unsigned NOT NULL Default 0,
+         `gamePhase` tinyInt(1) unsigned NOT NULL Default 0,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id_UNIQUE` (`id`),
+          KEY `match` (`matchNo`),
+          KEY `team` (`teamNo`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

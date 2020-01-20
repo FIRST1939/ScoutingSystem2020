@@ -71,34 +71,37 @@ def clearMatchScout(matchNo):
     cursor.execute(sql,(matchNo,))
     mariadb_connection.commit()
 
-def setMatchCycle(matchNo,
+def setMatchCycle(cycle,
+                  matchNo,
                   teamNo,
-                  shooterPositionTeleop,
-                  lowGoalMissesTele,
-                  highGoalMissesTele,
-                  lowGoalMakesTele,
-                  outerGoalMakesTele,
-                  innerGoalMakesTele,
-                  gameTime):
-    sql = "insert into matchCycle ( matchNo, \
+                  shooterPosition,
+                  lowGoalMisses,
+                  highGoalMisses,
+                  lowGoalMakes,
+                  outerGoalMakes,
+                  innerGoalMakes,
+                  gamePhase):
+    sql = "insert into matchCycle ( cycle, \
+                                    matchNo, \
                                     teamNo, \
-                                    shooterPositionTeleop, \
-                                    lowGoalMissesTele, \
-                                    highGoalMissesTele, \
-                                    lowGoalMakesTele, \
-                                    outerGoalMakesTele, \
-                                    innerGoalMakesTele, \
-                                    gameTime) \
-            values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    cursor.execute(sql,(matchNo,
+                                    shooterPosition, \
+                                    lowGoalMisses, \
+                                    highGoalMisses, \
+                                    lowGoalMakes, \
+                                    outerGoalMakes, \
+                                    innerGoalMakes, \
+                                    gamePhase) \
+            values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    cursor.execute(sql,(cycle,
+                        matchNo,
                         teamNo,
-                        shooterPositionTeleop,
-                        lowGoalMissesTele,
-                        highGoalMissesTele,
-                        lowGoalMakesTele,
-                        outerGoalMakesTele,
-                        innerGoalMakesTele,
-                        gameTime))
+                        shooterPosition,
+                        lowGoalMisses,
+                        highGoalMisses,
+                        lowGoalMakes,
+                        outerGoalMakes,
+                        innerGoalMakes,
+                        gamePhase))
      mariadb_connection.commit()   
                         
 

@@ -1,0 +1,11 @@
+[{'matchNo': string,
+  'teamNo': string,
+  [{ 'cycle': integer,
+     'shooterPosition': string,
+	 'lowGoalMisses': integer,
+	 'highGoalMisses': integer,
+	 'lowGoalMakes': integer,
+	 'outerGoalMakes': integer,
+	 'innerGoalMakes' integer,
+	 'gamePhase': integer},{...}]
+   },{...}]
