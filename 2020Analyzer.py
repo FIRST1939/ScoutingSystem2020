@@ -119,7 +119,7 @@ def readScout():
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
     with open(FileName, 'r') as ScoutFile:
-        ScoutData = pd.read_csv(ScoutFile, sep = '|') 
+        ScoutData = pd.read_json(ScoutFile) 
     Result = ScoutData.fillna(value = 0)
     return Result
     
