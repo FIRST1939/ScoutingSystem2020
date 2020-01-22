@@ -365,7 +365,67 @@ def getNextMatch():
 def sendMainToDatabase():
     match_dbconn.setMatchScout(match_no, 
                                teamno,
+                               name.get(),
+                               teamnum.get(),
+                               autoStartPos.get(),
+                               crossLine_State.get(),
+#                               autoShooterPos.get(),
+#                               autoLow.shotsTaken,
+#                               autoHigh.shotsMissed
+#                               autoLow.shotsMade
+                               #outerShotsMade
+                               #innerShotsMade
+                               autoBallsPickedUp.point,
+                               autoFoul.point,
+                               autoTechFoul.point,
+                               #teleShooterPos.get()
+#                               teleLow.shotsTaken
+#                               teleHigh.shotsMissed
+#                               teleLow.shotsMade
+                               #outerShotsMade
+                               #innerShotsMade
+                               teleFoul.point,
+                               teleTechFoul.point,
+                               defense_State.get(),
+                               rotationalControl.get(),
+                               positionalControl.get(),
+                               fellOffBar_State.get(),
+                               buddyClimb.get(),
+                               hitClimbingTeam.get(),
+                               leveledBar.get(),
+                               climbedFromBarOrRung.get(),
+                               climbLevel.get(),
+                               deadbot.get(),
+                               comments.get(),
+                               tippedOver.get(),
+                               recoveredFromDead.get(),
+                               cards.get()
                                )
+    
+def sendCycleToDatabase(gamePhase):
+    if gamePhase == 0: 
+        match_dbconn.setMatchCycle(cycle,
+                                   match_no, 
+                                   teamno, 
+                                   autoShooterPos.get(),
+                                   autoLow.shotsMissed,
+                                   autoHigh.shotsMissed,
+                                   autoLow.shotsMade,
+                                   autoHigh.outerShotsMade,
+                                   autoHigh.innerShotsMade,
+                                   gamePhase)
+        else: 
+            atch_dbconn.setMatchCycle(cycle,
+                                   match_no, 
+                                   teamno, 
+                                   shooterPos.get(),
+                                   teleLowGoal.shotsMissed,
+                                   teleHighGoal.shotsMissed,
+                                   autoLow.shotsMade,
+                                   autoHigh.outerShotsMade,
+                                   autoHigh.innerShotsMade,
+                                   gamePhase)
+                                   
 
 def screenClear():
     pass
@@ -431,22 +491,22 @@ teamnum.grid(column=7, row=0)
 teamnumLBL = Label(preMatch, text='  Team# you are with:')
 teamnumLBL.grid(row=0, column=5, columnspan=2)
 
-autoShooterPos = IntVar()
-aLocation = Radiobutton(preMatch, text = 'A', value = 1, var=autoShooterPos)
+autoStartPos = IntVar()
+aLocation = Radiobutton(preMatch, text = 'A', value = 0, var=autoStartPos)
 aLocation.grid(row=1, column=0)
-bLocation = Radiobutton(preMatch, text='B', value = 2, var=autoShooterPos)
+bLocation = Radiobutton(preMatch, text='B', value = 1, var=autoStartPos)
 bLocation.grid(row=1, column=1)
-cLocation = Radiobutton(preMatch, text = 'C', value = 3, var=autoShooterPos)
+cLocation = Radiobutton(preMatch, text = 'C', value = 2, var=autoStartPos)
 cLocation.grid(row=1, column=2)
-dLocation = Radiobutton(preMatch, text = 'D', value = 4, var=autoShooterPos)
+dLocation = Radiobutton(preMatch, text = 'D', value = 3, var=autoStartPos)
 dLocation.grid(row=1, column=3)
-eLocation = Radiobutton(preMatch, text = 'E', value = 5, var=autoShooterPos)
+eLocation = Radiobutton(preMatch, text = 'E', value = 4, var=autoStartPos)
 eLocation.grid(row=1, column=4)
-fLocation = Radiobutton(preMatch, text = 'F', value = 6, var=autoShooterPos)
+fLocation = Radiobutton(preMatch, text = 'F', value = 5, var=autoStartPos)
 fLocation.grid(row=1, column=5)
-gLocation = Radiobutton(preMatch, text = 'G', value = 7, var=autoShooterPos)
+gLocation = Radiobutton(preMatch, text = 'G', value = 6, var=autoStartPos)
 gLocation.grid(row=1, column=6, ipadx=14)
-hLocation = Radiobutton(preMatch, text = 'H', value = 8, var=autoShooterPos)
+hLocation = Radiobutton(preMatch, text = 'H', value = 7, var=autoStartPos)
 hLocation.grid(row=1, column=7, ipadx=17)
 
 #auto screen
@@ -565,10 +625,10 @@ leveledBar.grid(column= 3, row= 3, columnspan=4)
 barLevelLBL = Label(endGame, text='Where was the bar during the climb?')
 barLevelLBL.grid(column=0, row=5, ipady=23)
 barLevel = ttk.Combobox(endGame)
-barLevel['values']= ("When It Was Leveled", "Middle Of The Bar", "High Side Of The Bar", "Low Side Of The Bar", "No Climb")
+barLevel['values']= ("Any Position When It Was Leveled", "Middle Of The Bar", "High Side Of The Bar", "Low Side Of The Bar", "No Climb")
 barLevel.current(0)
-barLevel.grid(column= 3, row= 5, columnspan=4)
-barLevel.config(width= 15)
+barLevel.grid(column= 3, row= 5, columnspan=6)
+barLevel.config(width= 25)
 
 climbFrom = IntVar()
 climbFromLBL = Label(endGame, text='Where on the bar did they climb?')
