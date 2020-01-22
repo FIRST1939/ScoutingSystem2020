@@ -115,7 +115,6 @@ def setMatchScout(matchNo,
                   lowGoalMissesAuto,
                   highGoalMissesAuto,
                   lowGoalMakesAuto,
-                  highGoalMakesAuto,
                   outerGoalMakesAuto,
                   innerGoalMakesAuto,
                   ballsPickedUpAuto,
@@ -153,7 +152,6 @@ def setMatchScout(matchNo,
                   lowGoalMissesAuto, \
                   highGoalMissesAuto, \
                   lowGoalMakesAuto, \
-                  highGoalMakesAuto, \
                   outerGoalMakesAuto, \
                   innerGoalMakesAuto, \
                   ballsPickedUpAuto, \
@@ -184,7 +182,7 @@ def setMatchScout(matchNo,
     values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, \
            %s,%s,%s,%s,%s,%s,%s,%s,%s,%s, \
            %s,%s,%s,%s,%s,%s,%s,%s,%s,%s, \
-           %s,%s,%s,%s,%s,%s,%s,%s)"
+           %s,%s,%s,%s,%s,%s,%s)"
     cursor.execute(sql,(matchNo,
                   teamNo,
                   scoutName,
@@ -195,7 +193,6 @@ def setMatchScout(matchNo,
                   lowGoalMissesAuto,
                   highGoalMissesAuto,
                   lowGoalMakesAuto,
-                  highGoalMakesAuto,
                   outerGoalMakesAuto,
                   innerGoalMakesAuto,
                   ballsPickedUpAuto,
