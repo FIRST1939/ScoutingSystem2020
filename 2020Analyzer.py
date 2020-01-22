@@ -120,9 +120,22 @@ def readScout():
     FileName = filedialog.askopenfilename(title = 'select Data file')
     with open(FileName, 'r') as ScoutFile:
         ScoutData = pd.read_json(ScoutFile) 
-    Result = ScoutData.fillna(value = 0)
+    Result = ScoutData.fillna(value = 0).drop(labels='ID', axis=1)
+    stats=Result.drop(labels=['matchNo','teamNo','scoutTeamNo','comments'], axis=1)
+    stats=stats.describe(percentiles=[.25, .5, .75])
+    #in case you need the scout's name, uncomment it
+    comments=Result[['teamNo', 'comments',""" 'scoutName' """]]
+    #if you want to print out the data to look at and want to see all of it, use this
+    #with pd.option_context('display.max_rows', None, 
+    #                       'display.max_columns', None):
+        
+        #print(Result)
+        #print(stats)
+        #print(comments)
     return Result
-    
+    return stats
+    return comments
+
 
 def FindPartners(Matchlist, team = 1939):    
     '''
