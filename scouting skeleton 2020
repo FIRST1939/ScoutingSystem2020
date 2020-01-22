@@ -21,6 +21,12 @@ from tkinter import ttk
 from tkinter import font
 import PIL 
 from PIL import ImageTk, Image
+
+#global vars
+global autoCycles
+global teleCycles
+autoCycles = 0
+teleCycles = 0
     
 
 class CounterClass:
@@ -403,8 +409,10 @@ def sendMainToDatabase():
                                )
     
 def sendCycleToDatabase(gamePhase):
+    global autoCycles
+    global teleCycles
     if gamePhase == 0: 
-        match_dbconn.setMatchCycle(cycle,
+        match_dbconn.setMatchCycle(autoCycles,
                                    match_no, 
                                    teamno, 
                                    autoShooterPos.get(),
@@ -414,19 +422,36 @@ def sendCycleToDatabase(gamePhase):
                                    autoHigh.outerShotsMade,
                                    autoHigh.innerShotsMade,
                                    gamePhase)
-        else: 
-            atch_dbconn.setMatchCycle(cycle,
+        autoCycles = (autoCycle+1)
+    else: 
+            match_dbconn.setMatchCycle(teleCycles,
                                    match_no, 
                                    teamno, 
                                    shooterPos.get(),
                                    teleLowGoal.shotsMissed,
                                    teleHighGoal.shotsMissed,
-                                   autoLow.shotsMade,
-                                   autoHigh.outerShotsMade,
-                                   autoHigh.innerShotsMade,
+                                   teleLowGoal.shotsMade,
+                                   teleHighGoal.outerShotsMade,
+                                   teleHighGoal.innerShotsMade,
                                    gamePhase)
-                                   
-
+            teleCycles = (teleCycle+1)
+       
+def sendCycleData(gamePhase):
+    #reinitialize cycle 
+    sendCycleToDatabase(gamePhase)
+                            
+def sendMainData():
+    global autoCycles
+    global teleCycles
+    autoCycles = 0
+    teleCycles = 0
+    if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
+        sendCycleData(1)
+    if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
+        sendCycleData(0)
+    sendMainToDatabase()
+    reinitscreen()
+        
 def screenClear():
     pass
 
