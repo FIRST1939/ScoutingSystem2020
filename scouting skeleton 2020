@@ -1,27 +1,25 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan 16 17:41:34 2020
+
+@author: carolinebarstow
+"""
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jan 16 16:34:18 2020
 
-@author: carolinebarstow, and Mason
+@author: carolinebarstow
 """
 
 #imports
 from tkinter import Tk
-from tkinter import Button
-from tkinter import Label
-from tkinter import Checkbutton
-from tkinter import Canvas
-from tkinter import BOTH
-from tkinter import RIGHT
-from tkinter import Text
-from tkinter import Radiobutton
-from tkinter import BooleanVar
-from tkinter import IntVar
+from tkinter import *
 from tkinter import ttk
 from tkinter import font
-import match_dbconn
+import PIL 
 from PIL import ImageTk, Image
 
 #global vars
@@ -29,7 +27,12 @@ global autoCycles
 global teleCycles
 autoCycles = 0
 teleCycles = 0
-    
+totalLowGoalMisses = [0,0]
+totalHighGoalMisses = [0,0]
+totalLowGoalMakes = [0,0]
+totalInnerGoalMakes = [0,0]
+totalOuterGoalMakes = [0,0]
+
 
 class CounterClass:
     point = 0
@@ -370,48 +373,84 @@ def getNextMatch():
        match_dbconn.setScout(scoutName.get(),match_no,position)
    window.after(2000,getNextMatch)
 
+def cycleReinit(gamePhase):
+    global autoCycles
+    global teleCycles
+    if gamePhase == 0:
+        autoLow.shotsMissed = 0
+        autoHigh.shotsMissed = 0
+        autoLow.shotsMade = 0
+        autoHigh.innerShotsMade = 0
+        autoHigh.outerShotsMade = 0
+        autoCycles += 1
+    else:
+        teleLowGoal.shotsMissed = 0
+        teleHighGoal.shotsMissed = 0
+        teleLowGoal.shotsMade = 0
+        teleHighGoal.innerShotsMade = 0
+        teleHighGoal.outerShotsMade = 0
+        teleCycles += 1
+
 def sendMainToDatabase(cards):
+    global lowGoalMisses
+    global highGoalMisses
+    global lowGoalMakes
+    global innerGoalMakes
+    global outerGoalMakes
     match_dbconn.setMatchScout(match_no, 
                                teamno,
                                scoutName.get(),
                                teamnum.get(),
                                autoStartPos.get(),
                                crossLine_State.get(),
-#                               autoShooterPos.get(),
-#                               autoLow.shotsTaken,
-#                               autoHigh.shotsMissed
-#                               autoLow.shotsMade
-                               #outerShotsMade
-                               #innerShotsMade
+                               autoShooterPos.get(),
+                               lowGoalMisses[0],
+                               highGoalMisses[0],
+                               lowGoalMakes[0],
+                               outerGoalMakes[0],
+                               innerGoalMakes[0],
                                autoBallsPickedUp.point,
                                autoFoul.point,
                                autoTechFoul.point,
-                               #teleShooterPos.get()
-#                               teleLow.shotsTaken
-#                               teleHigh.shotsMissed
-#                               teleLow.shotsMade
-                               #outerShotsMade
-                               #innerShotsMade
+                               teleShooterPos.get(),
+                               lowGoalMisses[1],
+                               highGoalMisses[1],
+                               lowGoalMakes[1],
+                               outerGoalMakes[1],
+                               innerGoalMakes[1],
                                teleFoul.point,
                                teleTechFoul.point,
                                defense_State.get(),
                                rotationalControl.get(),
                                positionalControl.get(),
                                fellOffBar_State.get(),
-                               buddyClimb.get(),
-                               hitOpponent_State.get(),
-                               leveledBar.get(),
-                               climbFrom.get(),
+                               buddyClimb_State.get(),
+                               hitClimbingTeam_State.get(),
+                               leveledBar_State.get(),
+                               climbedFrom.get(),
                                barLevel.get(),
-                               tippedOver.get(),
-                               recoveredFromDead.get(),
+                               deadbot_State.get(),
+                               comments.get(),
+                               tippedOver_State.get(),
+                               recoveredFromDead_State.get(),
                                cards.get()
                                )
     
 def sendCycleToDatabase(gamePhase):
     global autoCycles
     global teleCycles
+    global lowGoalMisses
+    global highGoalMisses
+    global lowGoalMakes
+    global innerGoalMakes
+    global outerGoalMakes
     if gamePhase == 0: 
+        lowGoalMisses[0] += autoLow.shotsMissed
+        highGoalMisses[0] += autoHigh.shotsMissed
+        lowGoalMakes[0] += autoLow.shotsMade
+        outerGoalMakes[0] += autoHigh.outerShotsMade
+        innerGoalMakes[0] += autoHigh.innerShotsMade
+        
         match_dbconn.setMatchCycle(autoCycles,
                                    match_no, 
                                    teamno, 
@@ -422,8 +461,13 @@ def sendCycleToDatabase(gamePhase):
                                    autoHigh.outerShotsMade,
                                    autoHigh.innerShotsMade,
                                    gamePhase)
-        autoCycles = (autoCycles+1)
+        autoCycles = (autoCycle+1)
     else: 
+        lowGoalMisses[1] += teleLowGoal.shotsMissed
+        highGoalMisses[1] += teleHighGoal.shotsMissed
+        lowGoalMakes[1] += teleLowGoal.shotsMade
+        outerGoalMakes[1] += teleHighGoal.outerShotsMade
+        innerGoalMakes[1] += telepHighGoal.innerShotsMade
             match_dbconn.setMatchCycle(teleCycles,
                                    match_no, 
                                    teamno, 
@@ -434,39 +478,47 @@ def sendCycleToDatabase(gamePhase):
                                    teleHighGoal.outerShotsMade,
                                    teleHighGoal.innerShotsMade,
                                    gamePhase)
-            teleCycles = (teleCycles+1)
+            teleCycles = (teleCycle+1)
        
 def sendCycleData(gamePhase):
-    sendCycleToDatabase(gamePhase)
     #reinitialize cycle 
-    
-         
+    sendCycleToDatabase(gamePhase)
+
 def getCardValue():
     cardValue=0
     if yellowCard_State.get() !=0:
-        cardValue =1
-    if redCard_State.get() != 0:
-        cardValue =2
+        cardValue=1
+    if redCard_State.get() !=0:
+        cardValue=2
     return cardValue
-        
+                         
 def sendMainData():
     global autoCycles
     global teleCycles
-    cards = getCardValue()
     if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
         sendCycleData(1)
     if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
         sendCycleData(0)
     autoCycles = 0
     teleCycles = 0
-    sendMainToDatabase(cards)
+    sendMainToDatabase(getCardValue())
     reinitscreen()
         
 def screenClear():
     pass
 
 def reinitscreen():
-    pass
+    crossLine_State.set(False)
+    autoBallsPickedUp.point =0
+    autoFoul.point = 0
+    autoTechFoul.point = 0
+    teleFoul.point = 0
+    teleTechFoul.point = 0
+    defense_State.set(False)
+    rotationalControl.set(0)
+    positionalControl.set(0)
+    fellOffBar_State.set(False)
+    buddyClimb_State.set(False)
 
 def refImagePositionSet(event):
     position = shooterPosRef.get()
@@ -544,6 +596,13 @@ gLocation.grid(row=1, column=6, ipadx=14)
 hLocation = Radiobutton(preMatch, text = 'H', value = 7, var=autoStartPos)
 hLocation.grid(row=1, column=7, ipadx=17)
 
+image=Image.open('the_map_of_maps.png')
+photo=ImageTk.PhotoImage(image)
+
+label=Label(image=photo)
+label.image=photo
+label.grid(column=5, row=5)
+
 #auto screen
 crossLine_State = BooleanVar(False)
 crossLine = Checkbutton(auto, text='Crossed Start Line?', var=crossLine_State)
@@ -600,7 +659,7 @@ teleHighGoalLBL.grid(column=0, row=3)
 rotationalControlLBL = Label(tele, text='Has Rotational Control?')
 rotationalControlLBL.grid(column=0, row=9, ipady=23)
 rotationalControl = ttk.Combobox(tele)
-rotationalControl['values']= ("No attempt", "A", "Fail")
+rotationalControl['values']= ("No attempt","No", "Yes")
 rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
@@ -608,7 +667,7 @@ rotationalControl.config(width= 5)
 positionalControlLBL = Label(tele, text='Has Positional Control?')
 positionalControlLBL.grid(column=8, row=9, columnspan=5)
 positionalControl = ttk.Combobox(tele)
-positionalControl['values']= ("No attempt", "Yes", "Fail")
+positionalControl['values']= ("No attempt", "No", "Yes")
 positionalControl.current(0)
 positionalControl.grid(column= 13, row= 9, columnspan=5)
 positionalControl.config(width= 5)
