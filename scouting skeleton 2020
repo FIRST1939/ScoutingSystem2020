@@ -1,25 +1,27 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 16 17:41:34 2020
-
-@author: carolinebarstow
-"""
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jan 16 16:34:18 2020
 
-@author: carolinebarstow
+@author: carolinebarstow, and Mason
 """
 
 #imports
 from tkinter import Tk
-from tkinter import *
+from tkinter import Button
+from tkinter import Label
+from tkinter import Checkbutton
+from tkinter import Canvas
+from tkinter import BOTH
+from tkinter import RIGHT
+from tkinter import Text
+from tkinter import Radiobutton
+from tkinter import BooleanVar
+from tkinter import IntVar
 from tkinter import ttk
 from tkinter import font
-import PIL 
+import match_dbconn
 from PIL import ImageTk, Image
 
 #global vars
@@ -368,10 +370,10 @@ def getNextMatch():
        match_dbconn.setScout(scoutName.get(),match_no,position)
    window.after(2000,getNextMatch)
 
-def sendMainToDatabase():
+def sendMainToDatabase(cards):
     match_dbconn.setMatchScout(match_no, 
                                teamno,
-                               name.get(),
+                               scoutName.get(),
                                teamnum.get(),
                                autoStartPos.get(),
                                crossLine_State.get(),
@@ -397,12 +399,10 @@ def sendMainToDatabase():
                                positionalControl.get(),
                                fellOffBar_State.get(),
                                buddyClimb.get(),
-                               hitClimbingTeam.get(),
+                               hitOpponent_State.get(),
                                leveledBar.get(),
-                               climbedFromBarOrRung.get(),
-                               climbLevel.get(),
-                               deadbot.get(),
-                               comments.get(),
+                               climbFrom.get(),
+                               barLevel.get(),
                                tippedOver.get(),
                                recoveredFromDead.get(),
                                cards.get()
@@ -422,7 +422,7 @@ def sendCycleToDatabase(gamePhase):
                                    autoHigh.outerShotsMade,
                                    autoHigh.innerShotsMade,
                                    gamePhase)
-        autoCycles = (autoCycle+1)
+        autoCycles = (autoCycles+1)
     else: 
             match_dbconn.setMatchCycle(teleCycles,
                                    match_no, 
@@ -434,22 +434,32 @@ def sendCycleToDatabase(gamePhase):
                                    teleHighGoal.outerShotsMade,
                                    teleHighGoal.innerShotsMade,
                                    gamePhase)
-            teleCycles = (teleCycle+1)
+            teleCycles = (teleCycles+1)
        
 def sendCycleData(gamePhase):
-    #reinitialize cycle 
     sendCycleToDatabase(gamePhase)
-                            
+    #reinitialize cycle 
+    
+         
+def getCardValue():
+    cardValue=0
+    if yellowCard_State.get() !=0:
+        cardValue =1
+    if redCard_State.get() != 0:
+        cardValue =2
+    return cardValue
+        
 def sendMainData():
     global autoCycles
     global teleCycles
-    autoCycles = 0
-    teleCycles = 0
+    cards = getCardValue()
     if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
         sendCycleData(1)
     if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
         sendCycleData(0)
-    sendMainToDatabase()
+    autoCycles = 0
+    teleCycles = 0
+    sendMainToDatabase(cards)
     reinitscreen()
         
 def screenClear():
@@ -504,9 +514,9 @@ tab_control.add(postMatch, text='PostMatch')
 tab_control.pack(expand=1, fill='both')
 
 #Prematch Screen
-name = ttk.Entry(preMatch, width= 30)
-name.bind('<Button-1>')
-name.grid(column=1, row=0, columnspan=4)
+scoutName = ttk.Entry(preMatch, width= 30)
+scoutName.bind('<Button-1>')
+scoutName.grid(column=1, row=0, columnspan=4)
 nameLBL = Label(preMatch, text = 'Name:')
 nameLBL.grid(column=0, row=0, ipady=17)
 
