@@ -8,6 +8,7 @@ Created on Thu Jan 17 19:06:04 2019
 
 import tbaUtils
 import pandas as pd
+pd.set_option('display.max_columns', 50)
 import numpy as np
 from pprint import pprint
 from tkinter import filedialog
@@ -74,6 +75,8 @@ def combineColumn(scoutData):
     
     scoutData['autoScore']=2*scoutData['lowGoalMakesAuto']+4*scoutData['outerGoalMakesAuto']
     scoutData['autoScore']+=6*scoutData['innerGoalMakesAuto']
+    
+    
     
     print(scoutData.head())
     
