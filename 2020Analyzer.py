@@ -80,7 +80,6 @@ def combineColumn(scoutData):
     scoutData['lowGoalMakes']=scoutData['lowGoalMakesAuto']+scoutData['lowGoalMakesTele']
     
     
-    
     scoutData['highGoalAttemptsAuto']=(scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])+scoutData['highGoalMissesAuto']
     
     scoutData['highGoalAttemptsTele']=(scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])+scoutData['highGoalMissesTele']
@@ -90,7 +89,11 @@ def combineColumn(scoutData):
     scoutData['highGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesTele']+scoutData['innerGoalMakesAuto']
     
     
+    scoutData['outerGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']
     
+    
+    scoutData['innerGoalMakes']=scoutData['innerGoalMakesAuto']+scoutData['innerGoalMakesTele']
+
     
     scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
     scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
@@ -98,6 +101,7 @@ def combineColumn(scoutData):
     
     scoutData['autoScore']=2*scoutData['lowGoalMakesAuto']+4*scoutData['outerGoalMakesAuto']
     scoutData['autoScore']+=6*scoutData['innerGoalMakesAuto']
+    
     
     print(scoutData.head())
     
