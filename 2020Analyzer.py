@@ -103,10 +103,23 @@ def combineColumn(scoutData):
     
     scoutData['totalAccuracy']=(scoutData['totalMakes']/scoutData['totalAttempts'])*100
     
-    scoutData['lowGoalMakesPercent']=(scoutData['lowGoalMakes']/scoutData['lowGoalAttempts'])*100
+    scoutData['lowGoalMakesAccuracy']=(scoutData['lowGoalMakes']/scoutData['lowGoalAttempts'])*100
     
-    scoutData['lowGoalMakesPercentAuto']=(scoutData['lowGoalMakesAuto']/scoutData['lowGoalAttemptsAuto'])*100
+    scoutData['lowGoalMakesAccuracyAuto']=(scoutData['lowGoalMakesAuto']/scoutData['lowGoalAttemptsAuto'])*100
     
+    scoutData['lowGoalMakesAccuracyTele']=(scoutData['lowGoalMakesTele']/scoutData['lowGoalAttemptsTele'])*100
+    
+    scoutData['highGoalMakesAccuracy']=(scoutData['highGoalMakes']/scoutData['highGoalAttempts'])*100
+    
+    scoutData['highGoalMakesAccuracyAuto']=((scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])/scoutData['highGoalAttemptsAuto'])*100
+    
+    scoutData['highGoalMakesAccuracyTele']=((scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])/scoutData['highGoalAttemptsTele'])*100
+    
+    scoutData['percentOfLowGoal']=(scoutData['lowGoalMakes']/scoutData['totalMakes'])*100
+    
+    scoutData['percentOfOuterGoal']=(scoutData['outerGoalMakes']/scoutData['totalMakes'])*100
+    
+    scoutData['percentOfInnerGoal']=(scoutData['innerGoalMakes']/scoutData['totalMakes'])*100
     
     
     scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
@@ -116,7 +129,10 @@ def combineColumn(scoutData):
     scoutData['autoScore']=2*scoutData['lowGoalMakesAuto']+4*scoutData['outerGoalMakesAuto']
     scoutData['autoScore']+=6*scoutData['innerGoalMakesAuto']
     
-    scoutData.replace(to_replace='NaN',value=0)
+    
+    scoutData=scoutData.fillna(0)
+    
+    
     print(scoutData.head())
     
     return scoutData 
