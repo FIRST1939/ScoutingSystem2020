@@ -70,19 +70,19 @@ def combineColumn(scoutData):
     scoutData['totalAttempts']+=scoutData['lowGoalMakesTele']+scoutData['outerGoalMakesTele']
     scoutData['totalAttempts']+=scoutData['innerGoalMakesTele']
     
+    scoutData['lowGoalAttemptsAuto']=scoutData['lowGoalMissesAuto']+scoutData['lowGoalMakesAuto']
+    
+    
+    
     scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
     scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
     
     scoutData['autoScore']=2*scoutData['lowGoalMakesAuto']+4*scoutData['outerGoalMakesAuto']
     scoutData['autoScore']+=6*scoutData['innerGoalMakesAuto']
     
-    
-    
     print(scoutData.head())
     
-    
-    
-    return scoutData
+    return scoutData 
     
 def readMatchList():    
     '''
