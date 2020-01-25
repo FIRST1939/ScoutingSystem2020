@@ -116,7 +116,7 @@ def combineColumn(scoutData):
     scoutData['autoScore']=2*scoutData['lowGoalMakesAuto']+4*scoutData['outerGoalMakesAuto']
     scoutData['autoScore']+=6*scoutData['innerGoalMakesAuto']
     
-    
+    scoutData.replace(to_replace='NaN',value=0)
     print(scoutData.head())
     
     return scoutData 
