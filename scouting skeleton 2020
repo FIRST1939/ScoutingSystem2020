@@ -266,7 +266,7 @@ class highGoalCounterClass:
 #inner made def   
     def innerMadePlus5(self):
         self.innerShotsMade += 5
-        self.shotsMissed += 5
+#        self.shotsMissed += 5
         self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
