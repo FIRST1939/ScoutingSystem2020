@@ -98,6 +98,15 @@ def combineColumn(scoutData):
     scoutData['totalMakes']=scoutData['innerGoalMakes']+scoutData['outerGoalMakes']+scoutData['innerGoalMakes']
     
     
+    scoutData['autoMakes']=scoutData['innerGoalMakesAuto']+scoutData['outerGoalMakesAuto']+scoutData['lowGoalMakesAuto']
+    
+    
+    scoutData['totalAccuracy']=(scoutData['totalMakes']/scoutData['totalAttempts'])*100
+    
+    
+    
+    
+    
     scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
     scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
     
