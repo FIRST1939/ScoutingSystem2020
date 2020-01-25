@@ -28,7 +28,12 @@ from tkinter import BooleanVar
 from tkinter import IntVar
 from tkinter import ttk
 from tkinter import font
+from tkinter import messagebox
 #import match_dbconn
+import os
+import sys
+import psutil
+from time import sleep
 from PIL import ImageTk, Image
 
 #global vars
@@ -102,33 +107,33 @@ class lowGoalCounterClass:
         self.madeDisplayLabel.grid(column = (self.x+6), row = self.y)
         
 
-        self.Plus1Button = Button(self.app, text = "+", command=self.madePlus1, bg="green4")
+        self.Plus1Button = Button(self.app, text = "+1", command=self.madePlus1, bg="green4")
         self.Plus1Button.grid(column = (self.x+7), row = y)
 
-        self.Neg1Button = Button(self.app, text = "-", command=self.madeNeg1, bg="red4")
+        self.Neg1Button = Button(self.app, text = "-1", command=self.madeNeg1, bg="red4")
         self.Neg1Button.grid(column = (self.x+5), row = y)
 
-        self.Plus5Button = Button(self.app, text = "+", command=self.madePlus5, bg="green4")
+        self.Plus5Button = Button(self.app, text = "+5", command=self.madePlus5, bg="green4")
         self.Plus5Button.grid(column = (self.x+8), row = y)
 
-        self.Neg5Button = Button(self.app, text = "-", command=self.madeNeg5, bg="red4")
+        self.Neg5Button = Button(self.app, text = "-5", command=self.madeNeg5, bg="red4")
         self.Neg5Button.grid(column = (self.x+4), row = y)
 
         self.takenDisplayLabel = Label(self.app, text = self.shotsMissed)
         self.takenDisplayLabel.grid(column = self.x, row = self.y)
         
 
-        self.takenPlus1Button = Button(self.app, text = "+", command=self.takenPlus1, bg="green4")
+        self.takenPlus1Button = Button(self.app, text = "+1", command=self.takenPlus1, bg="green4")
         self.takenPlus1Button.grid(column = (self.x+1), row = y)
 
-        self.takenNeg1Button = Button(self.app, text = "-", command=self.takenNeg1, bg="red4")
+        self.takenNeg1Button = Button(self.app, text = "-1", command=self.takenNeg1, bg="red4")
         self.takenNeg1Button.grid(column = (self.x-1), row = y)
 
     
-        self.takenPlus5Button = Button(self.app, text = "+", command=self.takenPlus5, bg="green4")
+        self.takenPlus5Button = Button(self.app, text = "+5", command=self.takenPlus5, bg="green4")
         self.takenPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
 
-        self.takenNeg5Button = Button(self.app, text = "-", command=self.takenNeg5, bg="red4")
+        self.takenNeg5Button = Button(self.app, text = "-5", command=self.takenNeg5, bg="red4")
         self.takenNeg5Button.grid(column = (self.x-2), row = y)
 
 #        self.root.mainloop()
@@ -171,14 +176,14 @@ class lowGoalCounterClass:
     
     def madePlus1(self):
         self.shotsMade += 1
-        self.shotsMissed += 1
+#        self.shotsMissed += 1
         self.madeDisplayLabel["text"]=str(self.shotsMade)
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def madeNeg1(self):
         if self.shotsMade  > 0:
             self.shotsMade -= 1
-            self.shotsMissed -=1
+#            self.shotsMissed -=1
             self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
             
@@ -194,6 +199,11 @@ class lowGoalCounterClass:
             self.shotsMissed -=1
 #            self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            
+    def reinit(self):
+         self.takenDisplayLabel["text"]=str(self.shotsMissed)
+         self.madeDisplayLabel["text"]=str(self.shotsMade)
+         
 
 
 class highGoalCounterClass:
@@ -266,66 +276,66 @@ class highGoalCounterClass:
 #inner made def   
     def innerMadePlus5(self):
         self.innerShotsMade += 5
-        self.shotsMissed += 5
+#        self.shotsMissed += 5
         self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def innerMadeNeg5(self):
         if self.innerShotsMade  >= 5:
             self.innerShotsMade -= 5
-            self.shotsMissed -=5
+#            self.shotsMissed -=5
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.innerShotsMade = 0
-            self.shotsMissed = 0
+#            self.shotsMissed = 0
             self.madeDisplayLabel["text"]=str(self.innerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
             
 
     def innerMadePlus1(self):
         self.innerShotsMade += 1
-        self.shotsMissed += 1
+#        self.shotsMissed += 1
         self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def innerMadeNeg1(self):
         if self.innerShotsMade  > 0:
             self.innerShotsMade -= 1
-            self.shotsMissed -=1
+#            self.shotsMissed -=1
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
 
 #outer made def
     def outerMadePlus5(self):
         self.outerShotsMade += 5
-        self.shotsMissed += 5
+#        self.shotsMissed += 5
         self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def outerMadeNeg5(self):
         if self.outerShotsMade  >= 5:
             self.outerShotsMade -= 5
-            self.shotsMissed -=5
+#            self.shotsMissed -=5
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.outerShotsMade = 0
-            self.shotsMissed = 0
+#            self.shotsMissed = 0
             self.madeDisplayLabel["text"]=str(self.outerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
             
 
     def outerMadePlus1(self):
         self.outerShotsMade += 1
-        self.shotsMissed += 1
+#        self.shotsMissed += 1
         self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
         self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def outerMadeNeg1(self):
         if self.outerShotsMade  > 0:
             self.outerShotsMade -= 1
-            self.shotsMissed -=1
+#            self.shotsMissed -=1
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
 
@@ -360,6 +370,11 @@ class highGoalCounterClass:
 #            self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
 
+    def reinit(self):
+         self.takenDisplayLabel["text"]=str(self.shotsMissed)
+         self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
+         self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
+
 #some data base stuff
 #def getTeam():
 #    team_no = match_dbconn.getMatchInfo(match_no,position)
@@ -392,6 +407,9 @@ def cycleReinit(gamePhase):
         autoHigh.innerShotsMade = 0
         autoHigh.outerShotsMade = 0
         autoCycles += 1
+        autoLow.reinit()
+        autoHigh.reinit()  
+        
     else:
         teleLowGoal.shotsMissed = 0
         teleHighGoal.shotsMissed = 0
@@ -399,6 +417,8 @@ def cycleReinit(gamePhase):
         teleHighGoal.innerShotsMade = 0
         teleHighGoal.outerShotsMade = 0
         teleCycles += 1
+        teleLowGoal.reinit()
+        teleHighGoal.reinit()
 #
 #def sendMainToDatabase(cards):
 #    global lowGoalMisses
@@ -444,7 +464,16 @@ def cycleReinit(gamePhase):
 #                               recoveredFromDead_State.get(),
 #                               cards.get()
 #                               )
-#    
+
+def popup_keyboard(event):
+#    os.popen('matchbox-keyboard','r',4096)
+    PROCNAME = "florence"
+    for ploc in psutil.process_iter():
+        if proc.name() == PROCNAME:
+            proc.kill()
+    sleep(0.5)
+    os.popen('/usr/bin/florence')
+    
 #def sendCycleToDatabase(gamePhase):
 #    global autoCycles
 #    global teleCycles
@@ -489,8 +518,17 @@ def cycleReinit(gamePhase):
 #                                   gamePhase)
 #        teleCycles = (teleCycles+1)
 #       
-#def sendCycleData(gamePhase):
-#    #reinitialize cycle 
+def sendCycleData(gamePhase):
+    if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHighGoal.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHighGoal.outerShotsMade == 0 and teleHighGoal.innerShotsMade == 0):
+        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
+    elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
+        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
+    else:
+        #send data
+        cycleReinit(gamePhase)
+    
+
+    #reinitialize cycle 
 #    sendCycleToDatabase(gamePhase)
 #
 #def getCardValue():
@@ -576,13 +614,13 @@ tab_control.pack(expand=1, fill='both')
 
 #Prematch Screen
 scoutName = ttk.Entry(preMatch, width= 30)
-scoutName.bind('<Button-1>')
+scoutName.bind('<Button-1>', popup_keyboard)
 scoutName.grid(column=1, row=0, columnspan=4)
 nameLBL = Label(preMatch, text = 'Name:')
 nameLBL.grid(column=0, row=0, ipady=17)
 
 teamnum = ttk.Entry(preMatch, width=10)
-teamnum.bind('<Button-1>')
+teamnum.bind('<Button-1>' , popup_keyboard)
 teamnum.grid(column=7, row=0)
 teamnumLBL = Label(preMatch, text='  Team# you are with:')
 teamnumLBL.grid(row=0, column=5, columnspan=2)
@@ -602,8 +640,8 @@ fLocation = Radiobutton(preMatch, text = 'F', value = 5, var=autoStartPos)
 fLocation.grid(row=1, column=5)
 gLocation = Radiobutton(preMatch, text = 'G', value = 6, var=autoStartPos)
 gLocation.grid(row=1, column=6, ipadx=14)
-hLocation = Radiobutton(preMatch, text = 'H', value = 7, var=autoStartPos)
-hLocation.grid(row=1, column=7, ipadx=17)
+#hLocation = Radiobutton(preMatch, text = 'H', value = 7, var=autoStartPos)
+#hLocation.grid(row=1, column=7, ipadx=17)
 
 startPosImage=Image.open('the map of maps.png')
 startPosPhoto=ImageTk.PhotoImage(startPosImage)
@@ -637,7 +675,7 @@ autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
 
 
-autoEnter = Button(auto, text='enter', command=lambda: cycleReinit(0))
+autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
 autoEnter.grid(row=17, column=4, ipady=20, ipadx=80)
 
 #reference image
@@ -701,7 +739,7 @@ defense = Checkbutton(tele, text='Played Defense?', var=defense_State)
 defense.grid(column= 13, row= 10, columnspan=5)
 
 
-teleEnter = Button(tele, text='enter', command=lambda: cycleReinit(1))
+teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(1))
 teleEnter.grid(row=8, column=13, ipady=13, ipadx=80)
 
 #End Game
@@ -769,6 +807,7 @@ redCard.grid(column= 2, row= 3)
 
 comments= Text(postMatch, width=80, height=4)
 comments.grid(column=2, row=4, columnspan=2)
+comments.bind('<Button-1>', popup_keyboard)
 commentsLBL = Label(postMatch, text='Comments:')
 commentsLBL.grid(column=1, row=4, ipady=21)
 
