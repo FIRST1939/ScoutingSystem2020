@@ -8,6 +8,7 @@ Created on Thu Jan 17 19:06:04 2019
 
 import tbaUtils
 import pandas as pd
+pd.set_option('display.max_columns', 50)
 import numpy as np
 from pprint import pprint
 from tkinter import filedialog
@@ -55,34 +56,86 @@ def makeMatchList(event, year = 2019):
             Outstr = str(Match).replace('[', '').replace(']', '').replace(' ', '')+'\n'
             File.write(Outstr)
             
-def piecesMath(TeamDf):
-    TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
-    TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
-    TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
-  
-    TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
-    TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
-    TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
+def combineColumn(scoutData): 
+    '''
+    This combines columns and creates columns from adding other columns. Specifics:
+    Total/low/high/outer/inner goal makes/misses/attempts across  game phase(overall)
+    Percent of shots are makes, percent of makes in low/high/outer goals, accuracy
+    in low and high goal, autonomous score, teleop score.
+    '''
     
-    TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
-    TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
-    TeamDf['telehatch'] += TeamDf['TeleHatchLRocketHatch']
+    scoutData['totalAttempts']=scoutData['lowGoalMissesAuto']+scoutData['highGoalMissesAuto']
+    scoutData['totalAttempts']+=scoutData['lowGoalMakesAuto']+scoutData['outerGoalMakesAuto']
+    scoutData['totalAttempts']+=scoutData['innerGoalMakesAuto']+scoutData['lowGoalMissesTele']
+    scoutData['totalAttempts']+=scoutData['lowGoalMakesTele']+scoutData['outerGoalMakesTele']
+    scoutData['totalAttempts']+=scoutData['innerGoalMakesTele']
     
-    TeamDf['sandhatch'] = TeamDf['SSCargoHatch'] + TeamDf['SSCargoSSHRocketHatch']
-    TeamDf['sandhatch'] += TeamDf['SSCargoSSMRocketHatch']
-    TeamDf['sandhatch'] += TeamDf['SSCargoSSLRocketHatch']
+        
+    scoutData['lowGoalAttemptsAuto']=scoutData['lowGoalMissesAuto']+scoutData['lowGoalMakesAuto']
     
-    TeamDf['totalscored'] = TeamDf['telecargo'] + TeamDf['sandcargo']
-    TeamDf['totalscored'] += TeamDf['telehatch']
-    TeamDf['totalscored'] += TeamDf['sandhatch']
+    scoutData['lowGoalAttemptsTele']=scoutData['lowGoalMissesTele']+scoutData['lowGoalMakesTele']
     
-    TeamDf['teletotal'] = TeamDf['telecargo'] + TeamDf['telehatch']
+    scoutData['lowGoalAttempts']=scoutData['lowGoalAttemptsAuto']+scoutData['lowGoalAttemptsTele']
     
-    TeamDf['sandtotal'] = TeamDf['sandcargo'] + TeamDf['sandhatch']
+    scoutData['lowGoalMakes']=scoutData['lowGoalMakesAuto']+scoutData['lowGoalMakesTele']
     
-    TeamDf['totalcargo'] = TeamDf['telecargo'] + TeamDf['sandcargo']
     
-    TeamDf['totalhatch'] = TeamDf['telehatch'] + TeamDf['sandhatch']
+    scoutData['highGoalAttemptsAuto']=(scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])+scoutData['highGoalMissesAuto']
+    
+    scoutData['highGoalAttemptsTele']=(scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])+scoutData['highGoalMissesTele']
+    
+    scoutData['highGoalAttempts']=scoutData['highGoalAttemptsAuto']+scoutData['highGoalAttemptsTele']
+
+    scoutData['highGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesTele']+scoutData['innerGoalMakesAuto']
+    
+    
+    scoutData['outerGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']
+    
+    
+    scoutData['innerGoalMakes']=scoutData['innerGoalMakesAuto']+scoutData['innerGoalMakesTele']
+
+    
+    scoutData['totalMakes']=scoutData['innerGoalMakes']+scoutData['outerGoalMakes']+scoutData['innerGoalMakes']
+    
+    
+    scoutData['autoMakes']=scoutData['innerGoalMakesAuto']+scoutData['outerGoalMakesAuto']+scoutData['lowGoalMakesAuto']
+    
+    
+    scoutData['totalAccuracy']=(scoutData['totalMakes']/scoutData['totalAttempts'])*100
+    
+    scoutData['lowGoalMakesAccuracy']=(scoutData['lowGoalMakes']/scoutData['lowGoalAttempts'])*100
+    
+    scoutData['lowGoalMakesAccuracyAuto']=(scoutData['lowGoalMakesAuto']/scoutData['lowGoalAttemptsAuto'])*100
+    
+    scoutData['lowGoalMakesAccuracyTele']=(scoutData['lowGoalMakesTele']/scoutData['lowGoalAttemptsTele'])*100
+    
+    scoutData['highGoalMakesAccuracy']=(scoutData['highGoalMakes']/scoutData['highGoalAttempts'])*100
+    
+    scoutData['highGoalMakesAccuracyAuto']=((scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])/scoutData['highGoalAttemptsAuto'])*100
+    
+    scoutData['highGoalMakesAccuracyTele']=((scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])/scoutData['highGoalAttemptsTele'])*100
+    
+    scoutData['percentOfLowGoal']=(scoutData['lowGoalMakes']/scoutData['totalMakes'])*100
+    
+    scoutData['percentOfOuterGoal']=(scoutData['outerGoalMakes']/scoutData['totalMakes'])*100
+    
+    scoutData['percentOfInnerGoal']=(scoutData['innerGoalMakes']/scoutData['totalMakes'])*100
+    
+    
+    scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
+    scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
+    
+    
+    scoutData['autoScore']=2*scoutData['lowGoalMakesAuto']+4*scoutData['outerGoalMakesAuto']
+    scoutData['autoScore']+=6*scoutData['innerGoalMakesAuto']
+    
+    
+    scoutData=scoutData.fillna(0)
+    
+    
+    print(scoutData.head())
+    
+    return scoutData 
     
 def readMatchList():    
     '''
@@ -119,10 +172,9 @@ def readScout():
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
     with open(FileName, 'r') as ScoutFile:
-        ScoutData = pd.read_csv(ScoutFile, sep = '|') 
-    Result = ScoutData.fillna(value = 0)
+        ScoutData = pd.read_json(ScoutFile) 
+    Result = ScoutData.fillna(value = 0).drop(labels='ID', axis=1)
     return Result
-    
 
 def FindPartners(Matchlist, team = 1939):    
     '''
@@ -522,7 +574,7 @@ def getTeamScatterplot(team, df):
 #    df = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered data file'), sep = '|')
     df.set_index("teamNo", inplace = True)
 
-    piecesMath(df)
+    combineColumn(df)
 
     print(df.loc[[team], ["matchNo"]])
 
@@ -639,14 +691,15 @@ def Main(testmode):
         PickListHatch(TeamDf, PivotDf, lastMatch)
     elif selection == '9':
         ReadData = readScout()
+        cookedData=combineColumn(ReadData)
+        '''
         print(ReadData)
         TeamDf, PivotDf = TeamStats(ReadData)
-        
         print()
         print('TeamDF')
         print(TeamDf)
         print('\nTeam Pivot')
         print(PivotDf)
-        
+        '''
         
 Main(True)
