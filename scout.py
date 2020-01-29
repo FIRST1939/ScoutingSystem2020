@@ -29,8 +29,7 @@ from tkinter import IntVar
 from tkinter import ttk
 from tkinter import font
 from tkinter import messagebox
-#import match_dbconn
-import os
+import match_dbconn
 import sys
 import psutil
 from time import sleep
@@ -39,13 +38,18 @@ from PIL import ImageTk, Image
 #global vars
 global autoCycles
 global teleCycles
+global lowGoalMisses
+global highGoalMisses
+global lowGoalMakes
+global innerGoalMakes
+global outerGoalMakes
 autoCycles = 0
 teleCycles = 0
-totalLowGoalMisses = [0,0]
-totalHighGoalMisses = [0,0]
-totalLowGoalMakes = [0,0]
-totalInnerGoalMakes = [0,0]
-totalOuterGoalMakes = [0,0]
+lowGoalMisses = [0,0]
+highGoalMisses = [0,0]
+lowGoalMakes = [0,0]
+innerGoalMakes = [0,0]
+outerGoalMakes = [0,0]
 
 
 class CounterClass:
@@ -376,26 +380,26 @@ class highGoalCounterClass:
          self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
 
 #some data base stuff
-#def getTeam():
-#    team_no = match_dbconn.getMatchInfo(match_no,position)
-#    title_str = "MATCH NO: %s TEAM NO: %s  Postion %s" %(match_no,team_no,position)
-#    window.title(title_str)
-#    print(team_no)
-#    global teamno
-#    teamno = team_no
+def getTeam():
+    team_no = match_dbconn.getMatchInfo(match_no,position)
+    title_str = "MATCH NO: %s TEAM NO: %s  Postion %s" %(match_no,team_no,position)
+    window.title(title_str)
+    print(team_no)
+    global teamno
+    teamno = team_no
 #    
-#def getNextMatch():
-#   new_match_no = match_dbconn.getNextMatch();
-#   print('new match %s',new_match_no)
-#   global match_no
-#   global position
-#   print('current match %s',match_no)
-#   if new_match_no != match_no:
-#       print('reinitialize screens')
-#       match_no = new_match_no
-#       getTeam()
-#       match_dbconn.setScout(scoutName.get(),match_no,position)
-#   window.after(2000,getNextMatch)
+def getNextMatch():
+   new_match_no = match_dbconn.getNextMatch();
+   print('new match %s',new_match_no)
+   global match_no
+   global position
+   print('current match %s',match_no)
+   if new_match_no != match_no:
+       print('reinitialize screens')
+       match_no = new_match_no
+       getTeam()
+       match_dbconn.setScout(scoutName.get(),match_no,position)
+   window.after(2000,getNextMatch)
 #
 def cycleReinit(gamePhase):
     global autoCycles
@@ -474,59 +478,60 @@ def popup_keyboard(event):
     sleep(0.5)
     os.popen('/usr/bin/florence')
     
-#def sendCycleToDatabase(gamePhase):
-#    global autoCycles
-#    global teleCycles
-#    global lowGoalMisses
-#    global highGoalMisses
-#    global lowGoalMakes
-#    global innerGoalMakes
-#    global outerGoalMakes
-#    if gamePhase == 0: 
-#        lowGoalMisses[0] += autoLow.shotsMissed
-#        highGoalMisses[0] += autoHigh.shotsMissed
-#        lowGoalMakes[0] += autoLow.shotsMade
-#        outerGoalMakes[0] += autoHigh.outerShotsMade
-#        innerGoalMakes[0] += autoHigh.innerShotsMade
-#        
-#        match_dbconn.setMatchCycle(autoCycles,
-#                                   match_no, 
-#                                   teamno, 
-#                                   autoShooterPos.get(),
-#                                   autoLow.shotsMissed,
-#                                   autoHigh.shotsMissed,
-#                                   autoLow.shotsMade,
-#                                   autoHigh.outerShotsMade,
-#                                   autoHigh.innerShotsMade,
-#                                   gamePhase)
-#        autoCycles = (autoCycles+1)
-#    else: 
-#        lowGoalMisses[1] += teleLowGoal.shotsMissed
-#        highGoalMisses[1] += teleHighGoal.shotsMissed
-#        lowGoalMakes[1] += teleLowGoal.shotsMade
-#        outerGoalMakes[1] += teleHighGoal.outerShotsMade
-#        innerGoalMakes[1] += teleHighGoal.innerShotsMade
-#        match_dbconn.setMatchCycle(teleCycles,
-#                                   match_no, 
-#                                   teamno, 
-#                                   shooterPos.get(),
-#                                   teleLowGoal.shotsMissed,
-#                                   teleHighGoal.shotsMissed,
-#                                   teleLowGoal.shotsMade,
-#                                   teleHighGoal.outerShotsMade,
-#                                   teleHighGoal.innerShotsMade,
-#                                   gamePhase)
-#        teleCycles = (teleCycles+1)
+def sendCycleToDatabase(gamePhase):
+    global autoCycles
+    global teleCycles
+    global lowGoalMisses
+    global highGoalMisses
+    global lowGoalMakes
+    global innerGoalMakes
+    global outerGoalMakes
+    if gamePhase == 0: 
+        lowGoalMisses[0] += autoLow.shotsMissed
+        highGoalMisses[0] += autoHigh.shotsMissed
+        lowGoalMakes[0] += autoLow.shotsMade
+        outerGoalMakes[0] += autoHigh.outerShotsMade
+        innerGoalMakes[0] += autoHigh.innerShotsMade
+        
+        match_dbconn.setMatchCycle(autoCycles,
+                                   match_no, 
+                                   teamno, 
+                                   autoShooterPos.get(),
+                                   autoLow.shotsMissed,
+                                   autoHigh.shotsMissed,
+                                   autoLow.shotsMade,
+                                   autoHigh.outerShotsMade,
+                                   autoHigh.innerShotsMade,
+                                   gamePhase)
+        autoCycles = (autoCycles+1)
+    else: 
+        lowGoalMisses[1] += teleLowGoal.shotsMissed
+        highGoalMisses[1] += teleHighGoal.shotsMissed
+        lowGoalMakes[1] += teleLowGoal.shotsMade
+        outerGoalMakes[1] += teleHighGoal.outerShotsMade
+        innerGoalMakes[1] += teleHighGoal.innerShotsMade
+        match_dbconn.setMatchCycle(teleCycles,
+                                   match_no, 
+                                   teamno, 
+                                   shooterPos.get(),
+                                   teleLowGoal.shotsMissed,
+                                   teleHighGoal.shotsMissed,
+                                   teleLowGoal.shotsMade,
+                                   teleHighGoal.outerShotsMade,
+                                   teleHighGoal.innerShotsMade,
+                                   gamePhase)
+        teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHighGoal.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHighGoal.outerShotsMade == 0 and teleHighGoal.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
+        
     else:
         #send data
+        sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
-    
 
     #reinitialize cycle 
 #    sendCycleToDatabase(gamePhase)
