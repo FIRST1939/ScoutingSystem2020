@@ -13,6 +13,7 @@ import numpy as np
 from pprint import pprint
 from tkinter import filedialog
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 #change makeMatchList so the year is the current year using datetime module.
 def makeMatchList(event, year = 2019):
 #def makeMatchList(event, year = 2018):
@@ -79,10 +80,13 @@ def combineColumn(scoutData):
     
     scoutData['lowGoalMakes']=scoutData['lowGoalMakesAuto']+scoutData['lowGoalMakesTele']
     
+    scoutData['highGoalMakesAuto'] = (scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])
     
     scoutData['highGoalAttemptsAuto']=(scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])+scoutData['highGoalMissesAuto']
     
     scoutData['highGoalAttemptsTele']=(scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])+scoutData['highGoalMissesTele']
+    
+    scoutData['highGoalMakesTele']=scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele']
     
     scoutData['highGoalAttempts']=scoutData['highGoalAttemptsAuto']+scoutData['highGoalAttemptsTele']
 
@@ -95,7 +99,7 @@ def combineColumn(scoutData):
     scoutData['innerGoalMakes']=scoutData['innerGoalMakesAuto']+scoutData['innerGoalMakesTele']
 
     
-    scoutData['totalMakes']=scoutData['innerGoalMakes']+scoutData['outerGoalMakes']+scoutData['innerGoalMakes']
+    scoutData['totalMakes']=scoutData['innerGoalMakes']+scoutData['outerGoalMakes']+scoutData['lowGoalMakes']
     
     
     scoutData['autoMakes']=scoutData['innerGoalMakesAuto']+scoutData['outerGoalMakesAuto']+scoutData['lowGoalMakesAuto']
@@ -637,6 +641,24 @@ def getTeamScatterplot(team, df):
     plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["telehatch"]], color="red")
     plt.ylabel('HP')
 
+def getDfTeamList(df):
+    return(df['teamNo'].drop_duplicates())
+
+def getPicklistBoxplot(df, yvars, teamList):
+    df = df.sort_values('teamNo', ascending=True)
+    df.set_index('teamNo', inplace = True)
+    data = []
+    dataArr = []
+    k=0
+    for team in teamList:
+        data.append(df.loc[[team], [yvars]].get_values())
+
+    for i in data:
+        dataArr.append([])
+        for j in i:
+            dataArr[k].append(j[0])
+    return(dataArr)#.set_xticklabels(teamList.get_values()))
+ 
 def Main(testmode):
     print('press 1 to acquire a Match List')
     print('press 2 to get a prematch Scouting Report')
@@ -645,6 +667,7 @@ def Main(testmode):
     print('press 5 to get a cargo picklist for Day 2')
     print('press 6 to get a hatch picklist for Day 2')
     print('press 9 for functional math test')
+    print('press 10 to get picklist graphs')
     selection = input('enter number: ')
     
     if selection == '1':
@@ -701,5 +724,40 @@ def Main(testmode):
         print('\nTeam Pivot')
         print(PivotDf)
         '''
+    elif selection =='10':
+        selection = input('Enter 0 for an auto graph sheet, enter 1 for a total graph sheet: ')
+        readData = combineColumn(readScout())
+        tempData = readData
+        teamList = getDfTeamList(tempData)
+        print(teamList)
+        fig = plt.figure(0)
+        fig.clf
+        graphSheet = GridSpec(4, 1, wspace=1.5, hspace=2)
+        subTotalGraph = fig.add_subplot(graphSheet [0,0]).set_xticks(teamList.get_values())
+        highGoalGraph = fig.add_subplot(graphSheet [1,0]).set_xticks(teamList.get_values())
+        lowGoalGraph = fig.add_subplot(graphSheet [2, 0]).set_xticks(teamList.get_values())
+        heatmapGraph = fig.add_subplot(graphSheet [3, 0]).set_xticks(teamList.get_values())
+        
+        if selection == '1':
+             totalMakesBoxplot = getPicklistBoxplot(readData, 'totalMakes', teamList)
+             highGoalBoxplot = getPicklistBoxplot(readData, 'highGoalMakes', teamList)
+             lowGoalBoxplot = getPicklistBoxplot(readData, 'lowGoalMakes', teamList)
+        elif selection == '0':
+             totalMakesBoxplot = getPicklistBoxplot(readData, 'autoMakes', teamList)
+             highGoalBoxplot = getPicklistBoxplot(readData, 'highGoalMakesAuto', teamList)
+             lowGoalBoxplot = getPicklistBoxplot(readData, 'lowGoalMakesAuto', teamList)
+         #getPicklistHeatMap
+        #gridspec picklist graph
+        subTotalGraph.plot(boxplot(totalMakesBoxplot))
+        highGoalGraph.plot(boxplot(highGoalBoxplot))
+        lowGoalGraph.plot(boxplot(lowGoalBoxplot))
+        
+        eventTitle = input('Enter the event name you want displayed in the name of the file:')
+        if selection == '1':
+            plt.savefig(eventTitle + 'match scored picklist graphs')
+        elif selection == '0':
+            plt.savefig(eventTitle + 'auto scored picklist graphs')
+        
+        
         
 Main(True)
