@@ -3,7 +3,7 @@
 """
 Created on Thu Jan 17 19:06:04 2019
                                     
-@author: Saketh, Sriram
+@author: Saketh, Sriram, Charlie
 """
 
 import tbaUtils
@@ -12,8 +12,15 @@ import numpy as np
 from pprint import pprint
 from tkinter import filedialog
 import matplotlib.pyplot as plt
+<<<<<<< Updated upstream
+=======
+from matplotlib.gridspec import GridSpec
+import json
+import datetime
+>>>>>>> Stashed changes
 #change makeMatchList so the year is the current year using datetime module.
-def makeMatchList(event, year = 2019):
+year = datetime.date.today().year
+def makeMatchList(event, year):
 #def makeMatchList(event, year = 2018):
 
     '''
@@ -114,15 +121,35 @@ def readScout():
     Read Scouting Data from a file, fix formatting to numeric where neccessary,
     clean the data, report any implausibile data.  
     '''
-   # if testmode :
-    #    FileName = r'C:\Users\Saketh\Documents\GitHub\2019-Scouting-Analyzer\MatchScoutForOtherTeams.csv'
+
+
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
+<<<<<<< Updated upstream
     with open(FileName, 'r') as ScoutFile:
         ScoutData = pd.read_csv(ScoutFile, sep = '|') 
     Result = ScoutData.fillna(value = 0)
     return Result
     
+=======
+    with open(FileName, 'r') as scoutFile:
+#        ScoutData = pd.read_json(ScoutFile) 
+        scoutData = scoutFile.read()
+
+        
+#       result = scoutData.fillna(value = 0)
+        
+        scoutjson = json.loads(scoutData)
+        mainData = scoutjson["mainData"]
+        cycleData = scoutjson["cycleData"]
+#        pprint(cycleData)
+        cycledf = pd.DataFrame.from_dict(cycleData)
+        maindf = pd.DataFrame.from_dict(mainData)
+#        pprint(cycledf)
+#        pprint(maindf)
+        
+        return maindf, cycledf
+>>>>>>> Stashed changes
 
 def FindPartners(Matchlist, team = 1939):    
     '''
