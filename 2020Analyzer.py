@@ -179,7 +179,7 @@ def readScout():
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
     with open(FileName, 'r') as scoutFile:
-#        ScoutData = pd.read_json(ScoutFile) 
+#        ScoutData = pd.read_json(scoutFile) 
         scoutData = scoutFile.read()
 
         
