@@ -62,6 +62,7 @@ def makeMatchList(event, year):
             Outstr = str(Match).replace('[', '').replace(']', '').replace(' ', '')+'\n'
             File.write(Outstr)
             
+<<<<<<< Updated upstream
 def piecesMath(TeamDf):
     TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
     TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
@@ -70,6 +71,79 @@ def piecesMath(TeamDf):
     TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
+=======
+def combineColumn(scoutData): 
+    '''
+    This combines columns and creates columns from adding other columns. Specifics:
+    Total/low/high/outer/inner goal makes/misses/attempts across  game phase(overall)
+    Percent of shots are makes, percent of makes in low/high/outer goals, accuracy
+    in low and high goal, autonomous score, teleop score.
+    '''
+    
+    scoutData['totalAttempts']=scoutData['lowGoalMissesAuto']+scoutData['highGoalMissesAuto']
+    scoutData['totalAttempts']+=scoutData['lowGoalMakesAuto']+scoutData['outerGoalMakesAuto']
+    scoutData['totalAttempts']+=scoutData['innerGoalMakesAuto']+scoutData['lowGoalMissesTele']
+    scoutData['totalAttempts']+=scoutData['lowGoalMakesTele']+scoutData['outerGoalMakesTele']
+    scoutData['totalAttempts']+=scoutData['innerGoalMakesTele']
+    
+        
+    scoutData['lowGoalAttemptsAuto']=scoutData['lowGoalMissesAuto']+scoutData['lowGoalMakesAuto']
+    
+    scoutData['lowGoalAttemptsTele']=scoutData['lowGoalMissesTele']+scoutData['lowGoalMakesTele']
+    
+    scoutData['lowGoalAttempts']=scoutData['lowGoalAttemptsAuto']+scoutData['lowGoalAttemptsTele']
+    
+    scoutData['lowGoalMakes']=scoutData['lowGoalMakesAuto']+scoutData['lowGoalMakesTele']
+    
+    scoutData['highGoalMakesAuto'] = (scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])
+    
+    scoutData['highGoalAttemptsAuto']=(scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])+scoutData['highGoalMissesAuto']
+    
+    scoutData['highGoalAttemptsTele']=(scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])+scoutData['highGoalMissesTele']
+    
+    scoutData['highGoalMakesTele']=scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele']
+    
+    scoutData['highGoalAttempts']=scoutData['highGoalAttemptsAuto']+scoutData['highGoalAttemptsTele']
+
+    scoutData['highGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesTele']+scoutData['innerGoalMakesAuto']
+    
+    
+    scoutData['outerGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']
+    
+    
+    scoutData['innerGoalMakes']=scoutData['innerGoalMakesAuto']+scoutData['innerGoalMakesTele']
+
+    
+    scoutData['totalMakes']=scoutData['innerGoalMakes']+scoutData['outerGoalMakes']+scoutData['lowGoalMakes']
+    
+    
+    scoutData['autoMakes']=scoutData['innerGoalMakesAuto']+scoutData['outerGoalMakesAuto']+scoutData['lowGoalMakesAuto']
+    
+    print(scoutData['totalMakes'], scoutData['totalAttempts'])
+    scoutData['totalAccuracy']=(scoutData['totalMakes'].astype('int32'))/(scoutData['totalAttempts'].astype('int32'))*100
+    
+    scoutData['lowGoalMakesAccuracy']=(scoutData['lowGoalMakes']/scoutData['lowGoalAttempts'])*100
+    
+    scoutData['lowGoalMakesAccuracyAuto']=(scoutData['lowGoalMakesAuto']/scoutData['lowGoalAttemptsAuto'])*100
+    
+    scoutData['lowGoalMakesAccuracyTele']=(scoutData['lowGoalMakesTele']/scoutData['lowGoalAttemptsTele'])*100
+    
+    scoutData['highGoalMakesAccuracy']=(scoutData['highGoalMakes']/scoutData['highGoalAttempts'])*100
+    
+    scoutData['highGoalMakesAccuracyAuto']=((scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])/scoutData['highGoalAttemptsAuto'])*100
+    
+    scoutData['highGoalMakesAccuracyTele']=((scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])/scoutData['highGoalAttemptsTele'])*100
+    
+    scoutData['percentOfLowGoal']=(scoutData['lowGoalMakes']/scoutData['totalMakes'])*100
+    
+    scoutData['percentOfOuterGoal']=(scoutData['outerGoalMakes']/scoutData['totalMakes'])*100
+    
+    scoutData['percentOfInnerGoal']=(scoutData['innerGoalMakes']/scoutData['totalMakes'])*100
+    
+    
+    scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
+    scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
+>>>>>>> Stashed changes
     
     TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
     TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
@@ -122,9 +196,10 @@ def readScout():
     clean the data, report any implausibile data.  
     '''
 
-
+    print('entered readScout')
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
+<<<<<<< Updated upstream
 
     with open(FileName, 'r') as ScoutFile:
         ScoutData = pd.read_csv(ScoutFile, sep = '|') 
@@ -132,6 +207,9 @@ def readScout():
     return Result
     
 
+=======
+    print(FileName)
+>>>>>>> Stashed changes
     with open(FileName, 'r') as scoutFile:
 #        ScoutData = pd.read_json(ScoutFile) 
         scoutData = scoutFile.read()
@@ -392,7 +470,7 @@ def SearchTeam(Scoutdf, PivotDf, TeamNumber, File = None):
         
 \
                        
-        
+"""
 def TeamStats(TeamDf):
     '''
     Takes full dataframe, and creates per match calculated values. Creates a pivot
@@ -460,7 +538,7 @@ def TeamStats(TeamDf):
     
     return TeamDf, TeamPivot
     
-
+"""
 def PickListCargo(TeamDf, PivotDf, lastMatch):
     '''
     List of teams organized by the order we should pick them. Then catagories 
@@ -665,7 +743,16 @@ def Main(testmode):
         print(TeamDf.head())
         PickListHatch(TeamDf, PivotDf, lastMatch)
     elif selection == '9':
+<<<<<<< Updated upstream
         ReadData = readScout()
+=======
+        print('entered 9')
+        maindf, cycledf = readScout()
+        print('readFile')
+        combinedMaindf=combineColumn(maindf)
+        print(combinedMaindf)
+        '''
+>>>>>>> Stashed changes
         print(ReadData)
         TeamDf, PivotDf = TeamStats(ReadData)
         
