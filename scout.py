@@ -402,6 +402,7 @@ def getNextMatch():
    window.after(2000,getNextMatch)
 #
 def cycleReinit(gamePhase):
+    print('cycle reinit ran')
     global autoCycles
     global teleCycles
     if gamePhase == 0:
@@ -413,6 +414,7 @@ def cycleReinit(gamePhase):
         autoCycles += 1
         autoLow.reinit()
         autoHigh.reinit()  
+        print('auto reinitialized')
         
     else:
         teleLowGoal.shotsMissed = 0
@@ -423,6 +425,7 @@ def cycleReinit(gamePhase):
         teleCycles += 1
         teleLowGoal.reinit()
         teleHighGoal.reinit()
+        print('tele reinitialized')
 #
 #def sendMainToDatabase(cards):
 #    global lowGoalMisses
@@ -479,6 +482,7 @@ def popup_keyboard(event):
     os.popen('/usr/bin/florence')
     
 def sendCycleToDatabase(gamePhase):
+    print('send to database function ran')
     global autoCycles
     global teleCycles
     global lowGoalMisses
@@ -503,7 +507,9 @@ def sendCycleToDatabase(gamePhase):
                                    autoHigh.outerShotsMade,
                                    autoHigh.innerShotsMade,
                                    gamePhase)
+        print('Sent auto to database')
         autoCycles = (autoCycles+1)
+        print('increment autoCycles complete')
     else: 
         lowGoalMisses[1] += teleLowGoal.shotsMissed
         highGoalMisses[1] += teleHighGoal.shotsMissed
@@ -520,6 +526,7 @@ def sendCycleToDatabase(gamePhase):
                                    teleHighGoal.outerShotsMade,
                                    teleHighGoal.innerShotsMade,
                                    gamePhase)
+        print('sent tele cycles to database')
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
@@ -532,6 +539,7 @@ def sendCycleData(gamePhase):
         #send data
         sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
+    print('done!')
 
     #reinitialize cycle 
 #    sendCycleToDatabase(gamePhase)
@@ -591,7 +599,7 @@ def telePositionSet(event):
 window = Tk() 
 window.geometry('800x480')
 
-window.title('scouting app 2020')
+#window.title('scouting app 2020')
 
 #Give it some style
 style = ttk.Style()
@@ -822,5 +830,12 @@ dontUseThisData.grid(column= 0, row= 5)
 
 #send = Button(postMatch, text='Send to database', command=reinitscreen)
 #send.grid(row=5, column=2, ipady=13, ipadx=80)
+
+if len(sys.argv) > 1:
+   position = sys.argv[1]
+else:
+   position='R1'
+match_no='2'
+getNextMatch()
 
 window.mainloop()

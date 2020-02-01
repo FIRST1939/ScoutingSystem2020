@@ -102,7 +102,7 @@ def setMatchCycle(cycle,
                         outerGoalMakes,
                         innerGoalMakes,
                         gamePhase))
-     mariadb_connection.commit()   
+    mariadb_connection.commit()   
                         
 
 def setMatchScout(matchNo,
@@ -189,7 +189,7 @@ def setMatchScout(matchNo,
                   scoutTeamNo,
                   startPos,
                   crossInitiationLine,
-                  shotterPositionAuto,
+                  shooterPositionAuto,
                   lowGoalMissesAuto,
                   highGoalMissesAuto,
                   lowGoalMakesAuto,
