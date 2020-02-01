@@ -3,7 +3,7 @@
 """
 Created on Thu Jan 16 17:41:34 2020
 
-@author: carolinebarstow
+@author: caroline
 """
 
 #!/usr/bin/env python3
@@ -11,7 +11,7 @@ Created on Thu Jan 16 17:41:34 2020
 """
 Created on Thu Jan 16 16:34:18 2020
 
-@author: carolinebarstow
+@author: caroline
 """
 
 #imports
