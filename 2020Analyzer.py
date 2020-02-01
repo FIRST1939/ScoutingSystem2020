@@ -12,12 +12,12 @@ import numpy as np
 from pprint import pprint
 from tkinter import filedialog
 import matplotlib.pyplot as plt
-<<<<<<< Updated upstream
-=======
+
+
 from matplotlib.gridspec import GridSpec
 import json
 import datetime
->>>>>>> Stashed changes
+
 #change makeMatchList so the year is the current year using datetime module.
 year = datetime.date.today().year
 def makeMatchList(event, year):
@@ -125,13 +125,13 @@ def readScout():
 
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
-<<<<<<< Updated upstream
+
     with open(FileName, 'r') as ScoutFile:
         ScoutData = pd.read_csv(ScoutFile, sep = '|') 
     Result = ScoutData.fillna(value = 0)
     return Result
     
-=======
+
     with open(FileName, 'r') as scoutFile:
 #        ScoutData = pd.read_json(ScoutFile) 
         scoutData = scoutFile.read()
@@ -149,7 +149,7 @@ def readScout():
 #        pprint(maindf)
         
         return maindf, cycledf
->>>>>>> Stashed changes
+
 
 def FindPartners(Matchlist, team = 1939):    
     '''
