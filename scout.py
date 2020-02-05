@@ -431,50 +431,50 @@ def cycleReinit(gamePhase):
         teleHighGoal.reinit()
         print('tele reinitialized')
 #
-#def sendMainToDatabase(cards):
-#    global lowGoalMisses
-#    global highGoalMisses
-#    global lowGoalMakes
-#    global innerGoalMakes
-#    global outerGoalMakes
-#    match_dbconn.setMatchScout(match_no, 
-#                               teamno,
-#                               scoutName.get(),
-#                               teamnum.get(),
-#                               autoStartPos.get(),
-#                               crossLine_State.get(),
-#                               autoShooterPos.get(),
-#                               lowGoalMisses[0],
-#                               highGoalMisses[0],
-#                               lowGoalMakes[0],
-#                               outerGoalMakes[0],
-#                               innerGoalMakes[0],
-#                               autoBallsPickedUp.point,
-#                               autoFoul.point,
-#                               autoTechFoul.point,
-#                               shooterPos.get(),
-#                               lowGoalMisses[1],
-#                               highGoalMisses[1],
-#                               lowGoalMakes[1],
-#                               outerGoalMakes[1],
-#                               innerGoalMakes[1],
-#                               teleFoul.point,
-#                               teleTechFoul.point,
-#                               defense_State.get(),
-#                               rotationalControl.get(),
-#                               positionalControl.get(),
-#                               fellOffBar_State.get(),
-#                               buddyClimb_State.get(),
-#                               hitOpponent_State.get(),
-#                               leveledBar_State.get(),
-#                               climbFrom.get(),
-#                               barLevel.get(),
-#                               deadbot_State.get(),
-#                               comments.get(),
-#                               tippedOver_State.get(),
-#                               recoveredFromDead_State.get(),
-#                               cards.get()
-#                               )
+def sendMainToDatabase(cards):
+    global lowGoalMisses
+    global highGoalMisses
+    global lowGoalMakes
+    global innerGoalMakes
+    global outerGoalMakes
+    match_dbconn.setMatchScout(match_no, 
+                               teamno,
+                               scoutName.get(),
+                               teamnum.get(),
+                               autoStartPos.get(),
+                               crossLine_State.get(),
+                               autoShooterPos.get(),
+                               lowGoalMisses[0],
+                               highGoalMisses[0],
+                               lowGoalMakes[0],
+                               outerGoalMakes[0],
+                               innerGoalMakes[0],
+                               autoBallsPickedUp.point,
+                               autoFoul.point,
+                               autoTechFoul.point,
+                               shooterPos.get(),
+                               lowGoalMisses[1],
+                               highGoalMisses[1],
+                               lowGoalMakes[1],
+                               outerGoalMakes[1],
+                               innerGoalMakes[1],
+                               teleFoul.point,
+                               teleTechFoul.point,
+                               defense_State.get(),
+                               rotationalControl.get(),
+                               positionalControl.get(),
+                               fellOffBar_State.get(),
+                               buddyClimb_State.get(),
+                               hitOpponent_State.get(),
+                               leveledBar_State.get(),
+                               climbFrom.get(),
+                               barLevel.get(),
+                               deadbot_State.get(),
+                               comments.get(),
+                               tippedOver_State.get(),
+                               recoveredFromDead_State.get(),
+                               cards
+                               )
 
 #def popup_keyboard(event):
 ##    os.popen('matchbox-keyboard','r',4096)
@@ -559,14 +559,20 @@ def getCardValue():
 def sendMainData():
     global autoCycles
     global teleCycles
-    if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
-        sendCycleData(1)
-    if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
-        sendCycleData(0)
-    autoCycles = 0
-    teleCycles = 0
-    sendMainData(getCardValue())
-    reinitscreen()
+    sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
+    if sendMSG is True and badData_State.get() is False:
+        if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
+            sendCycleData(1)
+        if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
+            sendCycleData(0)
+        autoCycles = 0
+        teleCycles = 0
+        sendMainData(getCardValue())
+        reinitscreen()
+    if sendMSG is True and badData_State.get() is True:
+        autoCycles = 0
+        teleCycles = 0
+        reinitScreen()
 #        
 #def screenClear():
 #    pass
@@ -852,7 +858,7 @@ dontUseThisData_State = BooleanVar(False)
 dontUseThisData = Checkbutton(postMatch, text="Don't use this data", var=dontUseThisData_State)
 dontUseThisData.grid(column= 0, row= 5)
 
-send = Button(postMatch, text='Send to database', command=reinitscreen)
+send = Button(postMatch, text='Send to database', command=sendMainData)
 send.grid(row=5, column=2, ipady=13, ipadx=80)
 
 if len(sys.argv) > 1:
@@ -861,5 +867,6 @@ else:
    position='R1'
 match_no='2'
 getNextMatch()
+
 
 window.mainloop()
