@@ -31,8 +31,8 @@ from tkinter import font
 from tkinter import messagebox
 import match_dbconn
 import sys
-import psutil
-from time import sleep
+#import psutil
+#from time import sleep
 from PIL import ImageTk, Image
 
 #global vars
@@ -472,14 +472,14 @@ def cycleReinit(gamePhase):
 #                               cards.get()
 #                               )
 
-def popup_keyboard(event):
-#    os.popen('matchbox-keyboard','r',4096)
-    PROCNAME = "florence"
-    for ploc in psutil.process_iter():
-        if proc.name() == PROCNAME:
-            proc.kill()
-    sleep(0.5)
-    os.popen('/usr/bin/florence')
+#def popup_keyboard(event):
+##    os.popen('matchbox-keyboard','r',4096)
+#    PROCNAME = "florence"
+#    for ploc in psutil.process_iter():
+#        if proc.name() == PROCNAME:
+#            proc.kill()
+#    sleep(0.5)
+#    os.popen('/usr/bin/florence')
     
 def sendCycleToDatabase(gamePhase):
     print('send to database function ran')
@@ -544,41 +544,42 @@ def sendCycleData(gamePhase):
     #reinitialize cycle 
 #    sendCycleToDatabase(gamePhase)
 #
-#def getCardValue():
-#    cardValue=0
-#    if yellowCard_State.get() !=0:
-#        cardValue=1
-#    if redCard_State.get() !=0:
-#        cardValue=2
-#    return cardValue
+def getCardValue():
+    cardValue=0
+    if yellowCard_State.get() !=0:
+        cardValue=1
+    if redCard_State.get() !=0:
+        cardValue=2
+    return cardValue
 #                         
-#def sendMainData():
-#    global autoCycles
-#    global teleCycles
-#    if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
-#        sendCycleData(1)
-#    if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
-#        sendCycleData(0)
-#    autoCycles = 0
-#    teleCycles = 0
-#    sendMainToDatabase(getCardValue())
-#    reinitscreen()
+def sendMainData():
+    global autoCycles
+    global teleCycles
+    if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
+        sendCycleData(1)
+    if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
+        sendCycleData(0)
+    autoCycles = 0
+    teleCycles = 0
+    sendMainData(getCardValue())
+    reinitscreen()
 #        
 #def screenClear():
 #    pass
 #
-#def reinitscreen():
-#    crossLine_State.set(False)
-#    autoBallsPickedUp.point =0
-#    autoFoul.point = 0
-#    autoTechFoul.point = 0
-#    teleFoul.point = 0
-#    teleTechFoul.point = 0
-#    defense_State.set(False)
-#    rotationalControl.set(0)
-#    positionalControl.set(0)
-#    fellOffBar_State.set(False)
-#    buddyClimb_State.set(False)
+def reinitscreen():
+    #auto tab
+    crossLine_State.set(False)
+    telePrep_State.set(False)
+    autoFoul.point == 0
+    autoTechFoul.point == 0
+    teleFoul.point == 0
+    teleTechFoul.point == 0
+    defense_State.set(False)
+    rotationalControl.set(0)
+    positionalControl.set(0)
+    fellOffBar_State.set(False)
+    buddyClimb_State.set(False)
 
 def refImagePositionSet(event):
     position = shooterPosRef.get()
@@ -627,13 +628,13 @@ tab_control.pack(expand=1, fill='both')
 
 #Prematch Screen
 scoutName = ttk.Entry(preMatch, width= 30)
-scoutName.bind('<Button-1>', popup_keyboard)
+#scoutName.bind('<Button-1>', popup_keyboard)
 scoutName.grid(column=1, row=0, columnspan=4)
 nameLBL = Label(preMatch, text = 'Name:')
 nameLBL.grid(column=0, row=0, ipady=17)
 
 teamnum = ttk.Entry(preMatch, width=10)
-teamnum.bind('<Button-1>' , popup_keyboard)
+#teamnum.bind('<Button-1>' , popup_keyboard)
 teamnum.grid(column=7, row=0)
 teamnumLBL = Label(preMatch, text='  Team# you are with:')
 teamnumLBL.grid(row=0, column=5, columnspan=2)
@@ -820,7 +821,7 @@ redCard.grid(column= 2, row= 3)
 
 comments= Text(postMatch, width=80, height=4)
 comments.grid(column=2, row=4, columnspan=2)
-comments.bind('<Button-1>', popup_keyboard)
+#comments.bind('<Button-1>', popup_keyboard)
 commentsLBL = Label(postMatch, text='Comments:')
 commentsLBL.grid(column=1, row=4, ipady=21)
 
@@ -828,8 +829,8 @@ dontUseThisData_State = BooleanVar(False)
 dontUseThisData = Checkbutton(postMatch, text="Don't use this data", var=dontUseThisData_State)
 dontUseThisData.grid(column= 0, row= 5)
 
-#send = Button(postMatch, text='Send to database', command=reinitscreen)
-#send.grid(row=5, column=2, ipady=13, ipadx=80)
+send = Button(postMatch, text='Send to database', command=reinitscreen)
+send.grid(row=5, column=2, ipady=13, ipadx=80)
 
 if len(sys.argv) > 1:
    position = sys.argv[1]
