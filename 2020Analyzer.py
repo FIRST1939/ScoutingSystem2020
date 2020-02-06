@@ -14,11 +14,8 @@ from pprint import pprint
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-import datetime
-import json
 #change makeMatchList so the year is the current year using datetime module.
-year = datetime.date.today().year
-def makeMatchList(event, year):
+def makeMatchList(event, year = 2019):
 #def makeMatchList(event, year = 2018):
 
     '''
@@ -174,28 +171,15 @@ def readScout():
     Read Scouting Data from a file, fix formatting to numeric where neccessary,
     clean the data, report any implausibile data.  
     '''
-
-
+   # if testmode :
+    #    FileName = r'C:\Users\Saketh\Documents\GitHub\2019-Scouting-Analyzer\MatchScoutForOtherTeams.csv'
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
-    with open(FileName, 'r') as scoutFile:
-#        ScoutData = pd.read_json(ScoutFile) 
-        scoutData = scoutFile.read()
+    with open(FileName, 'r') as ScoutFile:
+        ScoutData = pd.read_json(ScoutFile) 
+    Result = ScoutData.fillna(value = 0).drop(labels='ID', axis=1)
+    return Result
 
-        
-#       result = scoutData.fillna(value = 0)
-        
-        scoutjson = json.loads(scoutData)
-        mainData = scoutjson["mainData"]
-        cycleData = scoutjson["cycleData"]
-#        pprint(cycleData)
-        cycledf = pd.DataFrame.from_dict(cycleData)
-        maindf = pd.DataFrame.from_dict(mainData)
-#        pprint(cycledf)
-#        pprint(maindf)
-        
-        return maindf, cycledf
-    
 def FindPartners(Matchlist, team = 1939):    
     '''
     Takes the Match List from the entire competition and finds the matches we're
