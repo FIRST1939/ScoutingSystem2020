@@ -561,9 +561,9 @@ def sendMainData():
     global teleCycles
     sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
     if sendMSG is True and dontUseThisData_State.get() is False:
-        if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
+        if  (teleLowGoal.shotsMissed != 0 or teleHighGoal.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHighGoal.outerShotsMade != 0 or teleHighGoal.innerShotsMade != 0):
             sendCycleData(1)
-        if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
+        if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
             sendCycleData(0)
         autoCycles = 0
         teleCycles = 0
