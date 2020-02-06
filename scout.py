@@ -470,7 +470,7 @@ def sendMainToDatabase(cards):
                                climbFrom.get(),
                                barLevel.get(),
                                deadbot_State.get(),
-                               comments.get(),
+                               comments.get("1.0", END),
                                tippedOver_State.get(),
                                recoveredFromDead_State.get(),
                                cards
@@ -560,19 +560,19 @@ def sendMainData():
     global autoCycles
     global teleCycles
     sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
-    if sendMSG is True and badData_State.get() is False:
+    if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 and teleHighGoal.shotsMissed != 0 and teleLowGoal.shotsMade != 0 and teleHighGoal.outerShotsMade != 0 and teleHighGoal.innerShotsMade != 0):
             sendCycleData(1)
         if (autoLow.shotsMissed != 0 and autoHigh.shotsMissed != 0 and autoLow.shotsMade != 0 and autoHigh.outerShotsMade != 0 and autoHigh.innerShotsMade !=0):
             sendCycleData(0)
         autoCycles = 0
         teleCycles = 0
-        sendMainData(getCardValue())
+        sendMainToDatabase(getCardValue())
         reinitscreen()
-    if sendMSG is True and badData_State.get() is True:
+    elif sendMSG is True and dontUseThisData_State.get() is True:
         autoCycles = 0
         teleCycles = 0
-        reinitScreen()
+        reinitscreen()
 #        
 #def screenClear():
 #    pass
@@ -600,7 +600,7 @@ def reinitscreen():
     buddyClimb_State.set(False)
     hitOpponent_State.set(False)
     leveledBar_State.set(False)
-    barLevel.set('No Climb')
+    barLevel.set("No Climb")
     #post match
     deadbot_State.set(False)
     recoveredFromDead_State.set(False)
@@ -608,7 +608,7 @@ def reinitscreen():
     yellowCard_State.set(False)
     redCard_State.set(False)
     comments.delete(1.0, END)
-    dontUseThisData.set(False)
+    dontUseThisData_State.set(False)
 
 def refImagePositionSet(event):
     position = shooterPosRef.get()
@@ -625,6 +625,7 @@ def telePositionSet(event):
     shooterPosRef.set(position)
     autoShooterPos.set(position)
 
+#print(teamno)
 #opening tkinter
 window = Tk() 
 window.geometry('800x480')
