@@ -30,7 +30,7 @@ from tkinter import ttk
 from tkinter import font
 from tkinter import messagebox
 from tkinter import END
-import match_dbconn
+#import match_dbconn
 import sys
 #import psutil
 #from time import sleep
@@ -110,7 +110,7 @@ class lowGoalCounterClass:
         self.textY = textY
         
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY)
-        self.spaceLBL = Label(self.app, text='   Low  ').grid(column=x+3, row=y)
+        self.spaceLBL = Label(self.app, text='                        Low  ').grid(column=x+3, row=y)
 
         self.madeDisplayLabel = Label(self.app, text = self.shotsMade)
         self.madeDisplayLabel.grid(column = (self.x+6), row = self.y)
@@ -229,8 +229,8 @@ class highGoalCounterClass:
         self.textY = textY
         
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY)
-        self.spaceLBL = Label(self.app, text='  Outer ').grid(column=x+3, row=y+1)
-        self.spaceLBL2 = Label(self.app, text='  Inner ').grid(column=x+3, row=y)
+        self.spaceLBL = Label(self.app, text='                        Outer ').grid(column=x+3, row=y+1)
+        self.spaceLBL2 = Label(self.app, text='                        Inner ').grid(column=x+3, row=y)
        
 #inner made
         self.innerMadeDisplayLabel = Label(self.app, text = self.innerShotsMade)
@@ -387,26 +387,26 @@ class highGoalCounterClass:
          self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
 
 #some data base stuff
-def getTeam():
-    team_no = match_dbconn.getMatchInfo(match_no,position)
-    title_str = "MATCH NO: %s TEAM NO: %s  Postion %s" %(match_no,team_no,position)
-    window.title(title_str)
-    print(team_no)
-    global teamno
-    teamno = team_no
+#def getTeam():
+#    team_no = match_dbconn.getMatchInfo(match_no,position)
+#    title_str = "MATCH NO: %s TEAM NO: %s  Postion %s" %(match_no,team_no,position)
+#    window.title(title_str)
+#    print(team_no)
+#    global teamno
+#    teamno = team_no
 #    
-def getNextMatch():
-   new_match_no = match_dbconn.getNextMatch();
-   print('new match %s',new_match_no)
-   global match_no
-   global position
-   print('current match %s',match_no)
-   if new_match_no != match_no:
-       print('reinitialize screens')
-       match_no = new_match_no
-       getTeam()
-       match_dbconn.setScout(scoutName.get(),match_no,position)
-   window.after(2000,getNextMatch)
+#def getNextMatch():
+#   new_match_no = match_dbconn.getNextMatch();
+#   print('new match %s',new_match_no)
+#   global match_no
+#   global position
+#   print('current match %s',match_no)
+#   if new_match_no != match_no:
+#       print('reinitialize screens')
+#       match_no = new_match_no
+#       getTeam()
+#       match_dbconn.setScout(scoutName.get(),match_no,position)
+#   window.after(2000,getNextMatch)
 #
 def cycleReinit(gamePhase):
     print('cycle reinit ran')
@@ -434,50 +434,50 @@ def cycleReinit(gamePhase):
         teleHighGoal.reinit()
         print('tele reinitialized')
 #
-def sendMainToDatabase(cards):
-    global lowGoalMisses
-    global highGoalMisses
-    global lowGoalMakes
-    global innerGoalMakes
-    global outerGoalMakes
-    match_dbconn.setMatchScout(match_no, 
-                               teamno,
-                               scoutName.get(),
-                               teamnum.get(),
-                               autoStartPos.get(),
-                               crossLine_State.get(),
-                               autoShooterPos.get(),
-                               lowGoalMisses[0],
-                               highGoalMisses[0],
-                               lowGoalMakes[0],
-                               outerGoalMakes[0],
-                               innerGoalMakes[0],
-                               autoBallsPickedUp.point,
-                               autoFoul.point,
-                               autoTechFoul.point,
-                               shooterPos.get(),
-                               lowGoalMisses[1],
-                               highGoalMisses[1],
-                               lowGoalMakes[1],
-                               outerGoalMakes[1],
-                               innerGoalMakes[1],
-                               teleFoul.point,
-                               teleTechFoul.point,
-                               defense_State.get(),
-                               rotationalControl.get(),
-                               positionalControl.get(),
-                               fellOffBar_State.get(),
-                               buddyClimb_State.get(),
-                               hitOpponent_State.get(),
-                               leveledBar_State.get(),
-                               climbFrom.get(),
-                               barLevel.get(),
-                               deadbot_State.get(),
-                               comments.get("1.0", END),
-                               tippedOver_State.get(),
-                               recoveredFromDead_State.get(),
-                               cards
-                               )
+#def sendMainToDatabase(cards):
+#    global lowGoalMisses
+#    global highGoalMisses
+#    global lowGoalMakes
+#    global innerGoalMakes
+#    global outerGoalMakes
+#    match_dbconn.setMatchScout(match_no, 
+#                               teamno,
+#                               scoutName.get(),
+#                               teamnum.get(),
+#                               autoStartPos.get(),
+#                               crossLine_State.get(),
+#                               autoShooterPos.get(),
+#                               lowGoalMisses[0],
+#                               highGoalMisses[0],
+#                               lowGoalMakes[0],
+#                               outerGoalMakes[0],
+#                               innerGoalMakes[0],
+#                               autoBallsPickedUp.point,
+#                               autoFoul.point,
+#                               autoTechFoul.point,
+#                               shooterPos.get(),
+#                               lowGoalMisses[1],
+#                               highGoalMisses[1],
+#                               lowGoalMakes[1],
+#                               outerGoalMakes[1],
+#                               innerGoalMakes[1],
+#                               teleFoul.point,
+#                               teleTechFoul.point,
+#                               defense_State.get(),
+#                               rotationalControl.get(),
+#                               positionalControl.get(),
+#                               fellOffBar_State.get(),
+#                               buddyClimb_State.get(),
+#                               hitOpponent_State.get(),
+#                               leveledBar_State.get(),
+#                               climbFrom.get(),
+#                               barLevel.get(),
+#                               deadbot_State.get(),
+#                               comments.get("1.0", END),
+#                               tippedOver_State.get(),
+#                               recoveredFromDead_State.get(),
+#                               cards
+#                               )
 
 #def popup_keyboard(event):
 ##    os.popen('matchbox-keyboard','r',4096)
@@ -488,53 +488,53 @@ def sendMainToDatabase(cards):
 #    sleep(0.5)
 #    os.popen('/usr/bin/florence')
     
-def sendCycleToDatabase(gamePhase):
-    print('send to database function ran')
-    global autoCycles
-    global teleCycles
-    global lowGoalMisses
-    global highGoalMisses
-    global lowGoalMakes
-    global innerGoalMakes
-    global outerGoalMakes
-    if gamePhase == 0: 
-        lowGoalMisses[0] += autoLow.shotsMissed
-        highGoalMisses[0] += autoHigh.shotsMissed
-        lowGoalMakes[0] += autoLow.shotsMade
-        outerGoalMakes[0] += autoHigh.outerShotsMade
-        innerGoalMakes[0] += autoHigh.innerShotsMade
-        
-        match_dbconn.setMatchCycle(autoCycles,
-                                   match_no, 
-                                   teamno, 
-                                   autoShooterPos.get(),
-                                   autoLow.shotsMissed,
-                                   autoHigh.shotsMissed,
-                                   autoLow.shotsMade,
-                                   autoHigh.outerShotsMade,
-                                   autoHigh.innerShotsMade,
-                                   gamePhase)
-        print('Sent auto to database')
-        autoCycles = (autoCycles+1)
-        print('increment autoCycles complete')
-    else: 
-        lowGoalMisses[1] += teleLowGoal.shotsMissed
-        highGoalMisses[1] += teleHighGoal.shotsMissed
-        lowGoalMakes[1] += teleLowGoal.shotsMade
-        outerGoalMakes[1] += teleHighGoal.outerShotsMade
-        innerGoalMakes[1] += teleHighGoal.innerShotsMade
-        match_dbconn.setMatchCycle(teleCycles,
-                                   match_no, 
-                                   teamno, 
-                                   shooterPos.get(),
-                                   teleLowGoal.shotsMissed,
-                                   teleHighGoal.shotsMissed,
-                                   teleLowGoal.shotsMade,
-                                   teleHighGoal.outerShotsMade,
-                                   teleHighGoal.innerShotsMade,
-                                   gamePhase)
-        print('sent tele cycles to database')
-        teleCycles = (teleCycles+1)
+#def sendCycleToDatabase(gamePhase):
+#    print('send to database function ran')
+#    global autoCycles
+#    global teleCycles
+#    global lowGoalMisses
+#    global highGoalMisses
+#    global lowGoalMakes
+#    global innerGoalMakes
+#    global outerGoalMakes
+#    if gamePhase == 0: 
+#        lowGoalMisses[0] += autoLow.shotsMissed
+#        highGoalMisses[0] += autoHigh.shotsMissed
+#        lowGoalMakes[0] += autoLow.shotsMade
+#        outerGoalMakes[0] += autoHigh.outerShotsMade
+#        innerGoalMakes[0] += autoHigh.innerShotsMade
+#        
+#        match_dbconn.setMatchCycle(autoCycles,
+#                                   match_no, 
+#                                   teamno, 
+#                                   autoShooterPos.get(),
+#                                   autoLow.shotsMissed,
+#                                   autoHigh.shotsMissed,
+#                                   autoLow.shotsMade,
+#                                   autoHigh.outerShotsMade,
+#                                   autoHigh.innerShotsMade,
+#                                   gamePhase)
+#        print('Sent auto to database')
+#        autoCycles = (autoCycles+1)
+#        print('increment autoCycles complete')
+#    else: 
+#        lowGoalMisses[1] += teleLowGoal.shotsMissed
+#        highGoalMisses[1] += teleHighGoal.shotsMissed
+#        lowGoalMakes[1] += teleLowGoal.shotsMade
+#        outerGoalMakes[1] += teleHighGoal.outerShotsMade
+#        innerGoalMakes[1] += teleHighGoal.innerShotsMade
+#        match_dbconn.setMatchCycle(teleCycles,
+#                                   match_no, 
+#                                   teamno, 
+#                                   shooterPos.get(),
+#                                   teleLowGoal.shotsMissed,
+#                                   teleHighGoal.shotsMissed,
+#                                   teleLowGoal.shotsMade,
+#                                   teleHighGoal.outerShotsMade,
+#                                   teleHighGoal.innerShotsMade,
+#                                   gamePhase)
+#        print('sent tele cycles to database')
+#        teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHighGoal.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHighGoal.outerShotsMade == 0 and teleHighGoal.innerShotsMade == 0):
@@ -544,7 +544,7 @@ def sendCycleData(gamePhase):
         
     else:
         #send data
-        sendCycleToDatabase(gamePhase)
+#        sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
     print('done!')
 
@@ -559,23 +559,23 @@ def getCardValue():
         cardValue=2
     return cardValue
 #                         
-def sendMainData():
-    global autoCycles
-    global teleCycles
-    sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
-    if sendMSG is True and dontUseThisData_State.get() is False:
-        if  (teleLowGoal.shotsMissed != 0 or teleHighGoal.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHighGoal.outerShotsMade != 0 or teleHighGoal.innerShotsMade != 0):
-            sendCycleData(1)
-        if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
-            sendCycleData(0)
-        autoCycles = 0
-        teleCycles = 0
-        sendMainToDatabase(getCardValue())
-        reinitscreen()
-    elif sendMSG is True and dontUseThisData_State.get() is True:
-        autoCycles = 0
-        teleCycles = 0
-        reinitscreen()
+#def sendMainData():
+#    global autoCycles
+#    global teleCycles
+#    sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
+#    if sendMSG is True and dontUseThisData_State.get() is False:
+#        if  (teleLowGoal.shotsMissed != 0 or teleHighGoal.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHighGoal.outerShotsMade != 0 or teleHighGoal.innerShotsMade != 0):
+#            sendCycleData(1)
+#        if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
+#            sendCycleData(0)
+#        autoCycles = 0
+#        teleCycles = 0
+#        sendMainToDatabase(getCardValue())
+#        reinitscreen()
+#    elif sendMSG is True and dontUseThisData_State.get() is True:
+#        autoCycles = 0
+#        teleCycles = 0
+#        reinitscreen()
 #        
 #def screenClear():
 #    pass
@@ -698,32 +698,38 @@ startPosLabel.image=startPosPhoto
 startPosLabel.grid(column=0, row=5, columnspan=5)
 
 #auto screen
+autoMissesLBL = Label(auto, text='Misses')
+autoMissesLBL.grid(column=1, row=0, columnspan=5)
+
+autoMakesLBL = Label(auto, text='Makes')
+autoMakesLBL.grid(column=7, row=0, columnspan=5)
+
 crossLine_State = BooleanVar(False)
 crossLine = Checkbutton(auto, text='Crossed Start Line?', var=crossLine_State)
-crossLine.grid(row=6, column=7, columnspan=5)
+crossLine.grid(row=8, column=7, columnspan=5, ipadx=30)
 
 telePrep_State = BooleanVar(False)
 telePrep = Checkbutton(auto, text='Prepared for Teleop?', var=telePrep_State)
-telePrep.grid(row=7, column=7, columnspan=5)
+telePrep.grid(row=9, column=7, columnspan=5, ipadx=30)
 
-autoFoul = CounterClass(auto, 3, 6, 'Foul', 0, 6, 3)
-autoTechFoul = CounterClass(auto, 3, 7, 'Tech Foul', 0, 11, 3)
-autoLow = lowGoalCounterClass(auto, 1, 1, 'Low', 0, 1)
-autoHigh = highGoalCounterClass(auto, 1, 2, 'High', 0, 2)
-autoBallsPickedUp = CounterClass(auto, 3, 5, 'Balls Picked Up', 0, 5, 3)
+autoFoul = CounterClass(auto, 4, 7, '       Foul', 0, 7, 3)
+autoTechFoul = CounterClass(auto, 4, 8, '     Tech Foul', 0, 8, 3)
+autoLow = lowGoalCounterClass(auto, 3, 1, '     Low', 0, 1)
+autoHigh = highGoalCounterClass(auto, 3, 2, '     High', 0, 2)
+autoBallsPickedUp = CounterClass(auto, 4, 6, 'Balls Picked Up', 0, 6, 3)
 
 autoShooterPos = Label(auto, text='Shooter Position')
-autoShooterPos.grid(column=0, row=4, columnspan=6)
+autoShooterPos.grid(column=0, row=4, columnspan=6, ipady=15, ipadx=10)
 autoShooterPos = ttk.Combobox(auto)
 autoShooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 autoShooterPos.current(0)
-autoShooterPos.grid(column= 6, row= 4, columnspan= 1)
+autoShooterPos.grid(column= 5, row= 4, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
 
 
 autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
-autoEnter.grid(row=4, column=7, rowspan=2, columnspan=5)
+autoEnter.grid(row=4, column=7, rowspan=4, columnspan=6, ipady=15, ipadx=15)
 
 #reference image
 image = Image.open('Reference Image.jpg')
@@ -743,8 +749,8 @@ shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
 
 #TELEOP pagE
             
-teleFoul = CounterClass(tele, 3, 10, 'Foul', 0, 10)
-teleTechFoul = CounterClass(tele, 9, 10, 'Tech Foul', 6, 10)
+teleFoul = CounterClass(tele, 3, 10, 'Foul', 0, 10, 1)
+teleTechFoul = CounterClass(tele, 9, 10, 'Tech Foul', 6, 10, 1)
 teleLowGoal = lowGoalCounterClass(tele, 3, 1, 'Low', 0, 1)
 teleHighGoal = highGoalCounterClass(tele, 3, 2, 'Inner', 0, 2)
 teleHighGoalLBL = Label(tele, text= 'Outer')
@@ -862,15 +868,15 @@ dontUseThisData_State = BooleanVar(False)
 dontUseThisData = Checkbutton(postMatch, text="Don't use this data", var=dontUseThisData_State)
 dontUseThisData.grid(column= 0, row= 5)
 
-send = Button(postMatch, text='Send to database', command=sendMainData)
-send.grid(row=5, column=2, ipady=13, ipadx=80)
-
-if len(sys.argv) > 1:
-   position = sys.argv[1]
-else:
-   position='R1'
-match_no='2'
-getNextMatch()
+#send = Button(postMatch, text='Send to database', command=sendMainData)
+#send.grid(row=5, column=2, ipady=13, ipadx=80)
+#
+#if len(sys.argv) > 1:
+#   position = sys.argv[1]
+#else:
+#   position='R1'
+#match_no='2'
+#getNextMatch()
 
 
 window.mainloop()
