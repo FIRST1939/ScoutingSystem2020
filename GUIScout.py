@@ -765,11 +765,11 @@ rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
 #
 positionalControlLBL = Label(tele, text='Has Positional Control?')
-positionalControlLBL.grid(column=8, row=9, columnspan=5)
+positionalControlLBL.grid(column=6, row=9, columnspan=5)
 positionalControl = ttk.Combobox(tele)
 positionalControl['values']= ("No attempt", "No", "Yes")
 positionalControl.current(0)
-positionalControl.grid(column= 13, row= 9, columnspan=5)
+positionalControl.grid(column= 9, row= 9, columnspan=5)
 positionalControl.config(width= 5)
 
 shooterPosLBL = Label(tele, text='Shooter Position')
@@ -781,19 +781,16 @@ shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 shooterPos.bind("<<ComboboxSelected>>", telePositionSet )
 
-teleTakenLBL = Label(tele, text='Shots Missed')
+teleTakenLBL = Label(tele, text='Missed')
 teleTakenLBL.grid(column=1, row=0, columnspan=5)
 
-teleMadeLBL = Label(tele, text='Shots Made')
+teleMadeLBL = Label(tele, text='Made')
 teleMadeLBL.grid(column=7, row=0, columnspan=5)
 
-defense_State = BooleanVar(False)
-defense = Checkbutton(tele, text='Played Defense?', var=defense_State)
-defense.grid(column= 13, row= 10, columnspan=5)
 
+teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(0))
+teleEnter.grid(row=5, column=4, rowspan=4, columnspan=6, ipady=15, ipadx=15)
 
-teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(1))
-teleEnter.grid(row=8, column=13, ipady=13, ipadx=80)
 
 #End Game
 
@@ -840,7 +837,7 @@ formattingLabel = Label(endGame, text='                                ').grid(r
 
 deadbot_State = BooleanVar(False)
 deadbot = Checkbutton(postMatch, text='Deadbot?', var=deadbot_State)
-deadbot.grid(column= 0, row= 0)
+deadbot.grid(column= 0, row= 0, ipady=20)
 
 recoveredFromDead_State = BooleanVar(False)
 recoveredFromDead = Checkbutton(postMatch, text='Recovered from dead?', var=recoveredFromDead_State)
@@ -848,28 +845,33 @@ recoveredFromDead.grid(column= 2, row= 0)
 
 tippedOver_State = BooleanVar(False)
 tippedOver = Checkbutton(postMatch, text='Tipped Over?', var=tippedOver_State)
-tippedOver.grid(column= 0, row= 2)
+tippedOver.grid(column= 3, row= 0)
 
 yellowCard_State = BooleanVar(False)
 yellowCard = Checkbutton(postMatch, text='Yellow Card?', var=yellowCard_State)
-yellowCard.grid(column= 0, row= 3)
+yellowCard.grid(column= 3, row= 5)
 
 redCard_State = BooleanVar(False)
 redCard = Checkbutton(postMatch, text='Red Card?', var=redCard_State)
-redCard.grid(column= 2, row= 3)
+redCard.grid(column= 3, row= 6, ipady=5)
 
-comments= Text(postMatch, width=80, height=4)
-comments.grid(column=2, row=4, columnspan=2)
+comments= Text(postMatch, width=40, height=4)
+comments.grid(column=1, row=5, columnspan=2)
 #comments.bind('<Button-1>', popup_keyboard)
 commentsLBL = Label(postMatch, text='Comments:')
-commentsLBL.grid(column=1, row=4, ipady=21)
+commentsLBL.grid(column=0, row=5, ipady=15)
 
 dontUseThisData_State = BooleanVar(False)
 dontUseThisData = Checkbutton(postMatch, text="Don't use this data", var=dontUseThisData_State)
-dontUseThisData.grid(column= 0, row= 5)
+dontUseThisData.grid(column= 0, row= 11, ipady=15)
+
+defense_State = BooleanVar(False)
+defense = Checkbutton(postMatch, text='Played Defense?', var=defense_State)
+defense.grid(column= 0, row= 8, ipady=20)
+
 
 #send = Button(postMatch, text='Send to database', command=sendMainData)
-#send.grid(row=5, column=2, ipady=13, ipadx=80)
+#send.grid(row=8, column=2)
 #
 #if len(sys.argv) > 1:
 #   position = sys.argv[1]
