@@ -322,6 +322,8 @@ class highGoalCounterClass:
 #            self.shotsMissed -=5
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
+#            if self.outerShotsMade <=5 and outerMadeNeg5()=True:
+#                self.outerMadeDisplayLabel =0
         else:
             self.outerShotsMade = 0
 #            self.shotsMissed = 0
@@ -417,13 +419,13 @@ def cycleReinit(gamePhase):
         
     else:
         teleLowGoal.shotsMissed = 0
-        teleHighGoal.shotsMissed = 0
+        teleHigh.shotsMissed = 0
         teleLowGoal.shotsMade = 0
-        teleHighGoal.innerShotsMade = 0
-        teleHighGoal.outerShotsMade = 0
+        teleHigh.innerShotsMade = 0
+        teleHigh.outerShotsMade = 0
         teleCycles += 1
         teleLowGoal.reinit()
-        teleHighGoal.reinit()
+        teleHigh.reinit()
         print('tele reinitialized')
 #
 def sendMainToDatabase(cards):
@@ -511,36 +513,35 @@ def sendCycleToDatabase(gamePhase):
         print('increment autoCycles complete')
     else: 
         lowGoalMisses[1] += teleLowGoal.shotsMissed
-        highGoalMisses[1] += teleHighGoal.shotsMissed
+        highGoalMisses[1] += teleHigh.shotsMissed
         lowGoalMakes[1] += teleLowGoal.shotsMade
-        outerGoalMakes[1] += teleHighGoal.outerShotsMade
-        innerGoalMakes[1] += teleHighGoal.innerShotsMade
+        outerGoalMakes[1] += teleHigh.outerShotsMade
+        innerGoalMakes[1] += teleHigh.innerShotsMade
         match_dbconn.setMatchCycle(teleCycles,
                                    match_no, 
                                    teamno, 
                                    shooterPos.get(),
                                    teleLowGoal.shotsMissed,
-                                   teleHighGoal.shotsMissed,
+                                   teleHigh.shotsMissed,
                                    teleLowGoal.shotsMade,
-                                   teleHighGoal.outerShotsMade,
-                                   teleHighGoal.innerShotsMade,
+                                   teleHigh.outerShotsMade,
+                                   teleHigh.innerShotsMade,
                                    gamePhase)
         print('sent tele cycles to database')
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
-    if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHighGoal.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHighGoal.outerShotsMade == 0 and teleHighGoal.innerShotsMade == 0):
+    if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
-        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
-        
+        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
     else:
 #        send data
         sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
-    print('done!')
+        messagebox.showinfo('Cycle submission','Cycle submission worked')
 
-    reinitialize cycle 
+    #reinitialize cycle 
     sendCycleToDatabase(gamePhase)
 #
 def getCardValue():
@@ -556,7 +557,7 @@ def sendMainData():
     global teleCycles
     sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
     if sendMSG is True and dontUseThisData_State.get() is False:
-        if  (teleLowGoal.shotsMissed != 0 or teleHighGoal.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHighGoal.outerShotsMade != 0 or teleHighGoal.innerShotsMade != 0):
+        if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
         if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
             sendCycleData(0)
@@ -744,9 +745,7 @@ shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
 teleFoul = CounterClass(tele, 3, 10, 'Foul', 0, 10, 1)
 teleTechFoul = CounterClass(tele, 9, 10, 'Tech Foul', 6, 10, 1)
 teleLowGoal = lowGoalCounterClass(tele, 3, 1, 'Low', 0, 1)
-teleHighGoal = highGoalCounterClass(tele, 3, 2, 'Inner', 0, 2)
-teleHighGoalLBL = Label(tele, text= 'Outer')
-teleHighGoalLBL.grid(column=0, row=3)
+teleHigh = highGoalCounterClass(tele, 3, 2, 'High', 0, 2)
 
 rotationalControlLBL = Label(tele, text='Has Rotational Control?')
 rotationalControlLBL.grid(column=0, row=9, ipady=23)
@@ -780,7 +779,7 @@ teleMadeLBL = Label(tele, text='Made')
 teleMadeLBL.grid(column=7, row=0, columnspan=5)
 
 
-teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(0))
+teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(1))
 teleEnter.grid(row=5, column=4, rowspan=4, columnspan=6, ipady=15, ipadx=15)
 
 
@@ -812,6 +811,13 @@ barLevel['values']= ("Any Position When It Was Leveled", "Middle Of The Bar", "H
 barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
 barLevel.config(width= 25)
+#def comboBoxBarLevel(barLevel):
+#    if barLevel['values']= ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
+#        barLevel['values']=True
+#    else:
+#        barLevel['values']=False
+#        if barLevel['values']=False:
+#            barLevel['values']=('')
 
 climbFrom = IntVar()
 climbFromLBL = Label(endGame, text='Where on the bar did they climb?')
