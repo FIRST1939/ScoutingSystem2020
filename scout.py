@@ -527,7 +527,7 @@ def sendCycleToDatabase(gamePhase):
                                    teleHigh.outerShotsMade,
                                    teleHigh.innerShotsMade,
                                    gamePhase)
-        print('sent tele cycles to database')
+        print('Sent tele cycles to database')
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
@@ -556,6 +556,14 @@ def sendMainData():
     global autoCycles
     global teleCycles
     sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
+    if comboBoxBarLevel():
+        sendMSG = False
+    if comboBoxAutoShooterPos():
+        sendMSG = False
+    if comboBoxReferenceShooterPos():
+        sendMSG = False
+    if comboBoxRotationalCont():
+        sendMSG = False
     if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
@@ -719,6 +727,12 @@ autoShooterPos.current(0)
 autoShooterPos.grid(column= 5, row= 4, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
+def comboBoxAutoShooterPos():
+    if autoShooterPos['values']== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for auto shooter position')
+        return True
 
 
 autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
@@ -739,6 +753,12 @@ shooterPosRef.current(0)
 shooterPosRef.pack(side=RIGHT)
 shooterPosRef.config(width= 5)
 shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
+def comboBoxReferenceShooterPos():
+    if shooterPosRef['values']== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for reference shooter position')
+        return True
 
 #TELEOP pagE
             
@@ -754,6 +774,13 @@ rotationalControl['values']= ("No attempt","No", "Yes")
 rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
+
+def comboBoxRotationalCont():
+    if rotationalControl['values']== ("No attempt"or"No"or "Yes"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for rotational control')
+        return True
 #
 positionalControlLBL = Label(tele, text='Has Positional Control?')
 positionalControlLBL.grid(column=6, row=9, columnspan=5)
@@ -811,13 +838,12 @@ barLevel['values']= ("Any Position When It Was Leveled", "Middle Of The Bar", "H
 barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
 barLevel.config(width= 25)
-#def comboBoxBarLevel(barLevel):
-#    if barLevel['values']= ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
-#        barLevel['values']=True
-#    else:
-#        barLevel['values']=False
-#        if barLevel['values']=False:
-#            barLevel['values']=('')
+def comboBoxBarLevel():
+    if barLevel['values']== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for Bar Level')
+        return True
 
 climbFrom = IntVar()
 climbFromLBL = Label(endGame, text='Where on the bar did they climb?')
