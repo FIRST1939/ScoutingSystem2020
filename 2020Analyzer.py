@@ -89,6 +89,8 @@ def combineColumn(scoutData):
         
     scoutData['lowGoalAttemptsAuto']=scoutData['lowGoalMissesAuto']+scoutData['lowGoalMakesAuto']
     
+    scoutData['teleMakes']=scoutData['innerGoalMakesTele']+scoutData['outerGoalMakesTele']+scoutData['lowGoalMakesTele']
+    
     scoutData['lowGoalAttemptsTele']=scoutData['lowGoalMissesTele']+scoutData['lowGoalMakesTele']
     
     scoutData['lowGoalAttempts']=scoutData['lowGoalAttemptsAuto']+scoutData['lowGoalAttemptsTele']
@@ -195,7 +197,10 @@ def readScout():
     Read Scouting Data from a file, fix formatting to numeric where neccessary,
     clean the data, report any implausibile data.  
     '''
+   # if testmode :
+    #    FileName = r'C:\Users\Saketh\Documents\GitHub\2019-Scouting-Analyzer\MatchScoutForOtherTeams.csv'
 
+<<<<<<< Updated upstream
     print('entered readScout')
 
     FileName = filedialog.askopenfilename(title = 'select Data file')
@@ -229,6 +234,29 @@ def readScout():
         return maindf, cycledf
 
 
+=======
+    FileName = filedialog.askopenfilename(title = 'select Main Data file')
+    with open(FileName, 'r') as ScoutFile:
+        mainDf = pd.read_csv(ScoutFile, sep = '|') 
+    mainDf = mainDf.fillna(value = 0)
+    
+    FileName = filedialog.askopenfilename(title = 'select Cycle Data file')
+    with open(FileName, 'r') as ScoutFile:
+        cycleData = pd.read_csv(ScoutFile, sep = '|') 
+    cycleDf = cycleData.fillna(value = 0)
+    return mainDf, cycleDf
+
+def readPitScout():
+    FileName = filedialog.askopenfilename(title = 'select pit scouting data file')
+    with open(FileName, 'r') as ScoutFile:
+        pitData = pd.read_csv(ScoutFile, sep = ',') 
+    pitDf = pitData.fillna(value = 0)
+    return pitDf
+
+
+
+    
+>>>>>>> Stashed changes
 def FindPartners(Matchlist, team = 1939):    
     '''
     Takes the Match List from the entire competition and finds the matches we're
@@ -690,6 +718,42 @@ def getTeamScatterplot(team, df):
     plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["telehatch"]], color="red")
     plt.ylabel('HP')
 
+<<<<<<< Updated upstream
+=======
+def getDfTeamList(df):
+    return(df['teamNo'].drop_duplicates())
+
+def getPicklistBoxplot(df, yvars, teamList):
+    df = df.sort_values('teamNo', ascending=True)
+    df.set_index('teamNo', inplace = True)
+    data = []
+    dataArr = []
+    k=0
+    for team in teamList:
+        data.append(df.loc[[team], [yvars]].get_values())
+
+    for i in data:
+        dataArr.append([])
+        for j in i:
+            dataArr[k].append(j[0])
+    return(dataArr)#.set_xticklabels(teamList.get_values()))
+def getFirstDayReportExcel(mainDf):
+    
+    #
+    
+    mainDf, cycleDf = readScout()
+    pitDf = readPitScout()
+    combineColumn(mainDf)
+    mainDf_avgpivot = pd.pivot_table(mainDf, index= ['teamNo'], values=['totalMakes', 'autoMakes', 'teleTotal'], aggfunc=np.average)
+    mainDf_min = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=min)
+    mainDf_max = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=max)
+    mainDf_nonzerocount = pd.pivot_table(mainDf, index=['index'], values=['matchNo', 'defense', 'cards'], aggfunc=np.count_nonzero)
+    merged = [mainDf_avgpivot,mainDf_min,mainDf_max,mainDf_nonzerocount]
+    
+    return pd.concat(merged)
+    
+    
+>>>>>>> Stashed changes
 def Main(testmode):
     print('press 1 to acquire a Match List')
     print('press 2 to get a prematch Scouting Report')
@@ -706,7 +770,7 @@ def Main(testmode):
         
     elif selection == '2':
         Team = enterTeam()       
-        ReadData = readScout()
+        ReadData, CycleData = readScout()
         MatchList = readMatchList()
         TeamDf, PivotDf = TeamStats(ReadData)
         Partners = FindPartners(MatchList, Team)
@@ -727,7 +791,8 @@ def Main(testmode):
     elif selection == '4':
         ReadData = readScout()
         TeamDf, PivotDf = TeamStats(ReadData)
-        Day1Report(TeamDf, PivotDf)
+        print()
+        #Day1Report(TeamDf, PivotDf)
     elif selection == '5':
         ReadData = readScout()
         TeamDf, PivotDf = TeamStats(ReadData)
@@ -763,4 +828,6 @@ def Main(testmode):
         print(PivotDf)
         
         
-Main(True)
+#Main(True)
+mainDf, cycleDf = readScout()
+pprint(combineColumn(mainDf))
