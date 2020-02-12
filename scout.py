@@ -1,14 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 16 17:41:34 2020
-
-@author: caroline
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Thu Jan 16 16:34:18 2020
 
 @author: caroline
@@ -32,8 +24,8 @@ from tkinter import messagebox
 from tkinter import END
 import match_dbconn
 import sys
-#import psutil
-#from time import sleep
+import psutil
+from time import sleep
 from PIL import ImageTk, Image
 
 #global vars
@@ -79,7 +71,7 @@ class CounterClass:
         self.Neg1Button = Button(self.app, text = "-", command=self.neg1, bg="red4")
         self.Neg1Button.grid(column = (self.x-1), row = y)
 
-#        self.root.mainloop()
+        #self.root.mainloop()
     
         
    
@@ -110,7 +102,7 @@ class lowGoalCounterClass:
         self.textY = textY
         
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY)
-        self.spaceLBL = Label(self.app, text='   Low  ').grid(column=x+3, row=y)
+        self.spaceLBL = Label(self.app, text='                        Low  ').grid(column=x+3, row=y)
 
         self.madeDisplayLabel = Label(self.app, text = self.shotsMade)
         self.madeDisplayLabel.grid(column = (self.x+6), row = self.y)
@@ -145,7 +137,7 @@ class lowGoalCounterClass:
         self.takenNeg5Button = Button(self.app, text = "-5", command=self.takenNeg5, bg="red4")
         self.takenNeg5Button.grid(column = (self.x-2), row = y)
 
-#        self.root.mainloop()
+        #self.root.mainloop()
     
         
    
@@ -229,8 +221,8 @@ class highGoalCounterClass:
         self.textY = textY
         
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY)
-        self.spaceLBL = Label(self.app, text='  Outer ').grid(column=x+3, row=y+1)
-        self.spaceLBL2 = Label(self.app, text='  Inner ').grid(column=x+3, row=y)
+        self.spaceLBL = Label(self.app, text='                        Outer ').grid(column=x+3, row=y+1)
+        self.spaceLBL2 = Label(self.app, text='                        Inner ').grid(column=x+3, row=y)
        
 #inner made
         self.innerMadeDisplayLabel = Label(self.app, text = self.innerShotsMade)
@@ -394,7 +386,7 @@ def getTeam():
     print(team_no)
     global teamno
     teamno = team_no
-#    
+    
 def getNextMatch():
    new_match_no = match_dbconn.getNextMatch();
    print('new match %s',new_match_no)
@@ -543,13 +535,13 @@ def sendCycleData(gamePhase):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
         
     else:
-        #send data
+#        send data
         sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
     print('done!')
 
-    #reinitialize cycle 
-#    sendCycleToDatabase(gamePhase)
+    reinitialize cycle 
+    sendCycleToDatabase(gamePhase)
 #
 def getCardValue():
     cardValue=0
@@ -576,9 +568,9 @@ def sendMainData():
         autoCycles = 0
         teleCycles = 0
         reinitscreen()
-#        
-#def screenClear():
-#    pass
+        
+def screenClear():
+    pass
 #
 def reinitscreen():
     #auto tab
@@ -698,32 +690,38 @@ startPosLabel.image=startPosPhoto
 startPosLabel.grid(column=0, row=5, columnspan=5)
 
 #auto screen
+autoMissesLBL = Label(auto, text='Misses')
+autoMissesLBL.grid(column=1, row=0, columnspan=5)
+
+autoMakesLBL = Label(auto, text='Makes')
+autoMakesLBL.grid(column=7, row=0, columnspan=5)
+
 crossLine_State = BooleanVar(False)
 crossLine = Checkbutton(auto, text='Crossed Start Line?', var=crossLine_State)
-crossLine.grid(row=6, column=7, columnspan=5)
+crossLine.grid(row=8, column=7, columnspan=5, ipadx=30)
 
 telePrep_State = BooleanVar(False)
 telePrep = Checkbutton(auto, text='Prepared for Teleop?', var=telePrep_State)
-telePrep.grid(row=7, column=7, columnspan=5)
+telePrep.grid(row=9, column=7, columnspan=5, ipadx=30)
 
-autoFoul = CounterClass(auto, 3, 6, 'Foul', 0, 6, 3)
-autoTechFoul = CounterClass(auto, 3, 7, 'Tech Foul', 0, 11, 3)
-autoLow = lowGoalCounterClass(auto, 1, 1, 'Low', 0, 1)
-autoHigh = highGoalCounterClass(auto, 1, 2, 'High', 0, 2)
-autoBallsPickedUp = CounterClass(auto, 3, 5, 'Balls Picked Up', 0, 5, 3)
+autoFoul = CounterClass(auto, 4, 7, '       Foul', 0, 7, 3)
+autoTechFoul = CounterClass(auto, 4, 8, '     Tech Foul', 0, 8, 3)
+autoLow = lowGoalCounterClass(auto, 3, 1, '     Low', 0, 1)
+autoHigh = highGoalCounterClass(auto, 3, 2, '     High', 0, 2)
+autoBallsPickedUp = CounterClass(auto, 4, 6, 'Balls Picked Up', 0, 6, 3)
 
 autoShooterPos = Label(auto, text='Shooter Position')
-autoShooterPos.grid(column=0, row=4, columnspan=6)
+autoShooterPos.grid(column=0, row=4, columnspan=6, ipady=15, ipadx=10)
 autoShooterPos = ttk.Combobox(auto)
 autoShooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 autoShooterPos.current(0)
-autoShooterPos.grid(column= 6, row= 4, columnspan= 1)
+autoShooterPos.grid(column= 5, row= 4, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
 
 
 autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
-autoEnter.grid(row=4, column=7, rowspan=2, columnspan=5)
+autoEnter.grid(row=4, column=7, rowspan=4, columnspan=6, ipady=15, ipadx=15)
 
 #reference image
 image = Image.open('Reference Image.jpg')
@@ -743,8 +741,8 @@ shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
 
 #TELEOP pagE
             
-teleFoul = CounterClass(tele, 3, 10, 'Foul', 0, 10)
-teleTechFoul = CounterClass(tele, 9, 10, 'Tech Foul', 6, 10)
+teleFoul = CounterClass(tele, 3, 10, 'Foul', 0, 10, 1)
+teleTechFoul = CounterClass(tele, 9, 10, 'Tech Foul', 6, 10, 1)
 teleLowGoal = lowGoalCounterClass(tele, 3, 1, 'Low', 0, 1)
 teleHighGoal = highGoalCounterClass(tele, 3, 2, 'Inner', 0, 2)
 teleHighGoalLBL = Label(tele, text= 'Outer')
@@ -759,11 +757,11 @@ rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
 #
 positionalControlLBL = Label(tele, text='Has Positional Control?')
-positionalControlLBL.grid(column=8, row=9, columnspan=5)
+positionalControlLBL.grid(column=6, row=9, columnspan=5)
 positionalControl = ttk.Combobox(tele)
 positionalControl['values']= ("No attempt", "No", "Yes")
 positionalControl.current(0)
-positionalControl.grid(column= 13, row= 9, columnspan=5)
+positionalControl.grid(column= 9, row= 9, columnspan=5)
 positionalControl.config(width= 5)
 
 shooterPosLBL = Label(tele, text='Shooter Position')
@@ -775,19 +773,16 @@ shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 shooterPos.bind("<<ComboboxSelected>>", telePositionSet )
 
-teleTakenLBL = Label(tele, text='Shots Missed')
+teleTakenLBL = Label(tele, text='Missed')
 teleTakenLBL.grid(column=1, row=0, columnspan=5)
 
-teleMadeLBL = Label(tele, text='Shots Made')
+teleMadeLBL = Label(tele, text='Made')
 teleMadeLBL.grid(column=7, row=0, columnspan=5)
 
-defense_State = BooleanVar(False)
-defense = Checkbutton(tele, text='Played Defense?', var=defense_State)
-defense.grid(column= 13, row= 10, columnspan=5)
 
+teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(0))
+teleEnter.grid(row=5, column=4, rowspan=4, columnspan=6, ipady=15, ipadx=15)
 
-teleEnter = Button(tele, text='enter', command=lambda: sendCycleData(1))
-teleEnter.grid(row=8, column=13, ipady=13, ipadx=80)
 
 #End Game
 
@@ -834,7 +829,7 @@ formattingLabel = Label(endGame, text='                                ').grid(r
 
 deadbot_State = BooleanVar(False)
 deadbot = Checkbutton(postMatch, text='Deadbot?', var=deadbot_State)
-deadbot.grid(column= 0, row= 0)
+deadbot.grid(column= 0, row= 0, ipady=20)
 
 recoveredFromDead_State = BooleanVar(False)
 recoveredFromDead = Checkbutton(postMatch, text='Recovered from dead?', var=recoveredFromDead_State)
@@ -842,28 +837,33 @@ recoveredFromDead.grid(column= 2, row= 0)
 
 tippedOver_State = BooleanVar(False)
 tippedOver = Checkbutton(postMatch, text='Tipped Over?', var=tippedOver_State)
-tippedOver.grid(column= 0, row= 2)
+tippedOver.grid(column= 3, row= 0)
 
 yellowCard_State = BooleanVar(False)
 yellowCard = Checkbutton(postMatch, text='Yellow Card?', var=yellowCard_State)
-yellowCard.grid(column= 0, row= 3)
+yellowCard.grid(column= 3, row= 5)
 
 redCard_State = BooleanVar(False)
 redCard = Checkbutton(postMatch, text='Red Card?', var=redCard_State)
-redCard.grid(column= 2, row= 3)
+redCard.grid(column= 3, row= 6, ipady=5)
 
-comments= Text(postMatch, width=80, height=4)
-comments.grid(column=2, row=4, columnspan=2)
+comments= Text(postMatch, width=40, height=4)
+comments.grid(column=1, row=5, columnspan=2)
 #comments.bind('<Button-1>', popup_keyboard)
 commentsLBL = Label(postMatch, text='Comments:')
-commentsLBL.grid(column=1, row=4, ipady=21)
+commentsLBL.grid(column=0, row=5, ipady=15)
 
 dontUseThisData_State = BooleanVar(False)
 dontUseThisData = Checkbutton(postMatch, text="Don't use this data", var=dontUseThisData_State)
-dontUseThisData.grid(column= 0, row= 5)
+dontUseThisData.grid(column= 0, row= 11, ipady=15)
+
+defense_State = BooleanVar(False)
+defense = Checkbutton(postMatch, text='Played Defense?', var=defense_State)
+defense.grid(column= 0, row= 8, ipady=20)
+
 
 send = Button(postMatch, text='Send to database', command=sendMainData)
-send.grid(row=5, column=2, ipady=13, ipadx=80)
+send.grid(row=11, column=2)
 
 if len(sys.argv) > 1:
    position = sys.argv[1]
