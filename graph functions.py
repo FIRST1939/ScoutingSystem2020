@@ -9,6 +9,7 @@ import pandas as pd
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+from pprint import pprint
 
 def combineColumn(scoutData): 
     '''
@@ -146,11 +147,12 @@ def getPrematchScatterPlot(df, team, graphVar, ax):
     ax.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], [graphVar]], color="red")
     ax.set_title(graphVar)
 
-def cyclePivot(cycleDf, ax, team, graphVar):
-    cycleDf.set_index("teamNo", inplace=True)
-    
 
-def prematchGraphs(maindf, cycledf, team):
+def cyclePivot(cycleDf, cycleFilePath, ax, team, graphVar):
+    positionA = pd.pivot_table(pd.read_csv(cycleFilePath, sep = '|').set_index("teamNo").loc[[team]].set_index('shooterPosition').loc[['A'], ['matchNo', graphVar]], index=['matchNo'], aggfunc=sum)
+    pprint(positionA)
+
+def prematchGraphs(maindf, cycledf, cycleFilePath, team):
     df = combineColumn(maindf)
     df.set_index("teamNo", inplace = True)
     fig, gs = initMatchReportGraph()
@@ -166,6 +168,11 @@ def prematchGraphs(maindf, cycledf, team):
     plt.savefig(str(team) + ' Prematch Graphs')
     plt.show()
     
-df = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered data file'), sep = '|')
-#picklistBoxPlots(df)
-prematchGraphs(df, 'yeet', 2001)
+    
+mainFilePath = filedialog.askopenfilename(title = 'select main data file')
+cycleFilePath = filedialog.askopenfilename(title = 'select cycle data file')
+maindf = pd.read_csv(mainFilePath, sep = '|')
+#picklistBoxPlots(maindf)
+cycledf = pd.read_csv(cycleFilePath, sep = '|')
+#prematchGraphs(maindf, cycledf, cycleFilePath, 2001)
+cyclePivot(cycledf, cycleFilePath, 'yeet', 1939, 'lowGoalMisses')
