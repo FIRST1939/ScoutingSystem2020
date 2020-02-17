@@ -11,9 +11,9 @@ from tkinter import Tk
 from tkinter import Button
 from tkinter import Label
 from tkinter import Checkbutton
-from tkinter import Canvas
-from tkinter import BOTH
-from tkinter import RIGHT
+#from tkinter import Canvas
+#from tkinter import BOTH
+#from tkinter import RIGHT
 from tkinter import Text
 from tkinter import Radiobutton
 from tkinter import BooleanVar
@@ -76,8 +76,9 @@ class CounterClass:
         
    
     def plus1(self):
-        self.point += 1
-        self.DisplayLabel["text"]=str(self.point)
+        if self.point < 255:
+            self.point += 1
+            self.DisplayLabel["text"]=str(self.point)
 
         
     def neg1(self):
@@ -492,8 +493,10 @@ def sendCycleToDatabase(gamePhase):
     global innerGoalMakes
     global outerGoalMakes
     if gamePhase == 0: 
-        lowGoalMisses[0] += autoLow.shotsMissed
-        highGoalMisses[0] += autoHigh.shotsMissed
+        if lowGoalMisses[0] + autoLow.shotsMissed <= 255:
+            lowGoalMisses[0] += autoLow.shotsMissed
+        if highGoalMisses[0] + autoHigh.shotsMissed <= 255:
+            highGoalMisses[0] += autoHigh.shotsMissed
         lowGoalMakes[0] += autoLow.shotsMade
         outerGoalMakes[0] += autoHigh.outerShotsMade
         innerGoalMakes[0] += autoHigh.innerShotsMade
@@ -531,40 +534,40 @@ def sendCycleToDatabase(gamePhase):
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
-    sendCycle = False
-    if lowGoalMisses[0] > 255:
-        sendCycle = True
-    if highGoalMisses[0] > 255:
-        sendCycle = True
-    if lowGoalMakes[0] > 255:
-        sendCycle = True
-    if outerGoalMakes[0] > 255:
-        sendCycle = True
-    if innerGoalMakes[0] > 255:
-        sendCycle = True
-    if lowGoalMisses[1] > 255:
-        sendCycle = True
-    if highGoalMisses[1] > 255:
-        sendCycle = True
-    if lowGoalMakes[1] > 255:
-        sendCycle = True
-    if outerGoalMakes[1] > 255:
-        sendCycle = True
-    if innerGoalMakes[1] > 255:
-        sendCycle = True
+#    sendCycle = False
+#    if lowGoalMisses[0] > 255:
+#        sendCycle = True
+#    if highGoalMisses[0] > 255:
+#        sendCycle = True
+#    if lowGoalMakes[0] > 255:
+#        sendCycle = True
+#    if outerGoalMakes[0] > 255:
+#        sendCycle = True
+#    if innerGoalMakes[0] > 255:
+#        sendCycle = True
+#    if lowGoalMisses[1] > 255:
+#        sendCycle = True
+#    if highGoalMisses[1] > 255:
+#        sendCycle = True
+#    if lowGoalMakes[1] > 255:
+#        sendCycle = True
+#    if outerGoalMakes[1] > 255:
+#        sendCycle = True
+#    if innerGoalMakes[1] > 255:
+#        sendCycle = True
         
-    elif  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
+    if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
     else:
 #        send data
-        if sendCycle == False:
-            sendCycleToDatabase(gamePhase)
-            cycleReinit(gamePhase)
-            messagebox.showinfo('Cycle submission','Cycle submission complete :)')
-        else:
-            messagebox.showinfo('Cycle submission error','Unable to go over 255')
+#        if sendCycle == False:
+        sendCycleToDatabase(gamePhase)
+        cycleReinit(gamePhase)
+        messagebox.showinfo('Cycle submission','Cycle submission complete :)')
+#        else:
+#            messagebox.showinfo('Cycle submission error','Unable to go over 255')
 
     #reinitialize cycle 
     sendCycleToDatabase(gamePhase)
@@ -591,51 +594,51 @@ def sendMainData():
         sendMSG = False
     if comboBoxShooterPosTele():
         sendMSG = False
-    if lowGoalMisses[0] > 255:
-        sendMSG = False
-        messagebox.showinfo('low goal misses error','Unable to go over 255')
-    if highGoalMisses[0] > 255:
-        sendMSG = False
-        messagebox.showinfo('high goal misses error','Unable to go over 255')
-    if lowGoalMakes[0] > 255:
-        sendMSG = False
-        messagebox.showinfo('low goal makes error','Unable to go over 255')
-    if outerGoalMakes[0] > 255:
-        sendMSG = False
-        messagebox.showinfo('outer goal makes error','Unable to go over 255')
-    if innerGoalMakes[0] > 255:
-        sendMSG = False
-        messagebox.showinfo('inner goal makes error','Unable to go over 255')
-    if lowGoalMisses[1] > 255:
-        sendMSG = False
-        messagebox.showinfo('low goal misses error','Unable to go over 255')
-    if highGoalMisses[1] > 255:
-        sendMSG = False
-        messagebox.showinfo('high goal misses error','Unable to go over 255')
-    if lowGoalMakes[1] > 255:
-        sendMSG = False
-        messagebox.showinfo('low goal makes error','Unable to go over 255')
-    if outerGoalMakes[1] > 255:
-        sendMSG = False
-        messagebox.showinfo('outer goal makes error','Unable to go over 255')
-    if innerGoalMakes[1] > 255:
-        sendMSG = False
-        messagebox.showinfo('inner goal makes error','Unable to go over 255')
-    if autoBallsPickedUp.get > 255:
-        sendMSG = False
-        messagebox.showinfo('auto balls picked up error','Unable to go over 255')
-    if autoFoul.get > 255:
-        sendMSG = False
-        messagebox.showinfo('auto fouls error','Unable to go over 255')
-    if autoTechFoul.get > 255:
-        sendMSG = False
-        messagebox.showinfo('auto tech fouls error','Unable to go over 255')
-    if teleFoul.get > 255:
-        sendMSG = False
-        messagebox.showinfo('tele fouls error','Unable to go over 255')
-    if teleTechFoul.get > 255:
-        sendMSG = False
-        messagebox.showinfo('tele tech fouls error','Unable to go over 255')
+#    if lowGoalMisses[0] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('low goal misses error','Unable to go over 255')
+#    if highGoalMisses[0] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('high goal misses error','Unable to go over 255')
+#    if lowGoalMakes[0] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('low goal makes error','Unable to go over 255')
+#    if outerGoalMakes[0] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('outer goal makes error','Unable to go over 255')
+#    if innerGoalMakes[0] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('inner goal makes error','Unable to go over 255')
+#    if lowGoalMisses[1] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('low goal misses error','Unable to go over 255')
+#    if highGoalMisses[1] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('high goal misses error','Unable to go over 255')
+#    if lowGoalMakes[1] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('low goal makes error','Unable to go over 255')
+#    if outerGoalMakes[1] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('outer goal makes error','Unable to go over 255')
+#    if innerGoalMakes[1] > 255:
+#        sendMSG = False
+#        messagebox.showinfo('inner goal makes error','Unable to go over 255')
+#    if autoBallsPickedUp.get > 255:
+#        sendMSG = False
+#        messagebox.showinfo('auto balls picked up error','Unable to go over 255')
+#    if autoFoul.get > 255:
+#        sendMSG = False
+#        messagebox.showinfo('auto fouls error','Unable to go over 255')
+#    if autoTechFoul.get > 255:
+#        sendMSG = False
+#        messagebox.showinfo('auto tech fouls error','Unable to go over 255')
+#    if teleFoul.get > 255:
+#        sendMSG = False
+#        messagebox.showinfo('tele fouls error','Unable to go over 255')
+#    if teleTechFoul.get > 255:
+#        sendMSG = False
+#        messagebox.showinfo('tele tech fouls error','Unable to go over 255')
     if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
@@ -811,18 +814,22 @@ autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
 autoEnter.grid(row=4, column=7, rowspan=4, columnspan=6, ipady=15, ipadx=15)
 
 #reference image
-image = Image.open('Reference Image.jpg')
-canvas = Canvas(reference,width = 600, height = 360)
-photo = ImageTk.PhotoImage(image)
-canvas.pack(expand=True,fill=BOTH)
-canvas.create_image(300,190,image=photo)
+referenceImage=Image.open('Reference Image.jpg')
+referenceImage=ImageTk.PhotoImage(referenceImage)
 
-shooterPosLBLRef = Label(reference, text='Shooter Position')
-shooterPosLBLRef.pack(side=RIGHT)
+refImage=Image.open('Reference Image.jpg')
+refPhoto=ImageTk.PhotoImage(refImage)
+
+refLabel=Label(reference, image=referenceImage)
+refLabel.image=startPosPhoto
+refLabel.grid(column=0, row=0, columnspan=5, rowspan=5)
+
+shooterPosRef = Label(reference, text='Shooter Position')
+shooterPosRef.grid(column=7, row=1, columnspan=6, ipady=15, ipadx=10)
 shooterPosRef = ttk.Combobox(reference)
 shooterPosRef['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 shooterPosRef.current(0)
-shooterPosRef.pack(side=RIGHT)
+shooterPosRef.grid(column= 7, row= 2, columnspan= 1, ipady=5, ipadx=10)
 shooterPosRef.config(width= 5)
 shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
 
