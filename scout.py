@@ -531,37 +531,29 @@ def sendCycleToDatabase(gamePhase):
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
+    sendCycle = False
     if lowGoalMisses[0] > 255:
         sendCycle = True
-        messagebox.showinfo('low goal misses error','Unable to go over 255')
     if highGoalMisses[0] > 255:
         sendCycle = True
-        messagebox.showinfo('high goal misses error','Unable to go over 255')
     if lowGoalMakes[0] > 255:
         sendCycle = True
-        messagebox.showinfo('low goal makes error','Unable to go over 255')
     if outerGoalMakes[0] > 255:
         sendCycle = True
-        messagebox.showinfo('outer goal makes error','Unable to go over 255')
     if innerGoalMakes[0] > 255:
         sendCycle = True
-        messagebox.showinfo('inner goal makes error','Unable to go over 255')
     if lowGoalMisses[1] > 255:
         sendCycle = True
-        messagebox.showinfo('low goal misses error','Unable to go over 255')
     if highGoalMisses[1] > 255:
         sendCycle = True
-        messagebox.showinfo('high goal misses error','Unable to go over 255')
     if lowGoalMakes[1] > 255:
         sendCycle = True
-        messagebox.showinfo('low goal makes error','Unable to go over 255')
     if outerGoalMakes[1] > 255:
         sendCycle = True
-        messagebox.showinfo('outer goal makes error','Unable to go over 255')
     if innerGoalMakes[1] > 255:
         sendCycle = True
-        messagebox.showinfo('inner goal makes error','Unable to go over 255')
-    if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
+        
+    elif  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
@@ -571,6 +563,8 @@ def sendCycleData(gamePhase):
             sendCycleToDatabase(gamePhase)
             cycleReinit(gamePhase)
             messagebox.showinfo('Cycle submission','Cycle submission complete :)')
+        else:
+            messagebox.showinfo('Cycle submission error','Unable to go over 255')
 
     #reinitialize cycle 
     sendCycleToDatabase(gamePhase)
@@ -627,7 +621,21 @@ def sendMainData():
     if innerGoalMakes[1] > 255:
         sendMSG = False
         messagebox.showinfo('inner goal makes error','Unable to go over 255')
-        
+    if autoBallsPickedUp.get > 255:
+        sendMSG = False
+        messagebox.showinfo('auto balls picked up error','Unable to go over 255')
+    if autoFoul.get > 255:
+        sendMSG = False
+        messagebox.showinfo('auto fouls error','Unable to go over 255')
+    if autoTechFoul.get > 255:
+        sendMSG = False
+        messagebox.showinfo('auto tech fouls error','Unable to go over 255')
+    if teleFoul.get > 255:
+        sendMSG = False
+        messagebox.showinfo('tele fouls error','Unable to go over 255')
+    if teleTechFoul.get > 255:
+        sendMSG = False
+        messagebox.showinfo('tele tech fouls error','Unable to go over 255')
     if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
