@@ -9,6 +9,7 @@ import pandas as pd
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.ticker as ticker
 
 def combineColumn(scoutData): 
     '''
@@ -144,6 +145,11 @@ def picklistBoxPlots(df):
 
 def getPrematchScatterPlot(df, team, graphVar, ax):
     ax.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], [graphVar]], color="red")
+    ax.set_ylim(top=55, bottom=0)
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    if graphVar == 'autoMakes':
+        ax.set_ylim(top=15, bottom=0)
+   
     ax.set_title(graphVar)
 
 def cyclePivot(cycleDf, ax, team, graphVar):
@@ -168,4 +174,4 @@ def prematchGraphs(maindf, cycledf, team):
     
 df = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered data file'), sep = '|')
 #picklistBoxPlots(df)
-prematchGraphs(df, 'boo', 1939)
+prematchGraphs(df, 'boo', 2001)
