@@ -497,9 +497,12 @@ def sendCycleToDatabase(gamePhase):
             lowGoalMisses[0] += autoLow.shotsMissed
         if highGoalMisses[0] + autoHigh.shotsMissed <= 255:
             highGoalMisses[0] += autoHigh.shotsMissed
-        lowGoalMakes[0] += autoLow.shotsMade
-        outerGoalMakes[0] += autoHigh.outerShotsMade
-        innerGoalMakes[0] += autoHigh.innerShotsMade
+        if lowGoalMakes[0] + autoLow.shotsMade <= 255:
+            lowGoalMakes[0] += autoLow.shotsMade
+        if outerGoalMakes[0] + autoHigh.outerShotsMade <= 255:
+            outerGoalMakes[0] += autoHigh.outerShotsMade
+        if innerGoalMakes[0] + autoHigh.innerShotsMade <= 255:
+            innerGoalMakes[0] += autoHigh.innerShotsMade
         
         match_dbconn.setMatchCycle(autoCycles,
                                    match_no, 
@@ -515,11 +518,16 @@ def sendCycleToDatabase(gamePhase):
         autoCycles = (autoCycles+1)
         print('increment autoCycles complete')
     else: 
-        lowGoalMisses[1] += teleLowGoal.shotsMissed
-        highGoalMisses[1] += teleHigh.shotsMissed
-        lowGoalMakes[1] += teleLowGoal.shotsMade
-        outerGoalMakes[1] += teleHigh.outerShotsMade
-        innerGoalMakes[1] += teleHigh.innerShotsMade
+        if lowGoalMisses[1] + teleLowGoal.shotsMissed <= 255:
+            lowGoalMisses[1] += teleLowGoal.shotsMissed
+        if highGoalMisses[1] + teleHigh.shotsMissed <= 255:
+            highGoalMisses[1] += teleHigh.shotsMissed
+        if lowGoalMakes[1] + teleLowGoal.shotsMade <= 255:
+            lowGoalMakes[1] += teleLowGoal.shotsMade
+        if outerGoalMakes[1] + teleHigh.outerShotsMade <= 255:
+            outerGoalMakes[1] += teleHigh.outerShotsMade
+        if innerGoalMakes[1] + teleHigh.innerShotsMade <=255:
+            innerGoalMakes[1] += teleHigh.innerShotsMade
         match_dbconn.setMatchCycle(teleCycles,
                                    match_no, 
                                    teamno, 
