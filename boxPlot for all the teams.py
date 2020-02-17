@@ -6,6 +6,8 @@ Created on Wed Sep 18 14:33:57 2019
 """
 
 import pandas as pd
+import numpy as np
+import seaborn as sb
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -151,9 +153,26 @@ def getPrematchScatterPlot(df, team, graphVar, ax):
         ax.set_ylim(top=15, bottom=0)
    
     ax.set_title(graphVar)
+    ax.set_xlabel('Matches')
+    ax.set_ylabel(graphVar)
 
-def cyclePivot(cycleDf, ax, team, graphVar):
-    cycleDf.set_index("teamNo", inplace=True)
+  
+def getHeatMapPivot(df):
+    firstmove = pd.pivot_table(df, index=['matchNo','teamNo','cycle'], columns='shooterPosition',aggfunc=np.sum).fillna(0)
+    print(firstmove)
+    secondmove = firstmove.groupby(axis=0,level=['matchNo','teamNo'])
+    thirdmove = secondmove.sum()
+    print(thirdmove)
+    fourthmove = thirdmove.swaplevel(i='matchNo',j='teamNo').sort_index()
+    print(fourthmove)
+    return fourthmove    
+
+def getHeatMap(df, team, graphVar, ax):
+    df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
+    highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
+    try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True)
+    except:print('data not available')
+    
     
 
 def prematchGraphs(maindf, cycledf, team):
@@ -169,9 +188,15 @@ def prematchGraphs(maindf, cycledf, team):
     ax7 = fig.add_subplot(gs[1, 3])
     getPrematchScatterPlot(df, team, 'autoMakes', ax1)
     getPrematchScatterPlot(df, team, 'totalMakes', ax2)
+    getHeatMap(cycledf, team, 'highGoalMisses', ax3)
+    getHeatMap(cycledf, team, 'lowGoalMisses', ax4)
+    getHeatMap(cycledf, team, 'innerGoalMakes', ax5)
+    getHeatMap(cycledf, team, 'outerGoalMakes', ax6)
+    getHeatMap(cycledf, team, 'lowGoalMakes', ax7)
     plt.savefig(str(team) + ' Prematch Graphs')
     plt.show()
     
-df = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered data file'), sep = '|')
+maindf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered main data file'), sep = '|')
+cycledf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered cycle data file'), sep = '|')
 #picklistBoxPlots(df)
-prematchGraphs(df, 'boo', 2001)
+prematchGraphs(maindf, cycledf, 1939)
