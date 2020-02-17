@@ -143,10 +143,9 @@ class lowGoalCounterClass:
         
    
     def madePlus5(self):
-        if self.shotsMade < 250:
-            self.shotsMade += 5
+        self.shotsMade += 5
 #        self.shotsMissed += 5
-            self.madeDisplayLabel["text"]=str(self.shotsMade)
+        self.madeDisplayLabel["text"]=str(self.shotsMade)
 #        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def madeNeg5(self):
@@ -163,10 +162,9 @@ class lowGoalCounterClass:
             
     def takenPlus5(self):
 #        self.shotsMade += 5
-        if self.shotsMissed < 250:
-            self.shotsMissed += 5
+        self.shotsMissed += 5
 #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def takenNeg5(self):
         if self.shotsMissed  >5:
@@ -179,11 +177,10 @@ class lowGoalCounterClass:
            self.takenDisplayLabel["text"]=str(self.shotsMissed)
     
     def madePlus1(self):
-        if self.shotsMade < 255:
-            self.shotsMade += 1
-        #        self.shotsMissed += 1
-            self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.shotsMade += 1
+#        self.shotsMissed += 1
+        self.madeDisplayLabel["text"]=str(self.shotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def madeNeg1(self):
         if self.shotsMade  > 0:
@@ -193,11 +190,10 @@ class lowGoalCounterClass:
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
             
     def takenPlus1(self):
-        if self.shotsMissed < 255:
-    #        self.shotsMade += 1
-            self.shotsMissed += 1
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+#        self.shotsMade += 1
+        self.shotsMissed += 1
+#        self.madeDisplayLabel["text"]=str(self.shotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def takenNeg1(self):
         if self.shotsMissed  > 0:
@@ -283,11 +279,10 @@ class highGoalCounterClass:
         
 #inner made def   
     def innerMadePlus5(self):
-        if self.innerShotsMade < 250:
-            self.innerShotsMade += 5
-    #        self.shotsMissed += 5
-            self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.innerShotsMade += 5
+#        self.shotsMissed += 5
+        self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def innerMadeNeg5(self):
         if self.innerShotsMade  >= 5:
@@ -303,11 +298,10 @@ class highGoalCounterClass:
             
 
     def innerMadePlus1(self):
-        if self.innerShotsMade < 255:
-            self.innerShotsMade += 1
-    #        self.shotsMissed += 1
-            self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.innerShotsMade += 1
+#        self.shotsMissed += 1
+        self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def innerMadeNeg1(self):
         if self.innerShotsMade  > 0:
@@ -318,11 +312,10 @@ class highGoalCounterClass:
 
 #outer made def
     def outerMadePlus5(self):
-        if self.outerShotsMade < 250:
-            self.outerShotsMade += 5
-    #        self.shotsMissed += 5
-            self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.outerShotsMade += 5
+#        self.shotsMissed += 5
+        self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def outerMadeNeg5(self):
         if self.outerShotsMade  >= 5:
@@ -340,11 +333,10 @@ class highGoalCounterClass:
             
 
     def outerMadePlus1(self):
-        if self.innerShotsMade < 255:
-            self.outerShotsMade += 1
-    #        self.shotsMissed += 1
-            self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.outerShotsMade += 1
+#        self.shotsMissed += 1
+        self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def outerMadeNeg1(self):
         if self.outerShotsMade  > 0:
@@ -354,15 +346,14 @@ class highGoalCounterClass:
             self.takenDisplayLabel["text"]=str(self.shotsMissed)
 
 
-#missed def
-    def missedPlus5(self):
-        if self.shotsMade < 255:
-    #        self.shotsMade += 5
-            self.shotsMissed += 5
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+#taken def
+    def takenPlus5(self):
+#        self.shotsMade += 5
+        self.shotsMissed += 5
+#        self.madeDisplayLabel["text"]=str(self.shotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
-    def missedNeg5(self):
+    def takenNeg5(self):
         if self.shotsMissed  >5:
 #            self.shotsMade -= 5
             self.shotsMissed -=5
@@ -372,14 +363,13 @@ class highGoalCounterClass:
            self.shotsMissed = 0
            self.takenDisplayLabel["text"]=str(self.shotsMissed)
                 
-    def missedPlus1(self):
-        if self.shotsMissed < 255:
-    #        self.shotsMade += 1
-            self.shotsMissed += 1
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+    def takenPlus1(self):
+#        self.shotsMade += 1
+        self.shotsMissed += 1
+#        self.madeDisplayLabel["text"]=str(self.shotsMade)
+        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
-    def missedNeg1(self):
+    def takenNeg1(self):
         if self.shotsMissed  > 0:
 #            self.shotsMade -= 1
             self.shotsMissed -=1
