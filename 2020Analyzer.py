@@ -1,4 +1,4 @@
-1
+
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jan 17 19:06:04 2019
@@ -12,15 +12,15 @@ import numpy as np
 from pprint import pprint
 from tkinter import filedialog
 import matplotlib.pyplot as plt
-
-
 from matplotlib.gridspec import GridSpec
 import json
-import datetime
+from datetime import datetime
+import sys
+import os
 
 #change makeMatchList so the year is the current year using datetime module.
-year = datetime.date.today().year
-def makeMatchList(event, year):
+year = datetime.today().year
+def makeMatchList(event):
 #def makeMatchList(event, year = 2018):
 
     '''
@@ -62,16 +62,16 @@ def makeMatchList(event, year):
             Outstr = str(Match).replace('[', '').replace(']', '').replace(' ', '')+'\n'
             File.write(Outstr)
             
-<<<<<<< Updated upstream
-def piecesMath(TeamDf):
-    TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
-    TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
-    TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
+
+# #def piecesMath(TeamDf):
+#     TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
+#     TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
+#     TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
   
-    TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
-    TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
-    TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
-=======
+#     TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
+#     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
+#     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
+
 def combineColumn(scoutData): 
     '''
     This combines columns and creates columns from adding other columns. Specifics:
@@ -121,7 +121,7 @@ def combineColumn(scoutData):
     
     scoutData['autoMakes']=scoutData['innerGoalMakesAuto']+scoutData['outerGoalMakesAuto']+scoutData['lowGoalMakesAuto']
     
-    print(scoutData['totalMakes'], scoutData['totalAttempts'])
+    #print(scoutData['totalMakes'], scoutData['totalAttempts'])
     scoutData['totalAccuracy']=(scoutData['totalMakes'].astype('int32'))/(scoutData['totalAttempts'].astype('int32'))*100
     
     scoutData['lowGoalMakesAccuracy']=(scoutData['lowGoalMakes']/scoutData['lowGoalAttempts'])*100
@@ -145,27 +145,8 @@ def combineColumn(scoutData):
     
     scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
     scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
->>>>>>> Stashed changes
+    return scoutData
     
-    TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
-    TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
-    TeamDf['telehatch'] += TeamDf['TeleHatchLRocketHatch']
-    
-    TeamDf['sandhatch'] = TeamDf['SSCargoHatch'] + TeamDf['SSCargoSSHRocketHatch']
-    TeamDf['sandhatch'] += TeamDf['SSCargoSSMRocketHatch']
-    TeamDf['sandhatch'] += TeamDf['SSCargoSSLRocketHatch']
-    
-    TeamDf['totalscored'] = TeamDf['telecargo'] + TeamDf['sandcargo']
-    TeamDf['totalscored'] += TeamDf['telehatch']
-    TeamDf['totalscored'] += TeamDf['sandhatch']
-    
-    TeamDf['teletotal'] = TeamDf['telecargo'] + TeamDf['telehatch']
-    
-    TeamDf['sandtotal'] = TeamDf['sandcargo'] + TeamDf['sandhatch']
-    
-    TeamDf['totalcargo'] = TeamDf['telecargo'] + TeamDf['sandcargo']
-    
-    TeamDf['totalhatch'] = TeamDf['telehatch'] + TeamDf['sandhatch']
     
 def readMatchList():    
     '''
@@ -200,63 +181,43 @@ def readScout():
    # if testmode :
     #    FileName = r'C:\Users\Saketh\Documents\GitHub\2019-Scouting-Analyzer\MatchScoutForOtherTeams.csv'
 
-<<<<<<< Updated upstream
-    print('entered readScout')
-
-    FileName = filedialog.askopenfilename(title = 'select Data file')
-<<<<<<< Updated upstream
-
-    with open(FileName, 'r') as ScoutFile:
-        ScoutData = pd.read_csv(ScoutFile, sep = '|') 
-    Result = ScoutData.fillna(value = 0)
-    return Result
-    
-
-=======
-    print(FileName)
->>>>>>> Stashed changes
-    with open(FileName, 'r') as scoutFile:
-#        ScoutData = pd.read_json(ScoutFile) 
-        scoutData = scoutFile.read()
-
+    choice = input('is this charlie testing?')
+    choice = choice.lower()
         
-#       result = scoutData.fillna(value = 0)
+    if choice == 'yes':
         
-        scoutjson = json.loads(scoutData)
-        mainData = scoutjson["mainData"]
-        cycleData = scoutjson["cycleData"]
-#        pprint(cycleData)
-        cycledf = pd.DataFrame.from_dict(cycleData)
-        maindf = pd.DataFrame.from_dict(mainData)
-#        pprint(cycledf)
-#        pprint(maindf)
+        mainData = pd.read_csv(r'C:\Users\charl\Downloads\MainData.csv', sep= '|')
+        mainDf = mainData.fillna('0')
         
-        return maindf, cycledf
-
-
-=======
-    FileName = filedialog.askopenfilename(title = 'select Main Data file')
-    with open(FileName, 'r') as ScoutFile:
-        mainDf = pd.read_csv(ScoutFile, sep = '|') 
-    mainDf = mainDf.fillna(value = 0)
-    
-    FileName = filedialog.askopenfilename(title = 'select Cycle Data file')
-    with open(FileName, 'r') as ScoutFile:
-        cycleData = pd.read_csv(ScoutFile, sep = '|') 
-    cycleDf = cycleData.fillna(value = 0)
+        
+        cycleData = pd.read_csv(r'C:\Users\charl\Downloads\CycleData.csv', sep = '|')
+        cycleDf = cycleData.fillna('0')
+    else:
+        
+        FileName = filedialog.askopenfilename(title = 'select Main Data file')
+        with open(FileName, 'r') as MainFile:
+            mainData = pd.read_csv(MainFile, sep = '|') 
+        mainDf = mainData.fillna('0')
+        
+        FileName = filedialog.askopenfilename(title = 'select Cycle Data file')
+        with open(FileName, 'r') as CycleFile:
+            cycleData = pd.read_csv(CycleFile, sep = '|') 
+        cycleDf = cycleData.fillna('0')/"??"""
+        
     return mainDf, cycleDf
 
 def readPitScout():
     FileName = filedialog.askopenfilename(title = 'select pit scouting data file')
     with open(FileName, 'r') as ScoutFile:
-        pitData = pd.read_csv(ScoutFile, sep = ',') 
+        pitData = pd.read_csv(ScoutFile, sep = '|') 
     pitDf = pitData.fillna(value = 0)
+    
     return pitDf
 
 
 
     
->>>>>>> Stashed changes
+
 def FindPartners(Matchlist, team = 1939):    
     '''
     Takes the Match List from the entire competition and finds the matches we're
@@ -394,8 +355,8 @@ def Day1Report(Scoutdf, PivotDf):
     '''
     PivotDf.to_csv(r'C:\Users\Mason\Desktop\heatmap analyzed data file.csv')
 #    maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
-    outfile = '1st Day report.xlsx'
-    with pd.ExcelWriter(outfile) as writer:
+    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+    with pd.ExcelWriter('1st Day report' + str(today) + '.xlsx') as writer:
         Scoutdf = Scoutdf.sort_values(by = 'team')   
         tabname = 'Raw Data'
         Scoutdf.to_excel(writer, tabname, index=False)
@@ -498,142 +459,142 @@ def SearchTeam(Scoutdf, PivotDf, TeamNumber, File = None):
         
 \
                        
-"""
-def TeamStats(TeamDf):
-    '''
-    Takes full dataframe, and creates per match calculated values. Creates a pivot
-    dataframe with overall team statistics
-    '''
-    # Normalize column names
-    # Database renamed match and team to matchNo and teamNo.  We put back.
-    TeamDf.rename(columns = {'teamNo':'team', 'matchNo': 'match'}, inplace = True)
+
+# #def TeamStats(TeamDf):
+#     '''
+#     Takes full dataframe, and creates per match calculated values. Creates a pivot
+#     dataframe with overall team statistics
+#     '''
+#     # Normalize column names
+#     # Database renamed match and team to matchNo and teamNo.  We put back.
+#     TeamDf.rename(columns = {'teamNo':'team', 'matchNo': 'match'}, inplace = True)
     
-    # Calculate cube usage
-    TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
-    TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
-    TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
+#     # Calculate cube usage
+#     TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
+#     TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
+#     TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
   
-    TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
-    TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
-    TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
+#     TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
+#     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
+#     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
     
-    TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
-    TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
-    TeamDf['telehatch'] += TeamDf['TeleHatchLRocketHatch']
+#     TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
+#     TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
+#     TeamDf['telehatch'] += TeamDf['TeleHatchLRocketHatch']
     
-    TeamDf['sandhatch'] = TeamDf['SSCargoHatch'] + TeamDf['SSCargoSSHRocketHatch']
-    TeamDf['sandhatch'] += TeamDf['SSCargoSSMRocketHatch']
-    TeamDf['sandhatch'] += TeamDf['SSCargoSSLRocketHatch']
+#     TeamDf['sandhatch'] = TeamDf['SSCargoHatch'] + TeamDf['SSCargoSSHRocketHatch']
+#     TeamDf['sandhatch'] += TeamDf['SSCargoSSMRocketHatch']
+#     TeamDf['sandhatch'] += TeamDf['SSCargoSSLRocketHatch']
     
-    TeamDf['totalscored'] = TeamDf['telecargo'] + TeamDf['sandcargo']
-    TeamDf['totalscored'] += TeamDf['telehatch']
-    TeamDf['totalscored'] += TeamDf['sandhatch']
+#     TeamDf['totalscored'] = TeamDf['telecargo'] + TeamDf['sandcargo']
+#     TeamDf['totalscored'] += TeamDf['telehatch']
+#     TeamDf['totalscored'] += TeamDf['sandhatch']
     
-    TeamDf['teleTotal'] = TeamDf['telecargo'] + TeamDf['telehatch']
+#     TeamDf['teleMakes'] = TeamDf['telecargo'] + TeamDf['telehatch']
     
-    TeamDf['sandTotal'] = TeamDf['sandcargo'] + TeamDf['sandhatch'] 
+#     TeamDf['sandTotal'] = TeamDf['sandcargo'] + TeamDf['sandhatch'] 
     
-    tempDf = TeamDf[['team', 'reachLvl1','reachLvl2','reachLvl3', 'defense']]
-    climbDf = pd.pivot_table(tempDf,values=['reachLvl1','reachLvl2','reachLvl3', 'defense'],index=['team'],
-                             columns=['reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], aggfunc=len, fill_value=0)
-    print(climbDf)
-    climbDf.reset_index(inplace = True)
+#     tempDf = TeamDf[['team', 'reachLvl1','reachLvl2','reachLvl3', 'defense']]
+#     climbDf = pd.pivot_table(tempDf,values=['reachLvl1','reachLvl2','reachLvl3', 'defense'],index=['team'],
+#                              columns=['reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], aggfunc=len, fill_value=0)
+#     print(climbDf)
+#     climbDf.reset_index(inplace = True)
     
-    #TeamDf['PostiveComments'] = TeamDf['postCommentsPro'] 
+#     #TeamDf['PostiveComments'] = TeamDf['postCommentsPro'] 
     
-    TeamDf['totalmatches'] = 1
+#     TeamDf['totalmatches'] = 1
     
-#    maxScored = pd.pivot_table(TeamDf, values = ['totalscored'], index='team', aggfunc = TeamDf.loc[[team]].max())
-    AvgTeamPivot = pd.pivot_table(TeamDf, values = ['telecargo', 'sandcargo', 'telehatch', 'sandhatch', 'totalscored'], index = 'team', aggfunc = np.average)
-    MatchCount = pd.pivot_table(TeamDf, values = ['totalmatches', 'reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], index = 'team', aggfunc = np.count_nonzero)
-    Comments = pd.pivot_table(TeamDf, values = ['Comments'], index = 'team', aggfunc = lambda x: ' '.join(x))
+# #    maxScored = pd.pivot_table(TeamDf, values = ['totalscored'], index='team', aggfunc = TeamDf.loc[[team]].max())
+#     AvgTeamPivot = pd.pivot_table(TeamDf, values = ['telecargo', 'sandcargo', 'telehatch', 'sandhatch', 'totalscored'], index = 'team', aggfunc = np.average)
+#     MatchCount = pd.pivot_table(TeamDf, values = ['totalmatches', 'reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], index = 'team', aggfunc = np.count_nonzero)
+#     Comments = pd.pivot_table(TeamDf, values = ['Comments'], index = 'team', aggfunc = lambda x: ' '.join(x))
     
-    AvgTeamPivot.reset_index(inplace = True)
-    MatchCount.reset_index(inplace = True)
-    Comments.reset_index(inplace = True)
+#     AvgTeamPivot.reset_index(inplace = True)
+#     MatchCount.reset_index(inplace = True)
+#     Comments.reset_index(inplace = True)
                                                                                
-    TeamPivot = pd.merge(AvgTeamPivot, MatchCount, on = 'team')
+#     TeamPivot = pd.merge(AvgTeamPivot, MatchCount, on = 'team')
     
-    TeamPivot = pd.merge(TeamPivot, climbDf, on = 'team')
+#     TeamPivot = pd.merge(TeamPivot, climbDf, on = 'team')
     
     
-    TeamPivot.rename(columns = {"Did not Try": 'noAttempt', "Attempt Level One Climb": 'attemptLvl1', 
-                                "Climbed Level One": 'reachLvl1', "Attempt Level Two Climb": 'attemptLvl2',
-                                "Climbed Level Two": 'reachLvl2', "Attempt Level Three Climb": 'attemptLvl3',
-                                "Climbed Level Three": 'reachLvl3', "Deployed Ramps": 'deployedRamps', 
-                                "Attempted Deploying Ramps": 'attemptDeployedRamps', "Used Another Robot": 'usedAnotherRobot',
-                                "Lifted Another Robot": 'lift', "Attempted Lifting Another Robot": 'attemptLift'}, inplace = True)
+#     TeamPivot.rename(columns = {"Did not Try": 'noAttempt', "Attempt Level One Climb": 'attemptLvl1', 
+#                                 "Climbed Level One": 'reachLvl1', "Attempt Level Two Climb": 'attemptLvl2',
+#                                 "Climbed Level Two": 'reachLvl2', "Attempt Level Three Climb": 'attemptLvl3',
+#                                 "Climbed Level Three": 'reachLvl3', "Deployed Ramps": 'deployedRamps', 
+#                                 "Attempted Deploying Ramps": 'attemptDeployedRamps', "Used Another Robot": 'usedAnotherRobot',
+#                                 "Lifted Another Robot": 'lift', "Attempted Lifting Another Robot": 'attemptLift'}, inplace = True)
     
-    return TeamDf, TeamPivot
+#     return TeamDf, TeamPivot
     
-"""
-def PickListCargo(TeamDf, PivotDf, lastMatch):
-    '''
-    List of teams organized by the order we should pick them. Then catagories 
-    that rank robotics based on that catagory. Do not pick catagory.
-    '''
-    earlyDf = TeamDf[TeamDf.match <= lastMatch]
-    lateDf = TeamDf[TeamDf.match > lastMatch]
+
+# def PickListCargo(TeamDf, PivotDf, lastMatch):
+#     '''
+#     List of teams organized by the order we should pick them. Then catagories 
+#     that rank robotics based on that catagory. Do not pick catagory.
+#     '''
+#     earlyDf = TeamDf[TeamDf.match <= lastMatch]
+#     lateDf = TeamDf[TeamDf.match > lastMatch]
         
     
-    earlytelepivot = pd.pivot_table(earlyDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
-    latetelepivot = pd.pivot_table(lateDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
+#     earlytelepivot = pd.pivot_table(earlyDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
+#     latetelepivot = pd.pivot_table(lateDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
     
-    earlytelepivot.reset_index(inplace = True)
-    latetelepivot.reset_index(inplace = True)
-    print(PivotDf.head())
-    deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
+#     earlytelepivot.reset_index(inplace = True)
+#     latetelepivot.reset_index(inplace = True)
+#     print(PivotDf.head())
+#     deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
     
     
-    deltaDf['change'] = deltaDf['telecargo_late'] - deltaDf['telecargo_early']
-    deltaDf.sort_values('change')  
+#     deltaDf['change'] = deltaDf['telecargo_late'] - deltaDf['telecargo_early']
+#     deltaDf.sort_values('change')  
     
-   # deltaDf['HatchChange'] = deltaDf['avgtelehatch_late'] - deltaDf['avgtelehatch_early']
-   # deltaDf.sort_values('HatchChange')
+#    # deltaDf['HatchChange'] = deltaDf['avgtelehatch_late'] - deltaDf['avgtelehatch_early']
+#    # deltaDf.sort_values('HatchChange')
     
-    outfile = 'PicklistCargo.xlsx'
-    with pd.ExcelWriter(outfile) as writer:
-        TeamDf = deltaDf.sort_values(by = 'team')   
-        tabname = 'Raw Data'
-        TeamDf.to_excel(writer, tabname, index=False)
-        PivotDf = deltaDf.sort_values(by = ['team'])
-        tabname = 'Pivot'
-        PivotDf.to_excel(writer, tabname, index=False)
-        tabname = 'Changes'
-        deltaDf.to_excel(writer, tabname)
+#     outfile = 'PicklistCargo.xlsx'
+#     with ExcelWriter(outfile) as writer:
+#         TeamDf = deltaDf.sort_values(by = 'team')   
+#         tabname = 'Raw Data'
+#         TeamDf.to_excel(writer, tabname, index=False)
+#         PivotDf = deltaDf.sort_values(by = ['team'])
+#         tabname = 'Pivot'
+#         PivotDf.to_excel(writer, tabname, index=False)
+#         tabname = 'Changes'
+#         deltaDf.to_excel(writer, tabname)
         
-def PickListHatch(TeamDf, PivotDf, lastMatch):
-    '''
-    List of teams organized by the order we should pick them. Then catagories 
-    that rank robotics based on that catagory. Do not pick catagory.
-    '''
-    earlyDf = TeamDf[TeamDf.match <= lastMatch]
-    lateDf = TeamDf[TeamDf.match > lastMatch]
+# def PickListHatch(TeamDf, PivotDf, lastMatch):
+#     '''
+#     List of teams organized by the order we should pick them. Then catagories 
+#     that rank robotics based on that catagory. Do not pick catagory.
+#     '''
+#     earlyDf = TeamDf[TeamDf.match <= lastMatch]
+#     lateDf = TeamDf[TeamDf.match > lastMatch]
         
 
-    earlytelepivot = pd.pivot_table(earlyDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
-    latetelepivot = pd.pivot_table(lateDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
+#     earlytelepivot = pd.pivot_table(earlyDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
+#     latetelepivot = pd.pivot_table(lateDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
     
-    earlytelepivot.reset_index(inplace = True)
-    latetelepivot.reset_index(inplace = True)
-    print(PivotDf.head())
-    deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
-    
-    
-    deltaDf['change'] = deltaDf['telehatch_late'] - deltaDf['telehatch_early']
-    deltaDf.sort_values('change')  
+#     earlytelepivot.reset_index(inplace = True)
+#     latetelepivot.reset_index(inplace = True)
+#     print(PivotDf.head())
+#     deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
     
     
-    outfile = 'PicklistHatch.xlsx'
-    with pd.ExcelWriter(outfile) as writer:
-        TeamDf = deltaDf.sort_values(by = 'team')   
-        tabname = 'Raw Data'
-        TeamDf.to_excel(writer, tabname, index=False)
-        PivotDf = deltaDf.sort_values(by = ['team'])
-        tabname = 'Pivot'
-        PivotDf.to_excel(writer, tabname, index=False)
-        tabname = 'Changes'
-        deltaDf.to_excel(writer, tabname)
+#     deltaDf['change'] = deltaDf['telehatch_late'] - deltaDf['telehatch_early']
+#     deltaDf.sort_values('change')  
+    
+    
+#     outfile = 'PicklistHatch.xlsx'
+#     with ExcelWriter(outfile) as writer:
+#         TeamDf = deltaDf.sort_values(by = 'team')   
+#         tabname = 'Raw Data'
+#         TeamDf.to_excel(writer, tabname, index=False)
+#         PivotDf = deltaDf.sort_values(by = ['team'])
+#         tabname = 'Pivot'
+#         PivotDf.to_excel(writer, tabname, index=False)
+#         tabname = 'Changes'
+#         deltaDf.to_excel(writer, tabname)
 
      
 def enterTeam():
@@ -655,7 +616,7 @@ def getTeamScatterplot(team, df):
 #    df = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered data file'), sep = '|')
     df.set_index("teamNo", inplace = True)
 
-    piecesMath(df)
+    #piecesMath(df)
 
     print(df.loc[[team], ["matchNo"]])
 
@@ -705,7 +666,7 @@ def getTeamScatterplot(team, df):
 
     plt.subplot(311)
     plt.title('Total Tele Pieces')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["teletotal"]])
+    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["teleMakes"]])
     plt.ylabel('Total Objects')
     
     plt.subplot(312)
@@ -718,8 +679,8 @@ def getTeamScatterplot(team, df):
     plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["telehatch"]], color="red")
     plt.ylabel('HP')
 
-<<<<<<< Updated upstream
-=======
+
+
 def getDfTeamList(df):
     return(df['teamNo'].drop_duplicates())
 
@@ -739,21 +700,25 @@ def getPicklistBoxplot(df, yvars, teamList):
     return(dataArr)#.set_xticklabels(teamList.get_values()))
 def getFirstDayReportExcel(mainDf):
     
-    #
-    
-    mainDf, cycleDf = readScout()
-    pitDf = readPitScout()
+#    cycleDf = scoutData[1]
+#    pitDf = readPitScout()
     combineColumn(mainDf)
-    mainDf_avgpivot = pd.pivot_table(mainDf, index= ['teamNo'], values=['totalMakes', 'autoMakes', 'teleTotal'], aggfunc=np.average)
+    mainDf_avgpivot = pd.pivot_table(mainDf, index= ['teamNo'], values=['totalMakes', 'autoMakes', 'teleMakes'], aggfunc=np.average)
     mainDf_min = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=min)
     mainDf_max = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=max)
-    mainDf_nonzerocount = pd.pivot_table(mainDf, index=['index'], values=['matchNo', 'defense', 'cards'], aggfunc=np.count_nonzero)
+    mainDf_nonzerocount = pd.pivot_table(mainDf, index=['teamNo'], values=['matchNo', 'defense', 'cards'], aggfunc=np.count_nonzero)
+    
     merged = [mainDf_avgpivot,mainDf_min,mainDf_max,mainDf_nonzerocount]
+    mergedDf = pd.concat(merged, axis=1)
+    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+    filename = 'merged mainDf' + str(today) + '.xlsx'
+    mergedDf.to_excel(filename, sheet_name= 'merged mainDf', index=False)
+    path = os.path.abspath(filename)
+    directory = os.path.dirname(path)
+    print('saved in  ' + str(directory))
     
-    return pd.concat(merged)
     
-    
->>>>>>> Stashed changes
+
 def Main(testmode):
     print('press 1 to acquire a Match List')
     print('press 2 to get a prematch Scouting Report')
@@ -762,6 +727,7 @@ def Main(testmode):
     print('press 5 to get a cargo picklist for Day 2')
     print('press 6 to get a hatch picklist for Day 2')
     print('press 9 for functional math test')
+    print('press C to run getFirstDayREportExcel')
     selection = input('enter number: ')
     
     if selection == '1':
@@ -770,12 +736,12 @@ def Main(testmode):
         
     elif selection == '2':
         Team = enterTeam()       
-        ReadData, CycleData = readScout()
+        MainData, CycleData = readScout()
         MatchList = readMatchList()
-        TeamDf, PivotDf = TeamStats(ReadData)
+        #TeamDf, PivotDf = TeamStats(MainData)
         Partners = FindPartners(MatchList, Team)
         #matchNum = FindPartners(MatchList, Team)
-        MatchReport(Partners, PivotDf, TeamDf, Team)
+        #MatchReport(Partners, PivotDf, TeamDf, Team)
         
     elif selection == '3':
         Team = int(enterTeam())       
@@ -783,51 +749,52 @@ def Main(testmode):
         df = ReadData
         print(ReadData)
         MatchList = readMatchList()
-        TeamDf, PivotDf = TeamStats(ReadData)
-        print (TeamStats(ReadData))
-        SearchTeam(TeamDf, PivotDf, Team)
+        #TeamDf, PivotDf = TeamStats(ReadData)
+        #print (TeamStats(ReadData))
+        #SearchTeam(TeamDf, PivotDf, Team)
         print(df)
 #        getTeamScatterplot(Team, df)
     elif selection == '4':
         ReadData = readScout()
-        TeamDf, PivotDf = TeamStats(ReadData)
+        #TeamDf, PivotDf = TeamStats(ReadData)
         print()
         #Day1Report(TeamDf, PivotDf)
     elif selection == '5':
         ReadData = readScout()
-        TeamDf, PivotDf = TeamStats(ReadData)
+        #TeamDf, PivotDf = TeamStats(ReadData)
         lastMatch = int(input('enter last match of Day 1'))
         print('boo')
-        print(TeamDf.head())
-        PickListCargo(TeamDf, PivotDf, lastMatch)
+        #print(TeamDf.head())
+        #PickListCargo(TeamDf, PivotDf, lastMatch)
     elif selection == '6':
         ReadData = readScout()
-        TeamDf, PivotDf = TeamStats(ReadData)
-        lastMatch = int(input('enter last match of Day 1'))
+        #TeamDf, PivotDf = TeamStats(ReadData)
+        #lastMatch = int(input('enter last match of Day 1'))
         print('boo')
-        print(TeamDf.head())
-        PickListHatch(TeamDf, PivotDf, lastMatch)
+        #print(TeamDf.head())
+        #PickListHatch(TeamDf, PivotDf, lastMatch)
     elif selection == '9':
-<<<<<<< Updated upstream
+
         ReadData = readScout()
-=======
-        print('entered 9')
+
+        #print('entered 9')
         maindf, cycledf = readScout()
-        print('readFile')
+        #print('readFile')
         combinedMaindf=combineColumn(maindf)
         print(combinedMaindf)
-        '''
->>>>>>> Stashed changes
-        print(ReadData)
-        TeamDf, PivotDf = TeamStats(ReadData)
+        
+
+        #print(ReadData)
+        #TeamDf, PivotDf = TeamStats(ReadData)
         
         print()
         print('TeamDF')
-        print(TeamDf)
+        #print(TeamDf)
         print('\nTeam Pivot')
-        print(PivotDf)
+        #print(PivotDf)
+    elif selection == 'C':
+        Main, Cycle = readScout()
+        getFirstDayReportExcel(Main)
         
         
-#Main(True)
-mainDf, cycleDf = readScout()
-pprint(combineColumn(mainDf))
+Main(True)
