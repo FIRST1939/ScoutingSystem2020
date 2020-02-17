@@ -531,15 +531,46 @@ def sendCycleToDatabase(gamePhase):
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
+    if lowGoalMisses[0] > 255:
+        sendCycle = True
+        messagebox.showinfo('low goal misses error','Unable to go over 255')
+    if highGoalMisses[0] > 255:
+        sendCycle = True
+        messagebox.showinfo('high goal misses error','Unable to go over 255')
+    if lowGoalMakes[0] > 255:
+        sendCycle = True
+        messagebox.showinfo('low goal makes error','Unable to go over 255')
+    if outerGoalMakes[0] > 255:
+        sendCycle = True
+        messagebox.showinfo('outer goal makes error','Unable to go over 255')
+    if innerGoalMakes[0] > 255:
+        sendCycle = True
+        messagebox.showinfo('inner goal makes error','Unable to go over 255')
+    if lowGoalMisses[1] > 255:
+        sendCycle = True
+        messagebox.showinfo('low goal misses error','Unable to go over 255')
+    if highGoalMisses[1] > 255:
+        sendCycle = True
+        messagebox.showinfo('high goal misses error','Unable to go over 255')
+    if lowGoalMakes[1] > 255:
+        sendCycle = True
+        messagebox.showinfo('low goal makes error','Unable to go over 255')
+    if outerGoalMakes[1] > 255:
+        sendCycle = True
+        messagebox.showinfo('outer goal makes error','Unable to go over 255')
+    if innerGoalMakes[1] > 255:
+        sendCycle = True
+        messagebox.showinfo('inner goal makes error','Unable to go over 255')
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
     else:
 #        send data
-        sendCycleToDatabase(gamePhase)
-        cycleReinit(gamePhase)
-        messagebox.showinfo('Cycle submission','Cycle submission worked')
+        if sendCycle == False:
+            sendCycleToDatabase(gamePhase)
+            cycleReinit(gamePhase)
+            messagebox.showinfo('Cycle submission','Cycle submission complete :)')
 
     #reinitialize cycle 
     sendCycleToDatabase(gamePhase)
@@ -560,10 +591,43 @@ def sendMainData():
         sendMSG = False
     if comboBoxAutoShooterPos():
         sendMSG = False
-    if comboBoxReferenceShooterPos():
-        sendMSG = False
     if comboBoxRotationalCont():
         sendMSG = False
+    if comboBoxPositionalControl():
+        sendMSG = False
+    if comboBoxShooterPosTele():
+        sendMSG = False
+    if lowGoalMisses[0] > 255:
+        sendMSG = False
+        messagebox.showinfo('low goal misses error','Unable to go over 255')
+    if highGoalMisses[0] > 255:
+        sendMSG = False
+        messagebox.showinfo('high goal misses error','Unable to go over 255')
+    if lowGoalMakes[0] > 255:
+        sendMSG = False
+        messagebox.showinfo('low goal makes error','Unable to go over 255')
+    if outerGoalMakes[0] > 255:
+        sendMSG = False
+        messagebox.showinfo('outer goal makes error','Unable to go over 255')
+    if innerGoalMakes[0] > 255:
+        sendMSG = False
+        messagebox.showinfo('inner goal makes error','Unable to go over 255')
+    if lowGoalMisses[1] > 255:
+        sendMSG = False
+        messagebox.showinfo('low goal misses error','Unable to go over 255')
+    if highGoalMisses[1] > 255:
+        sendMSG = False
+        messagebox.showinfo('high goal misses error','Unable to go over 255')
+    if lowGoalMakes[1] > 255:
+        sendMSG = False
+        messagebox.showinfo('low goal makes error','Unable to go over 255')
+    if outerGoalMakes[1] > 255:
+        sendMSG = False
+        messagebox.showinfo('outer goal makes error','Unable to go over 255')
+    if innerGoalMakes[1] > 255:
+        sendMSG = False
+        messagebox.showinfo('inner goal makes error','Unable to go over 255')
+        
     if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
@@ -720,15 +784,15 @@ autoHigh = highGoalCounterClass(auto, 3, 2, '     High', 0, 2)
 autoBallsPickedUp = CounterClass(auto, 4, 6, 'Balls Picked Up', 0, 6, 3)
 
 autoShooterPos = Label(auto, text='Shooter Position')
-autoShooterPos.grid(column=0, row=4, columnspan=6, ipady=15, ipadx=10)
+autoShooterPos.grid(column=0, row=3, columnspan=6, ipady=15, ipadx=10)
 autoShooterPos = ttk.Combobox(auto)
 autoShooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 autoShooterPos.current(0)
-autoShooterPos.grid(column= 5, row= 4, columnspan= 1, ipady=15, ipadx=10)
+autoShooterPos.grid(column= 5, row= 3, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
 def comboBoxAutoShooterPos():
-    if autoShooterPos['values']== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
+    if autoShooterPos.get()== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for auto shooter position')
@@ -753,12 +817,6 @@ shooterPosRef.current(0)
 shooterPosRef.pack(side=RIGHT)
 shooterPosRef.config(width= 5)
 shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
-def comboBoxReferenceShooterPos():
-    if shooterPosRef['values']== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for reference shooter position')
-        return True
 
 #TELEOP pagE
             
@@ -774,9 +832,8 @@ rotationalControl['values']= ("No attempt","No", "Yes")
 rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
-
 def comboBoxRotationalCont():
-    if rotationalControl['values']== ("No attempt"or"No"or "Yes"):
+    if rotationalControl.get()== ("No attempt"or"No"or "Yes"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for rotational control')
@@ -789,6 +846,12 @@ positionalControl['values']= ("No attempt", "No", "Yes")
 positionalControl.current(0)
 positionalControl.grid(column= 9, row= 9, columnspan=5)
 positionalControl.config(width= 5)
+def comboBoxPositionalControl():
+    if positionalControl.get()== ("No attempt"or"No"or "Yes"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for positional control')
+        return True
 
 shooterPosLBL = Label(tele, text='Shooter Position')
 shooterPosLBL.grid(column=0, row=8, ipady=23)
@@ -798,6 +861,12 @@ shooterPos.current(0)
 shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 shooterPos.bind("<<ComboboxSelected>>", telePositionSet )
+def comboBoxShooterPosTele():
+    if shooterPos.get()== ("A"or "B"or "C"or "D"or"E"or "F"or "G"or "H"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
+        return True
 
 teleTakenLBL = Label(tele, text='Missed')
 teleTakenLBL.grid(column=1, row=0, columnspan=5)
@@ -839,7 +908,7 @@ barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
 barLevel.config(width= 25)
 def comboBoxBarLevel():
-    if barLevel['values']== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
+    if barLevel.get()== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for Bar Level')
