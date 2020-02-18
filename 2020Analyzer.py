@@ -6,17 +6,18 @@ Created on Thu Jan 17 19:06:04 2019
 @author: Saketh, Sriram, Charlie
 """
 
+import json
+import os
+import sys
 import tbaUtils
-import pandas as pd
-import numpy as np
+from datetime import datetime
 from pprint import pprint
 from tkinter import filedialog
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from matplotlib.gridspec import GridSpec
-import json
-from datetime import datetime
-import sys
-import os
 
 #change makeMatchList so the year is the current year using datetime module.
 year = datetime.today().year
@@ -356,7 +357,7 @@ def Day1Report(Scoutdf, PivotDf):
     PivotDf.to_csv(r'C:\Users\Mason\Desktop\heatmap analyzed data file.csv')
 #    maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
-    with pd.ExcelWriter('1st Day report' + str(today) + '.xlsx') as writer:
+    with pd.DataFrame.ExcelWriter('1st Day report' + str(today) + '.xlsx') as writer:
         Scoutdf = Scoutdf.sort_values(by = 'team')   
         tabname = 'Raw Data'
         Scoutdf.to_excel(writer, tabname, index=False)
@@ -712,12 +713,113 @@ def getFirstDayReportExcel(mainDf):
     mergedDf = pd.concat(merged, axis=1)
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     filename = 'merged mainDf' + str(today) + '.xlsx'
-    mergedDf.to_excel(filename, sheet_name= 'merged mainDf', index=False)
+    mergedDf.to_excel(filename, sheet_name= 'merged mainDf', index=True)
     path = os.path.abspath(filename)
     directory = os.path.dirname(path)
     print('saved in  ' + str(directory))
     
+
+
+def getPrematchReportDf(MainData, CycleData, PitData):
     
+    # 1. Matches Scouted - matchscouted
+    # 2. Average Powercells Scored - avgpcs
+    # 3. Avg High Powercells Scored: avghi
+    # 4. Best Shooting Position:*
+    # 5. Shots Taken There:*
+    # 6. Accuracy There:*
+    # 7. favorite Shooting Position:*
+    # 8. Shots Taken There:*
+    # 9. Accuracy There:*
+    # 10. Tall or Short Bot: bhdf
+    # 11. Drivetrain: dtdf
+    # 12. Times Completed Rotational Control: tcrcdf
+    # 13. Times Completed Positional Control: tcpcdf
+    # 14. Matches Played on Defense: mpod
+    # * = from cycle data
+    # 10 & 11 are from pit data
+    # index = team
+    
+    
+    mainDf = combinedMainDf
+    cycleDf = CycleData
+    pitDf = PitData
+    
+    #teamList = mainDf['teamNo']
+    
+    matchscouted = pd.pivot_table(mainDf, values=['matchNo'], aggfunc=np.count_nonzero, index=['teamNo'])
+    mslist = matchscouted['matchNo']
+    #pprint(matchscouted)
+    
+    avgpcs = pd.pivot_table(mainDf, values=['totalMakes'], aggfunc=np.average, index=['teamNo'])
+    avgpcslis = avgpcs['totalMakes']
+    #pprint(avgpcs)
+    
+    avghi = pd.pivot_table(mainDf, values=['highGoalMakes'], aggfunc=np.average, index=['teamNo'])
+    avghils = avghi['highGoalMakes']
+    #pprint(avghi)
+    
+    botheight = pitDf['Tall or Short bot?']
+    teamList = mainDf['teamNo']
+    pitTeamList = pitDf['Team number of team you are scouting']
+
+    #bottype = pd.pivot_table(pitDf, columns = ['Tall or Short bot?'], index = ['Team number of team you are scouting'])
+    heightdict = {'teamNo' : pitTeamList, 'bot height' : botheight}
+    bhdf = pd.DataFrame(data=heightdict)
+    bhlist = bhdf['bot height']
+    #pprint(botheightdf)
+    
+    drivetrain = pitDf['What drivetrain do they have?']
+    dtdict = {'teamNo' : pitTeamList, 'drivetrain' : drivetrain}
+    dtdf = pd.DataFrame(data=dtdict)
+    dtls = dtdf['drivetrain']
+    
+    tcrcdf = pd.pivot_table(mainDf, values=['rotationalControl'], aggfunc = np.count_nonzero, index = ['teamNo'])
+    #pprint(tcrcdf)
+    tcrcls= tcrcdf['rotationalControl']
+    tcpcdf = pd.pivot_table(mainDf, values=['positionalControl'], aggfunc = np.count_nonzero, index = ['teamNo'])
+    #pprint(tcpcdf)
+    tcpcls = tcpcdf['positionalControl']
+    mpod = pd.pivot_table(mainDf, values=['defense'], aggfunc = np.count_nonzero, index = ['teamNo'])
+    #pprint(mpod)
+    mpodls = mpod['defense']
+    
+    #ultralist = [matchscouted, avgpcs, avghi, tcrcdf, tcpcdf, mpod, dtdf, bhdf]
+    
+#    stg1 = mainDf.join(matchscouted, how='outer', lsuffix='_left', rsuffix='_right')
+#    stg2 = stg1.join(avgpcs, how='outer', lsuffix='_left', rsuffix='_right')
+#    stg3 = stg2.join(avghi, how='outer', lsuffix='_left', rsuffix='_right')
+#    stg4 = stg3.join(tcrcdf, how='outer', lsuffix='_left', rsuffix='_right')
+#    stg5 = stg4.join(tcpcdf, how='outer', lsuffix='_left', rsuffix='_right')
+#    stg6 = stg5.join(dtdf, how='outer', lsuffix='_left', rsuffix='_right')
+#    ultradf = stg6.join(bhdf, how='outer', lsuffix='_left', rsuffix='_right')
+    
+    ultraList = {'Matches Scouted' : mslist, 'Average Pieces Scored' : avgpcslis, 'Average High Goal Makes' : avghils, 'Times Completed Rotation Control' : tcrcls, 'Times Completed Positional Control' : tcpcls, 'Matches Played on Defense' : mpodls}
+    
+    ultraDf = pd.DataFrame(data=ultraList)
+    
+    ultraDf = ultraDf.fillna('no data')
+    
+    
+    pitultradf = bhdf.merge(dtdf)
+    pitultradf.set_index('teamNo', inplace=True)
+    
+    pitultradf.sort_index(ascending=True)
+    ultraDf.sort_index(ascending=True)
+    
+    prematchScoutingReportDf = ultraDf.merge(pitultradf, on='teamNo')
+    return prematchScoutingReportDf
+
+
+
+
+
+
+
+
+
+
+
 
 def Main(testmode):
     print('press 1 to acquire a Match List')
@@ -735,19 +837,20 @@ def Main(testmode):
         makeMatchList(event)
         
     elif selection == '2':
-        Team = enterTeam()       
+        # Team = enterTeam()       
         MainData, CycleData = readScout()
-        MatchList = readMatchList()
-        #TeamDf, PivotDf = TeamStats(MainData)
-        Partners = FindPartners(MatchList, Team)
-        #matchNum = FindPartners(MatchList, Team)
-        #MatchReport(Partners, PivotDf, TeamDf, Team)
+        PitData = readPitScout()
+        # MatchList = readMatchList()
+        # #TeamDf, PivotDf = TeamStats(MainData)
+        # Partners = FindPartners(MatchList, Team)
+        # #matchNum = FindPartners(MatchList, Team)
+        # #MatchReport(Partners, PivotDf, TeamDf, Team)
         
     elif selection == '3':
         Team = int(enterTeam())       
         ReadData = readScout()
-        df = ReadData
-        print(ReadData)
+        # df = ReadData
+        # print(ReadData)
         MatchList = readMatchList()
         #TeamDf, PivotDf = TeamStats(ReadData)
         #print (TeamStats(ReadData))
@@ -795,6 +898,3 @@ def Main(testmode):
     elif selection == 'C':
         Main, Cycle = readScout()
         getFirstDayReportExcel(Main)
-        
-        
-Main(True)
