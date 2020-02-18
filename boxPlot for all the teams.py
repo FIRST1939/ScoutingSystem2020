@@ -185,6 +185,8 @@ def getHeatMap(df, mainDf, team, graphVar, ax):
     print(matchNum)
     print(yLabels)
     ax.set_title(graphVar)
+    ax.set_xlabel('Matches')
+    ax.set_ylabel(graphVar)
     try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels=matchNum, vmin=0, vmax=maxShot)
     except:print('data not available')
     
