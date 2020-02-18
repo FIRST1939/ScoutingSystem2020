@@ -660,11 +660,13 @@ def sendMainData():
             sendCycleData(1)
         if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
             sendCycleData(0)
+        messagebox.showinfo('submitted to database', 'Thanks! Your data was sent to the database ;D')
         autoCycles = 0
         teleCycles = 0
         sendMainToDatabase(getCardValue())
         reinitscreen()
     elif sendMSG is True and dontUseThisData_State.get() is True:
+        messagebox.showinfo('submitted to database', 'Thanks! Your data was deleted ;D')
         autoCycles = 0
         teleCycles = 0
         reinitscreen()
