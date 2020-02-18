@@ -128,7 +128,7 @@ def initPicklistGraph(teamList):
    return fig, gs
 
 def initMatchReportGraph():
-   fig = plt.figure(tight_layout=True, figsize=(10, 10))
+   fig = plt.figure(tight_layout=True, figsize=(20, 10))
    gs = gridspec.GridSpec(2, 4)
    return fig, gs
 
@@ -167,10 +167,25 @@ def getHeatMapPivot(df):
     print(fourthmove)
     return fourthmove    
 
-def getHeatMap(df, team, graphVar, ax):
+def getHeatMap(df, mainDf, team, graphVar, ax):
+    maxShot =55
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
-    try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True)
+    yLabels=['A']
+    matchNum = []
+    for position in df['shooterPosition'].sort_values().values:
+        passer = False
+        for label in yLabels:
+            if label == position:
+                passer = True
+        if passer == False:
+            yLabels.append(position)
+    for match in mainDf.set_index('teamNo').loc[[team], ["matchNo"]].values:
+        matchNum.append(str(match[0]))
+    print(matchNum)
+    print(yLabels)
+    ax.set_title(graphVar)
+    try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels=matchNum, vmin=0, vmax=maxShot)
     except:print('data not available')
     
     
@@ -188,11 +203,16 @@ def prematchGraphs(maindf, cycledf, team):
     ax7 = fig.add_subplot(gs[1, 3])
     getPrematchScatterPlot(df, team, 'autoMakes', ax1)
     getPrematchScatterPlot(df, team, 'totalMakes', ax2)
-    getHeatMap(cycledf, team, 'highGoalMisses', ax3)
-    getHeatMap(cycledf, team, 'lowGoalMisses', ax4)
-    getHeatMap(cycledf, team, 'innerGoalMakes', ax5)
-    getHeatMap(cycledf, team, 'outerGoalMakes', ax6)
-    getHeatMap(cycledf, team, 'lowGoalMakes', ax7)
+    getHeatMap(cycledf, maindf, team, 'highGoalMisses', ax3)
+    getHeatMap(cycledf, maindf, team, 'lowGoalMisses', ax4)
+    getHeatMap(cycledf, maindf, team, 'innerGoalMakes', ax5)
+    getHeatMap(cycledf, maindf, team, 'outerGoalMakes', ax6)
+    getHeatMap(cycledf, maindf, team, 'lowGoalMakes', ax7)
+    ax3.title.set_position([.5, 1.2])
+    ax4.title.set_position([.5, 1.2])
+    ax5.title.set_position([.5, 1.2])
+    ax6.title.set_position([.5, 1.2])
+    ax7.title.set_position([.5, 1.2])
     plt.savefig(str(team) + ' Prematch Graphs')
     plt.show()
     
