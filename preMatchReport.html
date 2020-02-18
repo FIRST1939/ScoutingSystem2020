@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {font-family: Arial;}
+body {
+  font-family: Arial;
+}
 
 /* Style the tab */
 .tab {
@@ -41,32 +44,94 @@ body {font-family: Arial;}
   border: 1px solid #ccc;
   border-top: none;
 }
+
+.team-card {
+  width: 400px;
+  display: inline-block;
+}
+
+.team-card-text {
+  padding: 0 40px;
+}
 </style>
 </head>
+
 <body>
 
-<h2>Tabs</h2>
-<p>Click on the buttons inside the tabbed menu:</p>
+<h2>Prematch Report</h2>
+<p>Match: 17</p>
 
 <div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'Pre Match')">Pre Match</button>
-  <button class="tablinks" onclick="openTab(event, 'Paris')">Paris</button>
-  <button class="tablinks" onclick="openTab(event, 'Tokyo')">Tokyo</button>
+  <button class="tablinks active" onclick="openTab(event, 'Overview')">Overview</button>
+  <button class="tablinks" onclick="openTab(event, '1939')">1939</button>
+  <button class="tablinks" onclick="openTab(event, 'Ally')">Ally</button>
+  <button class="tablinks" onclick="openTab(event, 'Ally2')">Ally2</button>
+  <button class="tablinks" onclick="openTab(event, 'opp1')">opp1</button>
+  <button class="tablinks" onclick="openTab(event, 'opp2')">opp2</button>
+  <button class="tablinks" onclick="openTab(event, 'opp3')">opp3</button>
 </div>
 
-<div id="Pre Match" class="tabcontent">
-  <h3>Pre Match</h3>
-  <p>Pre Match is the capital city of England.</p>
+<div id="Overview" class="tabcontent" style="display: block;">
+  <h3>Overview</h3>
+  <div class="team-card">
+    <p><img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;"></p>
+    <div class="team-card-text">
+      <p>Team</p>
+      <p>Matches Scouted:</p>
+      <p>Average Powercells Scored:</p>
+      <p>Avg High Powercells Scored:</p>
+      <p>Best Shooting Position:</p>
+      <p>Favorite Shooting Position:</p>
+    </div>
+  </div>
+  <div class="team-card">
+    <p><img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;">
+      <p>Team</p>
+      <p>Matches Scouted:</p>
+      <p>Average Powercells Scored:</p>
+      <p>Avg High Powercells Scored:</p>
+      <p>Best Shooting Position:</p>
+      <p>Favorite Shooting Position:</p>
+  </div>
+  <div class="team-card">
+    <p><img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;">
+      <p>Team</p>
+      <p>Matches Scouted:</p>
+      <p>Average Powercells Scored:</p>
+      <p>Avg High Powercells Scored:</p>
+      <p>Best Shooting Position:</p>
+      <p>Favorite Shooting Position:</p>
+  </div>
 </div>
 
-<div id="Paris" class="tabcontent">
-  <h3>Paris</h3>
-  <p>Paris is the capital of France.</p> 
+<div id="1939" class="tabcontent">
+  <h3>1939</h3>
+  <p>1939 is the capital of France.</p>
 </div>
 
-<div id="Tokyo" class="tabcontent">
-  <h3>Tokyo</h3>
-  <p>Tokyo is the capital of Japan.</p>
+<div id="Ally" class="tabcontent">
+  <h3>Ally</h3>
+  <p>Ally is the capital of Japan.</p>
+</div>
+
+<div id="Ally2" class="tabcontent">
+  <h3>Ally2</h3>
+  <p>Ally2 is the capital of Japan.</p>
+</div>
+
+<div id="opp1" class="tabcontent">
+  <h3>opp1</h3>
+  <p>opp1 is the capital of Japan.</p>
+</div>
+
+<div id="opp2" class="tabcontent">
+  <h3>opp2</h3>
+  <p>opp2 is the capital of Japan.</p>
+</div>
+
+<div id="opp3" class="tabcontent">
+  <h3>opp3</h3>
+  <p>opp3 is the capital of Japan.</p>
 </div>
 
 <script>
@@ -84,6 +149,7 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
 }
 </script>
-   
+
 </body>
-</html> 
+
+</html>
