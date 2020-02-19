@@ -100,10 +100,21 @@ def combineColumn(scoutData):
 
 def getPicklistHeatmap(df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
+    df = df.sort_values('teamNo', ascending=True)
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
     cookedDf = pd.pivot_table(highGoalMakesbyMatchDf.reset_index().drop(['matchNo'], axis=1), index='teamNo')
-    #cookedDf.stack(1).unstack(level=0).to_numpy()
-    sb.heatmap(cookedDf.stack(1).unstack(level=0).to_numpy(), cmap="YlGn", ax=ax, annot=True, vmin=0, vmax=55)
+    print(cookedDf.stack(1).unstack(level=0))
+    for position in df['shooterPosition'].sort_values().values:
+        passer = False
+        yLabels=[]
+        teamList = df['teamNo'].drop_duplicates().to_numpy()
+        for label in yLabels:
+            if label == position:
+                passer = True
+        if passer == False:
+            yLabels.append(position)
+    ax.set_title(graphVar)
+    sb.heatmap(cookedDf.stack(1).unstack(level=0).to_numpy(), cmap="YlGn", ax=ax, annot=True, vmin=0, vmax=55, yticklabels=yLabels, xticklabels=teamList )
 
 
 def getPicklistBoxplotData(df, graphVar, title, ax):
