@@ -98,11 +98,13 @@ def combineColumn(scoutData):
     
     return scoutData
 
-def getPicklistHeatmapPivot(df, graphVars):
+def getPicklistHeatmap(df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
-    funkyDf = getHeatMapPivot(df).reset_index()
-    cookedDf = pd.pivot_table(funkyDf, index='teamNo')
-    cookedDf.to_csv(r'Take This')
+    highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
+    cookedDf = pd.pivot_table(highGoalMakesbyMatchDf.reset_index().drop(['matchNo'], axis=1), index='teamNo')
+    #cookedDf.stack(1).unstack(level=0).to_numpy()
+    sb.heatmap(cookedDf.stack(1).unstack(level=0).to_numpy(), cmap="YlGn", ax=ax, annot=True, vmin=0, vmax=55)
+
 
 def getPicklistBoxplotData(df, graphVar, title, ax):
 
@@ -131,7 +133,7 @@ def getTeamList(df):
 
 def initPicklistGraph(teamList):
    fig = plt.figure(tight_layout=True, figsize=(len(teamList), 10))
-   gs = gridspec.GridSpec(3, 1)
+   gs = gridspec.GridSpec(4, 1)
    return fig, gs
 
 def initMatchReportGraph():
@@ -140,14 +142,16 @@ def initMatchReportGraph():
    return fig, gs
 
 
-def picklistBoxPlots(df):
+def picklistGraphs(df, cycleDf):
     fig, gs = initPicklistGraph(getTeamList(df))
     ax1 = fig.add_subplot(gs[0, 0])
     ax2 = fig.add_subplot(gs[1, 0])
     ax3 = fig.add_subplot(gs[2, 0])
+    ax4 = fig.add_subplot(gs[3, 0])
     getPicklistBoxplotData(df, 'totalMakes', 'Total Shots Made', ax1)
     getPicklistBoxplotData(df, 'highGoalMakes', 'Total High Shots Made', ax2)
     getPicklistBoxplotData(df, 'autoMakes', 'Total Auto Shots Made', ax3)
+    getPicklistHeatmap(cycleDf, ax4, 'highGoalMakes')
     plt.savefig(input('Event name: ') + ' Picklist Graphs')
     plt.show()
 
@@ -229,6 +233,6 @@ def prematchGraphs(maindf, cycledf, team):
     
 maindf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered main data file'), sep = '|')
 cycledf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered cycle data file'), sep = '|')
-#picklistBoxPlots(maindf)
-prematchGraphs(maindf, cycledf, 1939)
-#getPicklistHeatmapPivot(cycledf.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
+picklistGraphs(maindf, cycledf)
+#prematchGraphs(maindf, cycledf, 1939)
+#getPicklistHeatmapPivot(cycledf, 'outerGoalMakes')
