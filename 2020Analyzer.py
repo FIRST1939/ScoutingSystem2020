@@ -718,7 +718,8 @@ def getFirstDayReportExcel(mainDf):
     directory = os.path.dirname(path)
     print('saved in  ' + str(directory))
     
-
+cycleDf, mainDf = readScout()
+combinedMainDf = combineColumn(mainDf)
 
 def getPrematchReportDf(MainData, CycleData, PitData):
     
@@ -855,7 +856,7 @@ def Main(testmode):
         #TeamDf, PivotDf = TeamStats(ReadData)
         #print (TeamStats(ReadData))
         #SearchTeam(TeamDf, PivotDf, Team)
-        print(df)
+        #print(df)
 #        getTeamScatterplot(Team, df)
     elif selection == '4':
         ReadData = readScout()
