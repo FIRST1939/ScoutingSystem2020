@@ -100,6 +100,15 @@ def combineColumn(scoutData):
 
 def getPicklistHeatmap(mainDf, df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
+    pprint(df)
+    for team in mainDf['teamNo'].drop_duplicates().to_numpy():
+        passer = False
+        for cycleTeam in df['teamNo'].drop_duplicates().to_numpy():
+            if team == cycleTeam:
+                passer = True
+        if passer == False:
+            df.append([[0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0]])
+    
     df = df.sort_values('teamNo', ascending=True)
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
     cookedDf = pd.pivot_table(highGoalMakesbyMatchDf.reset_index().drop(['matchNo'], axis=1), index='teamNo')
@@ -108,12 +117,12 @@ def getPicklistHeatmap(mainDf, df, ax, graphVar):
     for position in df['shooterPosition'].sort_values().values:
         print(position)
         passer = False    
-        teamList = df['teamNo'].drop_duplicates().to_numpy()
         for label in yLabels:
             if label == position:
                 passer = True
         if passer == False:
             yLabels.append(position)
+    teamList = df['teamNo'].drop_duplicates().to_numpy()
     ax.set_title(graphVar)
     sb.heatmap(cookedDf.stack(1).unstack(level=0).to_numpy(), cmap="YlGn", ax=ax, annot=True, vmin=0, vmax=55, yticklabels=yLabels, xticklabels=teamList )
 
