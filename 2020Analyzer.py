@@ -13,7 +13,7 @@ import tbaUtils
 from datetime import datetime
 from pprint import pprint
 from tkinter import filedialog
-
+from tkinter import *
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -176,7 +176,9 @@ def readMatchList():
         
     return result
 
-
+def whoThis():
+    choice = input('who is testing : ')
+    return choice
 def readScout():
     '''
     Read Scouting Data from a file, fix formatting to numeric where neccessary,
@@ -185,10 +187,9 @@ def readScout():
    # if testmode :
     #    FileName = r'C:\Users\Saketh\Documents\GitHub\2019-Scouting-Analyzer\MatchScoutForOtherTeams.csv'
 
-    choice = input('is this charlie testing?')
-    choice = choice.lower()
+    choice = whoThis()
         
-    if choice == 'yes':
+    if choice == 'charlie':
         
         mainData = pd.read_csv(r"C:\Users\charl\Downloads\very cool scripts folder\MainData.csv", sep= '|')
         mainDf = mainData.fillna('0')
@@ -215,10 +216,10 @@ def readPitScout():
 #    with open(FileName, 'r') as ScoutFile:
 #        pitData = pd.read_csv(ScoutFile, sep = '|') 
 #    pitDf = pitData.fillna(value = 0)
-    
+    choice = whoThis()
     if choice == 'charlie':
         
-        pitDf = pd.read_csv(r'C:\Users\charl\Documents\GitHub\2020_Scouting_System\PitData.csv', sep= '|')
+        pitDf = pd.read_csv(r'C:\Users\charl\Downloads\very cool scripts folder\PitData.csv', sep= '|')
         pitDf = pitDf.fillna('0')
 
     else:
@@ -822,10 +823,15 @@ def getPrematchReportDf(mainDf, cycleDf, pitDf):
     ultraDf.sort_index(ascending=True)
     
     prematchScoutingReportDf = ultraDf.merge(pitultradf, on='teamNo')
-    
+    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+    pprint(prematchScoutingReportDf)
+    prematchScoutingReportDf.to_excel('prematch scouting report' + str(today) + '.xlsx')
     return prematchScoutingReportDf
 
-
+def getThatExcel(df):
+    
+    df.to_excel('export' + str(today) + '.xlsx')
+    
 def Main(testmode):
     print('press 1 to acquire a Match List')
     print('press 2 to get a prematch Scouting Report')
@@ -836,7 +842,7 @@ def Main(testmode):
     print('press 9 for functional math test')
     print('press C to run getFirstDayREportExcel')
     selection = input('enter number: ')
-    
+    selection = selection.lower()
     if selection == '1':
         event = input('enter event code: ')
         makeMatchList(event)
@@ -900,6 +906,8 @@ def Main(testmode):
         #print(TeamDf)
         print('\nTeam Pivot')
         #print(PivotDf)
-    elif selection == 'C':
+    elif selection == 'c':
         Main, Cycle = readScout()
-        getFirstDayReportExcel(Main)
+        Pit = readPitScout()
+        getPrematchReportDf(Main, Cycle, Pit)
+Main(True)
