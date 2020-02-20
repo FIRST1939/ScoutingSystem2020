@@ -19,6 +19,9 @@ import numpy as np
 import pandas as pd
 from matplotlib.gridspec import GridSpec
 
+
+
+
 #change makeMatchList so the year is the current year using datetime module.
 year = datetime.today().year
 def makeMatchList(event):
@@ -73,7 +76,7 @@ def makeMatchList(event):
 #     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
 #     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
 
-def combineColumn(scoutData): 
+def combineColumn(mainDf): 
     '''
     This combines columns and creates columns from adding other columns. Specifics:
     Total/low/high/outer/inner goal makes/misses/attempts across  game phase(overall)
@@ -81,72 +84,72 @@ def combineColumn(scoutData):
     in low and high goal, autonomous score, teleop score.
     '''
     
-    scoutData['totalAttempts']=scoutData['lowGoalMissesAuto']+scoutData['highGoalMissesAuto']
-    scoutData['totalAttempts']+=scoutData['lowGoalMakesAuto']+scoutData['outerGoalMakesAuto']
-    scoutData['totalAttempts']+=scoutData['innerGoalMakesAuto']+scoutData['lowGoalMissesTele']
-    scoutData['totalAttempts']+=scoutData['lowGoalMakesTele']+scoutData['outerGoalMakesTele']
-    scoutData['totalAttempts']+=scoutData['innerGoalMakesTele']
+    mainDf['totalAttempts']=mainDf['lowGoalMissesAuto']+mainDf['highGoalMissesAuto']
+    mainDf['totalAttempts']+=mainDf['lowGoalMakesAuto']+mainDf['outerGoalMakesAuto']
+    mainDf['totalAttempts']+=mainDf['innerGoalMakesAuto']+mainDf['lowGoalMissesTele']
+    mainDf['totalAttempts']+=mainDf['lowGoalMakesTele']+mainDf['outerGoalMakesTele']
+    mainDf['totalAttempts']+=mainDf['innerGoalMakesTele']
     
         
-    scoutData['lowGoalAttemptsAuto']=scoutData['lowGoalMissesAuto']+scoutData['lowGoalMakesAuto']
+    mainDf['lowGoalAttemptsAuto']=mainDf['lowGoalMissesAuto']+mainDf['lowGoalMakesAuto']
     
-    scoutData['teleMakes']=scoutData['innerGoalMakesTele']+scoutData['outerGoalMakesTele']+scoutData['lowGoalMakesTele']
+    mainDf['teleMakes']=mainDf['innerGoalMakesTele']+mainDf['outerGoalMakesTele']+mainDf['lowGoalMakesTele']
     
-    scoutData['lowGoalAttemptsTele']=scoutData['lowGoalMissesTele']+scoutData['lowGoalMakesTele']
+    mainDf['lowGoalAttemptsTele']=mainDf['lowGoalMissesTele']+mainDf['lowGoalMakesTele']
     
-    scoutData['lowGoalAttempts']=scoutData['lowGoalAttemptsAuto']+scoutData['lowGoalAttemptsTele']
+    mainDf['lowGoalAttempts']=mainDf['lowGoalAttemptsAuto']+mainDf['lowGoalAttemptsTele']
     
-    scoutData['lowGoalMakes']=scoutData['lowGoalMakesAuto']+scoutData['lowGoalMakesTele']
+    mainDf['lowGoalMakes']=mainDf['lowGoalMakesAuto']+mainDf['lowGoalMakesTele']
     
-    scoutData['highGoalMakesAuto'] = (scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])
+    mainDf['highGoalMakesAuto'] = (mainDf['outerGoalMakesAuto']+mainDf['innerGoalMakesAuto'])
     
-    scoutData['highGoalAttemptsAuto']=(scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])+scoutData['highGoalMissesAuto']
+    mainDf['highGoalAttemptsAuto']=(mainDf['outerGoalMakesAuto']+mainDf['innerGoalMakesAuto'])+mainDf['highGoalMissesAuto']
     
-    scoutData['highGoalAttemptsTele']=(scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])+scoutData['highGoalMissesTele']
+    mainDf['highGoalAttemptsTele']=(mainDf['outerGoalMakesTele']+mainDf['innerGoalMakesTele'])+mainDf['highGoalMissesTele']
     
-    scoutData['highGoalMakesTele']=scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele']
+    mainDf['highGoalMakesTele']=mainDf['outerGoalMakesTele']+mainDf['innerGoalMakesTele']
     
-    scoutData['highGoalAttempts']=scoutData['highGoalAttemptsAuto']+scoutData['highGoalAttemptsTele']
+    mainDf['highGoalAttempts']=mainDf['highGoalAttemptsAuto']+mainDf['highGoalAttemptsTele']
 
-    scoutData['highGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesTele']+scoutData['innerGoalMakesAuto']
+    mainDf['highGoalMakes']=mainDf['outerGoalMakesTele']+mainDf['outerGoalMakesAuto']+mainDf['innerGoalMakesTele']+mainDf['innerGoalMakesAuto']
     
     
-    scoutData['outerGoalMakes']=scoutData['outerGoalMakesTele']+scoutData['outerGoalMakesAuto']
+    mainDf['outerGoalMakes']=mainDf['outerGoalMakesTele']+mainDf['outerGoalMakesAuto']
     
     
-    scoutData['innerGoalMakes']=scoutData['innerGoalMakesAuto']+scoutData['innerGoalMakesTele']
+    mainDf['innerGoalMakes']=mainDf['innerGoalMakesAuto']+mainDf['innerGoalMakesTele']
 
     
-    scoutData['totalMakes']=scoutData['innerGoalMakes']+scoutData['outerGoalMakes']+scoutData['lowGoalMakes']
+    mainDf['totalMakes']=mainDf['innerGoalMakes']+mainDf['outerGoalMakes']+mainDf['lowGoalMakes']
     
     
-    scoutData['autoMakes']=scoutData['innerGoalMakesAuto']+scoutData['outerGoalMakesAuto']+scoutData['lowGoalMakesAuto']
+    mainDf['autoMakes']=mainDf['innerGoalMakesAuto']+mainDf['outerGoalMakesAuto']+mainDf['lowGoalMakesAuto']
     
-    #print(scoutData['totalMakes'], scoutData['totalAttempts'])
-    scoutData['totalAccuracy']=(scoutData['totalMakes'].astype('int32'))/(scoutData['totalAttempts'].astype('int32'))*100
+    #print(mainDf['totalMakes'], mainDf['totalAttempts'])
+    mainDf['totalAccuracy']=(mainDf['totalMakes'].astype('int32'))/(mainDf['totalAttempts'].astype('int32'))*100
     
-    scoutData['lowGoalMakesAccuracy']=(scoutData['lowGoalMakes']/scoutData['lowGoalAttempts'])*100
+    mainDf['lowGoalMakesAccuracy']=(mainDf['lowGoalMakes']/mainDf['lowGoalAttempts'])*100
     
-    scoutData['lowGoalMakesAccuracyAuto']=(scoutData['lowGoalMakesAuto']/scoutData['lowGoalAttemptsAuto'])*100
+    mainDf['lowGoalMakesAccuracyAuto']=(mainDf['lowGoalMakesAuto']/mainDf['lowGoalAttemptsAuto'])*100
     
-    scoutData['lowGoalMakesAccuracyTele']=(scoutData['lowGoalMakesTele']/scoutData['lowGoalAttemptsTele'])*100
+    mainDf['lowGoalMakesAccuracyTele']=(mainDf['lowGoalMakesTele']/mainDf['lowGoalAttemptsTele'])*100
     
-    scoutData['highGoalMakesAccuracy']=(scoutData['highGoalMakes']/scoutData['highGoalAttempts'])*100
+    mainDf['highGoalMakesAccuracy']=(mainDf['highGoalMakes']/mainDf['highGoalAttempts'])*100
     
-    scoutData['highGoalMakesAccuracyAuto']=((scoutData['outerGoalMakesAuto']+scoutData['innerGoalMakesAuto'])/scoutData['highGoalAttemptsAuto'])*100
+    mainDf['highGoalMakesAccuracyAuto']=((mainDf['outerGoalMakesAuto']+mainDf['innerGoalMakesAuto'])/mainDf['highGoalAttemptsAuto'])*100
     
-    scoutData['highGoalMakesAccuracyTele']=((scoutData['outerGoalMakesTele']+scoutData['innerGoalMakesTele'])/scoutData['highGoalAttemptsTele'])*100
+    mainDf['highGoalMakesAccuracyTele']=((mainDf['outerGoalMakesTele']+mainDf['innerGoalMakesTele'])/mainDf['highGoalAttemptsTele'])*100
     
-    scoutData['percentOfLowGoal']=(scoutData['lowGoalMakes']/scoutData['totalMakes'])*100
+    mainDf['percentOfLowGoal']=(mainDf['lowGoalMakes']/mainDf['totalMakes'])*100
     
-    scoutData['percentOfOuterGoal']=(scoutData['outerGoalMakes']/scoutData['totalMakes'])*100
+    mainDf['percentOfOuterGoal']=(mainDf['outerGoalMakes']/mainDf['totalMakes'])*100
     
-    scoutData['percentOfInnerGoal']=(scoutData['innerGoalMakes']/scoutData['totalMakes'])*100
+    mainDf['percentOfInnerGoal']=(mainDf['innerGoalMakes']/mainDf['totalMakes'])*100
     
     
-    scoutData['teleopScore']=scoutData['lowGoalMakesTele']+2*scoutData['outerGoalMakesTele']
-    scoutData['teleopScore']+=3*scoutData['innerGoalMakesTele']
-    return scoutData
+    mainDf['teleopScore']=mainDf['lowGoalMakesTele']+2*mainDf['outerGoalMakesTele']
+    mainDf['teleopScore']+=3*mainDf['innerGoalMakesTele']
+    return mainDf
     
     
 def readMatchList():    
@@ -187,11 +190,11 @@ def readScout():
         
     if choice == 'yes':
         
-        mainData = pd.read_csv(r'C:\Users\charl\Downloads\MainData.csv', sep= '|')
+        mainData = pd.read_csv(r"C:\Users\charl\Downloads\very cool scripts folder\MainData.csv", sep= '|')
         mainDf = mainData.fillna('0')
         
         
-        cycleData = pd.read_csv(r'C:\Users\charl\Downloads\CycleData.csv', sep = '|')
+        cycleData = pd.read_csv(r"C:\Users\charl\Downloads\very cool scripts folder\CycleData.csv", sep = '|')
         cycleDf = cycleData.fillna('0')
     else:
         
@@ -208,10 +211,22 @@ def readScout():
     return mainDf, cycleDf
 
 def readPitScout():
-    FileName = filedialog.askopenfilename(title = 'select pit scouting data file')
-    with open(FileName, 'r') as ScoutFile:
-        pitData = pd.read_csv(ScoutFile, sep = '|') 
-    pitDf = pitData.fillna(value = 0)
+#    FileName = filedialog.askopenfilename(title = 'select pit scouting data file')
+#    with open(FileName, 'r') as ScoutFile:
+#        pitData = pd.read_csv(ScoutFile, sep = '|') 
+#    pitDf = pitData.fillna(value = 0)
+    
+    if choice == 'charlie':
+        
+        pitDf = pd.read_csv(r'C:\Users\charl\Documents\GitHub\2020_Scouting_System\PitData.csv', sep= '|')
+        pitDf = pitDf.fillna('0')
+
+    else:
+        
+        FileName = filedialog.askopenfilename(title = 'select Pit Data file')
+        with open(FileName, 'r') as PitFile:
+            pitDf = pd.read_csv(PitFile, sep = '|') 
+        pitDf = pitDf.fillna('0')
     
     return pitDf
 
@@ -701,7 +716,7 @@ def getPicklistBoxplot(df, yvars, teamList):
     return(dataArr)#.set_xticklabels(teamList.get_values()))
 def getFirstDayReportExcel(mainDf):
     
-#    cycleDf = scoutData[1]
+#    cycleDf = mainDf[1]
 #    pitDf = readPitScout()
     combineColumn(mainDf)
     mainDf_avgpivot = pd.pivot_table(mainDf, index= ['teamNo'], values=['totalMakes', 'autoMakes', 'teleMakes'], aggfunc=np.average)
@@ -718,33 +733,31 @@ def getFirstDayReportExcel(mainDf):
     directory = os.path.dirname(path)
     print('saved in  ' + str(directory))
     
-cycleDf, mainDf = readScout()
-combinedMainDf = combineColumn(mainDf)
 
-def getPrematchReportDf(MainData, CycleData, PitData):
+
+def getPrematchReportDf(mainDf, cycleDf, pitDf):
+    """
+    1. Matches Scouted - matchscouted
+    2. Average Powercells Scored - avgpcs
+    3. Avg High Powercells Scored: avghi
+    4. Best Shooting Position:*
+    5. Shots Taken There:*
+    6. Accuracy There:*
+    7. favorite Shooting Position:*
+    8. Shots Taken There:*
+    9. Accuracy There:*
+    10. Tall or Short Bot: bhdf
+    11. Drivetrain: dtdf
+    12. Times Completed Rotational Control: tcrcdf
+    13. Times Completed Positional Control: tcpcdf
+    14. Matches Played on Defense: mpod
+    * = from cycle data
+    10 & 11 are from pit data
+    index = team
+    """
     
-    # 1. Matches Scouted - matchscouted
-    # 2. Average Powercells Scored - avgpcs
-    # 3. Avg High Powercells Scored: avghi
-    # 4. Best Shooting Position:*
-    # 5. Shots Taken There:*
-    # 6. Accuracy There:*
-    # 7. favorite Shooting Position:*
-    # 8. Shots Taken There:*
-    # 9. Accuracy There:*
-    # 10. Tall or Short Bot: bhdf
-    # 11. Drivetrain: dtdf
-    # 12. Times Completed Rotational Control: tcrcdf
-    # 13. Times Completed Positional Control: tcpcdf
-    # 14. Matches Played on Defense: mpod
-    # * = from cycle data
-    # 10 & 11 are from pit data
-    # index = team
+    mainDf = combineColumn(mainDf)
     
-    
-    mainDf = combinedMainDf
-    cycleDf = CycleData
-    pitDf = PitData
     
     #teamList = mainDf['teamNo']
     
@@ -809,17 +822,8 @@ def getPrematchReportDf(MainData, CycleData, PitData):
     ultraDf.sort_index(ascending=True)
     
     prematchScoutingReportDf = ultraDf.merge(pitultradf, on='teamNo')
+    
     return prematchScoutingReportDf
-
-
-
-
-
-
-
-
-
-
 
 
 def Main(testmode):
@@ -840,7 +844,7 @@ def Main(testmode):
     elif selection == '2':
         # Team = enterTeam()       
         MainData, CycleData = readScout()
-        PitData = readPitScout()
+        pitDf = readPitScout()
         # MatchList = readMatchList()
         # #TeamDf, PivotDf = TeamStats(MainData)
         # Partners = FindPartners(MatchList, Team)
@@ -857,7 +861,7 @@ def Main(testmode):
         #print (TeamStats(ReadData))
         #SearchTeam(TeamDf, PivotDf, Team)
         #print(df)
-#        getTeamScatterplot(Team, df)
+        #getTeamScatterplot(Team, df)
     elif selection == '4':
         ReadData = readScout()
         #TeamDf, PivotDf = TeamStats(ReadData)
