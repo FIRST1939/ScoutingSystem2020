@@ -828,9 +828,9 @@ def getPrematchReportDf(mainDf, cycleDf, pitDf):
     prematchScoutingReportDf.to_excel('prematch scouting report' + str(today) + '.xlsx')
     return prematchScoutingReportDf
 
-def getThatExcel(df):
+def getThatExcel(df, filename):
     
-    df.to_excel('export' + str(today) + '.xlsx')
+    df.to_excel((str(filename) + str(today) + '.xlsx'))
     
 def Main(testmode):
     print('press 1 to acquire a Match List')
