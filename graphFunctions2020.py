@@ -101,21 +101,25 @@ def combineColumn(scoutData):
 def getPicklistHeatmap(mainDf, df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
     pprint(df)
+    ''' FIX ME VICTORIA
+        THE APPEND DOESN'T WORK'''
     for team in mainDf['teamNo'].drop_duplicates().to_numpy():
         passer = False
         for cycleTeam in df['teamNo'].drop_duplicates().to_numpy():
             if team == cycleTeam:
                 passer = True
         if passer == False:
-            df.append([[0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0]])
-    
+            print(team)
+            df.append([0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0])
+            '''*****************************************'''
+    df.to_csv('Test.csv')
     df = df.sort_values('teamNo', ascending=True)
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
     cookedDf = pd.pivot_table(highGoalMakesbyMatchDf.reset_index().drop(['matchNo'], axis=1), index='teamNo')
     print(cookedDf.stack(1).unstack(level=0))
     yLabels=['A']
     for position in df['shooterPosition'].sort_values().values:
-        print(position)
+#        print(position)
         passer = False    
         for label in yLabels:
             if label == position:
@@ -191,12 +195,12 @@ def getPrematchScatterPlot(df, team, graphVar, ax):
   
 def getHeatMapPivot(df):
     firstmove = pd.pivot_table(df, index=['matchNo','teamNo','cycle'], columns='shooterPosition',aggfunc=np.sum).fillna(0)
-    print(firstmove)
+#    print(firstmove)
     secondmove = firstmove.groupby(axis=0,level=['matchNo','teamNo'])
     thirdmove = secondmove.sum()
-    print(thirdmove)
+#    print(thirdmove)
     fourthmove = thirdmove.swaplevel(i='matchNo',j='teamNo').sort_index()
-    print(fourthmove)
+#    print(fourthmove)
     return fourthmove    
 
 def getHeatMap(df, mainDf, team, graphVar, ax):
@@ -254,6 +258,6 @@ def prematchGraphs(maindf, cycledf, team):
     
 maindf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered main data file'), sep = '|')
 cycledf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered cycle data file'), sep = '|')
-#picklistGraphs(maindf, cycledf)
-prematchGraphs(maindf, cycledf, 1939)
+picklistGraphs(maindf, cycledf)
+#prematchGraphs(maindf, cycledf, 1939)
 #getPicklistHeatmapPivot(cycledf, 'outerGoalMakes')
