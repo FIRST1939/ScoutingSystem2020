@@ -2,14 +2,13 @@
 """
 Created on Wed Sep 18 14:33:57 2019
 
-@author: Mason
+@author: BigDadaGnomeFromTeam1939
 """
 
 import pandas as pd
 import numpy as np
 import seaborn as sb
 from tkinter import filedialog
-from pprint import pprint
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.ticker as ticker
@@ -96,36 +95,7 @@ def combineColumn(scoutData):
     
 #    print(scoutData.head())
     
-    return scoutData
-
-def getPicklistHeatmap(mainDf, df, ax, graphVar):
-    df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
-    pprint(df)
-    for team in mainDf['teamNo'].drop_duplicates().to_numpy():
-        passer = False
-        for cycleTeam in df['teamNo'].drop_duplicates().to_numpy():
-            if team == cycleTeam:
-                passer = True
-        if passer == False:
-            df.append([[0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0]])
-    
-    df = df.sort_values('teamNo', ascending=True)
-    highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
-    cookedDf = pd.pivot_table(highGoalMakesbyMatchDf.reset_index().drop(['matchNo'], axis=1), index='teamNo')
-    print(cookedDf.stack(1).unstack(level=0))
-    yLabels=['A']
-    for position in df['shooterPosition'].sort_values().values:
-        print(position)
-        passer = False    
-        for label in yLabels:
-            if label == position:
-                passer = True
-        if passer == False:
-            yLabels.append(position)
-    teamList = df['teamNo'].drop_duplicates().to_numpy()
-    ax.set_title(graphVar)
-    sb.heatmap(cookedDf.stack(1).unstack(level=0).to_numpy(), cmap="YlGn", ax=ax, annot=True, vmin=0, vmax=55, yticklabels=yLabels, xticklabels=teamList )
-
+    return scoutData 
 
 def getPicklistBoxplotData(df, graphVar, title, ax):
 
@@ -154,25 +124,23 @@ def getTeamList(df):
 
 def initPicklistGraph(teamList):
    fig = plt.figure(tight_layout=True, figsize=(len(teamList), 10))
-   gs = gridspec.GridSpec(4, 1)
+   gs = gridspec.GridSpec(3, 1)
    return fig, gs
 
 def initMatchReportGraph():
-   fig = plt.figure(tight_layout=True, figsize=(14, 7))
+   fig = plt.figure(tight_layout=True, figsize=(20, 10))
    gs = gridspec.GridSpec(2, 4)
    return fig, gs
 
 
-def picklistGraphs(df, cycleDf):
+def picklistBoxPlots(df):
     fig, gs = initPicklistGraph(getTeamList(df))
     ax1 = fig.add_subplot(gs[0, 0])
     ax2 = fig.add_subplot(gs[1, 0])
     ax3 = fig.add_subplot(gs[2, 0])
-    ax4 = fig.add_subplot(gs[3, 0])
     getPicklistBoxplotData(df, 'totalMakes', 'Total Shots Made', ax1)
     getPicklistBoxplotData(df, 'highGoalMakes', 'Total High Shots Made', ax2)
     getPicklistBoxplotData(df, 'autoMakes', 'Total Auto Shots Made', ax3)
-    getPicklistHeatmap(df, cycleDf, ax4, 'highGoalMakes')
     plt.savefig(input('Event name: ') + ' Picklist Graphs')
     plt.show()
 
@@ -202,8 +170,6 @@ def getHeatMapPivot(df):
 def getHeatMap(df, mainDf, team, graphVar, ax):
     maxShot =55
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
-    df['lowGoalAttempts'] = df['lowGoalMisses'] + df['lowGoalMakes']
-    df['highGoalAttempts'] = df['highGoalMisses'] + df['innerGoalMakes'] + df['outerGoalMakes']
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
     yLabels=['A']
     matchNum = []
@@ -220,7 +186,7 @@ def getHeatMap(df, mainDf, team, graphVar, ax):
     print(yLabels)
     ax.set_title(graphVar)
     ax.set_xlabel('Matches')
-    ax.set_ylabel('Position')
+    ax.set_ylabel(graphVar)
     try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels=matchNum, vmin=0, vmax=maxShot)
     except:print('data not available')
     
@@ -239,8 +205,8 @@ def prematchGraphs(maindf, cycledf, team):
     ax7 = fig.add_subplot(gs[1, 3])
     getPrematchScatterPlot(df, team, 'autoMakes', ax1)
     getPrematchScatterPlot(df, team, 'totalMakes', ax2)
-    getHeatMap(cycledf, maindf, team, 'highGoalAttempts', ax3)
-    getHeatMap(cycledf, maindf, team, 'lowGoalAttempts', ax4)
+    getHeatMap(cycledf, maindf, team, 'highGoalMisses', ax3)
+    getHeatMap(cycledf, maindf, team, 'lowGoalMisses', ax4)
     getHeatMap(cycledf, maindf, team, 'innerGoalMakes', ax5)
     getHeatMap(cycledf, maindf, team, 'outerGoalMakes', ax6)
     getHeatMap(cycledf, maindf, team, 'lowGoalMakes', ax7)
@@ -254,6 +220,5 @@ def prematchGraphs(maindf, cycledf, team):
     
 maindf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered main data file'), sep = '|')
 cycledf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered cycle data file'), sep = '|')
-#picklistGraphs(maindf, cycledf)
+#picklistBoxPlots(df)
 prematchGraphs(maindf, cycledf, 1939)
-#getPicklistHeatmapPivot(cycledf, 'outerGoalMakes')
