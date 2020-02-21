@@ -254,6 +254,6 @@ def prematchGraphs(maindf, cycledf, team):
     
 maindf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered main data file'), sep = '|')
 cycledf = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered cycle data file'), sep = '|')
-picklistGraphs(maindf, cycledf)
-#prematchGraphs(maindf, cycledf, 1939)
+#picklistGraphs(maindf, cycledf)
+prematchGraphs(maindf, cycledf, 1939)
 #getPicklistHeatmapPivot(cycledf, 'outerGoalMakes')
