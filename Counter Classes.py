@@ -1,7 +1,3 @@
-
-
-
-
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jan  9 12:42:19 2020
@@ -374,7 +370,3 @@ highAsAKite = highGoalCounterClass(tab2, 3, 3, 'done', 0, 3)
 printBtn = Button(tab1, text = 'print this thing', command = clicked)
 printBtn.grid(column = 1, row=1)
 window.mainloop()
-
-Reply
-Forward
-
