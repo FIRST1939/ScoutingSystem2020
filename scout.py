@@ -575,18 +575,28 @@ def sendCycleData(gamePhase):
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
-        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
+        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')  
+    
+    sendCycleMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
+ 
+    if comboBoxShooterPosTele():
+        sendCycleMSG = False
+        messagebox.showinfo('combo box error','Invalid shooter position')
+    if comboBoxShooterPosAuto():
+        sendCycleMSG = False
+        messagebox.showinfo('combo box error','Invalid shooter position')
+    if comboBoxShooterPosRef():
+        sendCycleMSG = False
+        messagebox.showinfo('combo box error','Invalid shooter position')
     else:
+        if sendCycleMSG == True:
 #        send data
 #        if sendCycle == False:
-        sendCycleToDatabase(gamePhase)
-        cycleReinit(gamePhase)
-        messagebox.showinfo('Cycle submission','Cycle submission complete :)')
+            sendCycleToDatabase(gamePhase)
+            cycleReinit(gamePhase)
+            messagebox.showinfo('Cycle submission','Cycle submission complete :)')
 #        else:
 #            messagebox.showinfo('Cycle submission error','Unable to go over 255')
-
-    #reinitialize cycle 
-    sendCycleToDatabase(gamePhase)
 #
 def getCardValue():
     cardValue=0
@@ -601,8 +611,6 @@ def sendMainData():
     global teleCycles
     sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
     if comboBoxBarLevel():
-        sendMSG = False
-    if comboBoxAutoShooterPos():
         sendMSG = False
     if comboBoxRotationalCont():
         sendMSG = False
@@ -660,10 +668,10 @@ def sendMainData():
             sendCycleData(1)
         if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
             sendCycleData(0)
+        sendMainToDatabase(getCardValue())
         messagebox.showinfo('submitted to database', 'Thanks! Your data was sent to the database ;D')
         autoCycles = 0
         teleCycles = 0
-        sendMainToDatabase(getCardValue())
         reinitscreen()
     elif sendMSG is True and dontUseThisData_State.get() is True:
         messagebox.showinfo('submitted to database', 'Thanks! Your data was deleted ;D')
@@ -820,13 +828,26 @@ autoShooterPos.current(0)
 autoShooterPos.grid(column= 5, row= 3, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
-def comboBoxAutoShooterPos():
-    if autoShooterPos.get()== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
+def comboBoxShooterPosAuto():
+    if autoShooterPos.get()== ("A"):
+        return False
+    elif autoShooterPos.get()== ("B"):
+        return False
+    elif autoShooterPos.get()== ("C"):
+        return False
+    elif autoShooterPos.get()== ("D"):
+        return False
+    elif autoShooterPos.get()== ("E"):
+        return False
+    elif autoShooterPos.get()== ("F"):
+        return False
+    elif autoShooterPos.get()== ("G"):
+        return False
+    elif autoShooterPos.get()== ("H"):
         return False
     else:
-        messagebox.showinfo('combo box error', 'invalid answer for auto shooter position')
+        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
         return True
-
 
 autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
 autoEnter.grid(row=4, column=7, rowspan=4, columnspan=6, ipady=15, ipadx=15)
@@ -850,6 +871,26 @@ shooterPosRef.current(0)
 shooterPosRef.grid(column= 7, row= 2, columnspan= 1, ipady=5, ipadx=10)
 shooterPosRef.config(width= 5)
 shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
+def comboBoxShooterPosRef():
+    if shooterPosRef.get()== ("A"):
+        return False
+    elif shooterPosRef.get()== ("B"):
+        return False
+    elif shooterPosRef.get()== ("C"):
+        return False
+    elif shooterPosRef.get()== ("D"):
+        return False
+    elif shooterPosRef.get()== ("E"):
+        return False
+    elif shooterPosRef.get()== ("F"):
+        return False
+    elif shooterPosRef.get()== ("G"):
+        return False
+    elif shooterPosRef.get()== ("H"):
+        return False
+    else:
+        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
+        return True
 
 #TELEOP pagE
             
@@ -866,7 +907,11 @@ rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
 def comboBoxRotationalCont():
-    if rotationalControl.get()== ("No attempt"or"No"or "Yes"):
+    if rotationalControl.get()== ("No attempt"):
+        return False
+    elif rotationalControl.get()== ("No"):
+        return False
+    elif rotationalControl.get() == ("Yes"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for rotational control')
@@ -880,7 +925,11 @@ positionalControl.current(0)
 positionalControl.grid(column= 9, row= 9, columnspan=5)
 positionalControl.config(width= 5)
 def comboBoxPositionalControl():
-    if positionalControl.get()== ("No attempt"or"No"or "Yes"):
+    if positionalControl.get()== ("No attempt"):
+        return False
+    elif positionalControl.get()== ("No"):
+        return False
+    elif positionalControl.get() == ("Yes"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for positional control')
@@ -895,7 +944,21 @@ shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 shooterPos.bind("<<ComboboxSelected>>", telePositionSet )
 def comboBoxShooterPosTele():
-    if shooterPos.get()== ("A"or "B"or "C"or "D"or"E"or "F"or "G"or "H"):
+    if shooterPos.get()== ("A"):
+        return False
+    elif shooterPos.get()== ("B"):
+        return False
+    elif shooterPos.get()== ("C"):
+        return False
+    elif shooterPos.get()== ("D"):
+        return False
+    elif shooterPos.get()== ("E"):
+        return False
+    elif shooterPos.get()== ("F"):
+        return False
+    elif shooterPos.get()== ("G"):
+        return False
+    elif shooterPos.get()== ("H"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for shooter position')
@@ -941,8 +1004,16 @@ barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
 barLevel.config(width= 25)
 def comboBoxBarLevel():
-    if barLevel.get()== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
+    if barLevel.get()== ("Any Position When It Was Leveled"):
         return False
+    elif barLevel.get() == ("Middle Of The Bar"):
+        return False
+    elif barLevel.get() == ("High Side Of The Bar"):
+        return False
+    elif barLevel.get() == ("Low Side Of The Bar"):
+        return False
+    elif barLevel.get() == ( "No Climb"):
+        return False   
     else:
         messagebox.showinfo('combo box error', 'invalid answer for Bar Level')
         return True
