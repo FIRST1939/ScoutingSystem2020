@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.ticker as ticker
 
+pd.set_option('display.max_columns', 200)
+
 def combineColumn(scoutData): 
     '''
     This combines columns and creates columns from adding other columns. Specifics:
@@ -103,16 +105,26 @@ def getPicklistHeatmap(mainDf, df, ax, graphVar):
     pprint(df)
     ''' FIX ME VICTORIA
         THE APPEND DOESN'T WORK'''
-    for team in mainDf['teamNo'].drop_duplicates().to_numpy():
-        passer = False
-        for cycleTeam in df['teamNo'].drop_duplicates().to_numpy():
-            if team == cycleTeam:
-                passer = True
-        if passer == False:
+    mainteams = mainDf['teamNo'].drop_duplicates().to_numpy()
+    teams = df['teamNo'].drop_duplicates().to_numpy()
+
+    for team in mainteams:
+        if team not in teams:
+            #df.append([0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0])
+
+            newdfentry = pd.DataFrame({'id': [df['id'].max()],'matchNo':[0], 'teamNo':[team], 'cycle':[0], 'shooterPosition':[0], 'lowGoalMisses':[0],
+                                               'highGoalMisses':[0], 'lowGoalMakes':[0], 'outerGoalMakes':[0], 'innerGoalMakes':[0],
+                                               'gamePhase':[0], 'highGoalMakes':[0]})
+            
+            print('\n', newdfentry, '\n')
+            
+            df = pd.concat([df, newdfentry], ignore_index=True)
             print(team)
-            df.append([0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0])
-            '''*****************************************'''
-    df.to_csv('Test.csv')
+ 
+    print()
+    print(df.tail())
+    print(df['teamNo'].drop_duplicates())
+    
     df = df.sort_values('teamNo', ascending=True)
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
     cookedDf = pd.pivot_table(highGoalMakesbyMatchDf.reset_index().drop(['matchNo'], axis=1), index='teamNo')
@@ -129,7 +141,6 @@ def getPicklistHeatmap(mainDf, df, ax, graphVar):
     teamList = df['teamNo'].drop_duplicates().to_numpy()
     ax.set_title(graphVar)
     sb.heatmap(cookedDf.stack(1).unstack(level=0).to_numpy(), cmap="YlGn", ax=ax, annot=True, vmin=0, vmax=55, yticklabels=yLabels, xticklabels=teamList )
-
 
 def getPicklistBoxplotData(df, graphVar, title, ax):
 
