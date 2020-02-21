@@ -481,15 +481,6 @@ def sendMainToDatabase(cards):
                                recoveredFromDead_State.get(),
                                cards
                                )
-
-#def popup_keyboard(event):
-##    os.popen('matchbox-keyboard','r',4096)
-#    PROCNAME = "florence"
-#    for ploc in psutil.process_iter():
-#        if proc.name() == PROCNAME:
-#            proc.kill()
-#    sleep(0.5)
-#    os.popen('/usr/bin/florence')
     
 def sendCycleToDatabase(gamePhase):
     print('send to database function ran')
@@ -550,27 +541,6 @@ def sendCycleToDatabase(gamePhase):
         teleCycles = (teleCycles+1)
 #       
 def sendCycleData(gamePhase):
-#    sendCycle = False
-#    if lowGoalMisses[0] > 255:
-#        sendCycle = True
-#    if highGoalMisses[0] > 255:
-#        sendCycle = True
-#    if lowGoalMakes[0] > 255:
-#        sendCycle = True
-#    if outerGoalMakes[0] > 255:
-#        sendCycle = True
-#    if innerGoalMakes[0] > 255:
-#        sendCycle = True
-#    if lowGoalMisses[1] > 255:
-#        sendCycle = True
-#    if highGoalMisses[1] > 255:
-#        sendCycle = True
-#    if lowGoalMakes[1] > 255:
-#        sendCycle = True
-#    if outerGoalMakes[1] > 255:
-#        sendCycle = True
-#    if innerGoalMakes[1] > 255:
-#        sendCycle = True
         
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
@@ -618,51 +588,7 @@ def sendMainData():
         sendMSG = False
     if comboBoxShooterPosTele():
         sendMSG = False
-#    if lowGoalMisses[0] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('low goal misses error','Unable to go over 255')
-#    if highGoalMisses[0] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('high goal misses error','Unable to go over 255')
-#    if lowGoalMakes[0] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('low goal makes error','Unable to go over 255')
-#    if outerGoalMakes[0] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('outer goal makes error','Unable to go over 255')
-#    if innerGoalMakes[0] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('inner goal makes error','Unable to go over 255')
-#    if lowGoalMisses[1] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('low goal misses error','Unable to go over 255')
-#    if highGoalMisses[1] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('high goal misses error','Unable to go over 255')
-#    if lowGoalMakes[1] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('low goal makes error','Unable to go over 255')
-#    if outerGoalMakes[1] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('outer goal makes error','Unable to go over 255')
-#    if innerGoalMakes[1] > 255:
-#        sendMSG = False
-#        messagebox.showinfo('inner goal makes error','Unable to go over 255')
-#    if autoBallsPickedUp.get > 255:
-#        sendMSG = False
-#        messagebox.showinfo('auto balls picked up error','Unable to go over 255')
-#    if autoFoul.get > 255:
-#        sendMSG = False
-#        messagebox.showinfo('auto fouls error','Unable to go over 255')
-#    if autoTechFoul.get > 255:
-#        sendMSG = False
-#        messagebox.showinfo('auto tech fouls error','Unable to go over 255')
-#    if teleFoul.get > 255:
-#        sendMSG = False
-#        messagebox.showinfo('tele fouls error','Unable to go over 255')
-#    if teleTechFoul.get > 255:
-#        sendMSG = False
-#        messagebox.showinfo('tele tech fouls error','Unable to go over 255')
+
     if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
