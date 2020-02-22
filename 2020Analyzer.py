@@ -9,6 +9,8 @@ Created on Thu Jan 17 19:06:04 2019
 import json
 import os
 import sys
+import shutil
+from glob import glob
 import tbaUtils
 from datetime import datetime
 from pprint import pprint
@@ -207,7 +209,7 @@ def readScout():
         FileName = filedialog.askopenfilename(title = 'select Cycle Data file')
         with open(FileName, 'r') as CycleFile:
             cycleData = pd.read_csv(CycleFile, sep = '|') 
-        cycleDf = cycleData.fillna('0')/"??"""
+        cycleDf = cycleData.fillna('0')
         
     return mainDf, cycleDf
 
@@ -226,7 +228,7 @@ def readPitScout():
         
         FileName = filedialog.askopenfilename(title = 'select Pit Data file')
         with open(FileName, 'r') as PitFile:
-            pitDf = pd.read_csv(PitFile, sep = '|') 
+            pitDf = pd.read_csv(PitFile, sep = ',') 
         pitDf = pitDf.fillna('0')
     
     return pitDf
@@ -839,10 +841,9 @@ def getThatExcel(df, filename):
 
 
 
-def getTeamReport(prematchDf, mainDf, cycleDf, team):
+def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath):
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     prematchGraphs(mainDf, cycleDf, team)
-    filepath = filedialog.askdirectory(title='select directory from team photos')
     filename = str(team) + ' Team Report ' + str(today) + '.html'
     with open(filename, 'w') as File:
         
@@ -903,23 +904,19 @@ def getTeamReport(prematchDf, mainDf, cycleDf, team):
         File.write('<h2>Team Report</h2>')
         File.write('<h3>1939</h3>')
         File.write('<div class="team-card">')
-        File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="r1 pic" style="width:350px;height:400px;">')
-
-        File.write('      <p>Team:</p>')
-        File.write('      <p>Matches Scouted:</p>')
-        File.write('      <p>Average Powercells Scored:</p>')
-        File.write('      <p>Avg High Powercells Scored:</p>')
-        File.write('      <p>Best Shooting Position:</p>')
-        File.write('	  <p>Shots Taken There:</p>')
-        File.write('      <p>Favorite Shooting Position:</p>')
-        File.write('	  <p>Shots Taken There:</p>')
-        File.write('	  <p>Accuracy There:</p>')
-        File.write('	  <p>Tall or Short Bot:</p>')
-        File.write('	  <p>Drivetrain:</p>')
-        File.write('	  <p>Times Completed Rotational Control:</p>')
-        File.write('	  <p>Times Completed Positional Control:</p>')
-        File.write('	  <p>Matches Played on Defense:</p>')
+        File.write('<div class="team-card">')
+        File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="pic not found for team ' + str(team) + '" style="width:350px;height:400px;">')
+        File.write('      <p>Team:' + str(team) + '</p>')
+        File.write('      <p>Matches Scouted: ' + str(prematchDf.at[team, 'Matches Scouted'])+ ' </p>')
+        File.write('      <p>Average Powercells Scored: '+ str(prematchDf.at[team, 'Average Pieces Scored']) + '</p>')
+        File.write('      <p>Avg High Powercells Scored: ' + str(prematchDf.at[team, 'Average High Goal Makes'])+'</p>')
+        File.write('	  <p>Tall or Short Bot: ' + str(prematchDf.at[team, 'bot height']) + '</p>')
+        File.write('	  <p>Drivetrain: ' + str(prematchDf.at[team, 'drivetrain']) + '</p>')
+        File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
+        File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
+        File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
         File.write('</div>')
+
         File.write('<div class="graphSheet">')
         File.write('	<img src="./' + str(team) + ' Prematch Graphs.png" alt="graph" style="width:894px">')
         File.write('</div>')
@@ -1109,9 +1106,13 @@ def Main(testmode):
     elif selection == '3':
         mainDf, cycleDf = readScout()
         pitDf = readPitScout()
-        team = int(enterTeam())
+#        team = int(enterTeam())
         preMatchReport = getPrematchReportDf(mainDf, cycleDf, pitDf)
-        getTeamReport(preMatchReport, mainDf, cycleDf, team)
+        filepath = filedialog.askdirectory(title='select directory from team photos')
+        team = int(input('Enter Team Number: '))
+        while team != 0:
+            getTeamReport(preMatchReport, mainDf.reset_index(), cycleDf.reset_index(), team, filepath)
+            team = int(input('Enter team number or enter 0 to quit: '))
         
     elif selection == '4':
         ReadData = readScout()
