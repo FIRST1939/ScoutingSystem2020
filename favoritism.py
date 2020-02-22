@@ -54,16 +54,16 @@ def maketeamshotsbypos(cycledf):
     highShotdict = highShots.to_dict(orient='split')
     posmap = highShotdict['columns']
     print(highShotdict)
-    reconfigHigh = pd.Series(highShotdict['data'], index=highShotdict['index']).reset_index(name='highShots')
+    reconfigHigh = pd.Series(highShotdict['data'], index=highShotdict['index']).reset_index(name='highShots').rename(columns={'index': 'teamNo'})
     
     acc = pd.pivot_table(posPivot, values = 'accuracy', index = 'teamNo', columns = 'shooterPosition').fillna(0)
     accdict = acc.to_dict(orient='split')
-    reconfigacc = pd.Series(accdict['data'], index=accdict['index']).reset_index(name='highShots').rename(columns={'index': 'teamNo'})
+    reconfigacc = pd.Series(accdict['data'], index=accdict['index']).reset_index(name='accuracy').rename(columns={'index': 'teamNo'})
+    
+    result = pd.merge(reconfigHigh, reconfigacc, on='teamNo')
     
     
-    
-    
-    return pd.Series([0,1,2]), posmap
+    return result, posmap
 
 def findfavpos(teamshotsbypos):
     '''
