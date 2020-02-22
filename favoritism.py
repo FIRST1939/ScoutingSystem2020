@@ -45,9 +45,11 @@ def maketeamshotsbypos(cycledf):
     
     '''    
     posPivot = pd.pivot_table(cycledf, values=['highGoalMisses','highGoalMakes','highGoalShots'],
-                              index=['teamNo', 'shooterPosition'])
+                              index=['teamNo', 'shooterPosition'], aggfunc = np.sum)
     
     posPivot.reset_index(inplace = True)
+    
+    print(posPivot.head())
     
     posPivot['accuracy'] = posPivot['highGoalMakes'] / posPivot['highGoalShots']
     
