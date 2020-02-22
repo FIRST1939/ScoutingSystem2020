@@ -6,7 +6,6 @@ Created on Thu Jan 17 19:06:04 2019
 @author: Saketh, Sriram, Charlie
 """
 
-import json
 import os
 import sys
 import shutil
@@ -625,81 +624,6 @@ def enterTeam():
         print('input error')
         return
 
-def getTeamScatterplot(team, df):
-#    team = int(input('Enter Which Team you want to generate a graph for:'))
-#    print('Enter 0 to generate a total pieces graph')
-#    print('Enter 1 to generate a sandstorm graph')
-#    print('Enter 2 to generate a tele graph')
-#    selection = input('Enter your selection here: ')
-
-#    df = pd.read_csv(filedialog.askopenfilename(title = 'select unfiltered data file'), sep = '|')
-    df.set_index("teamNo", inplace = True)
-
-    #piecesMath(df)
-
-    print(df.loc[[team], ["matchNo"]])
-
-#    if selection == "0":
-    plt.figure()
-    
-    plt.subplots(sharey = 'col')
-
-    plt.subplot(311)
-    plt.title('Total Pieces')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["totalscored"]])
-    plt.ylabel('Total Objects')
-    
-    plt.subplot(312)
-#    plt.title('Total Cargo')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["totalcargo"]], color="green")
-    plt.ylabel('Cargo')
-
-    plt.subplot(313)
-#    plt.title('Total Hatch')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["totalhatch"]], color="red")
-    plt.ylabel('HP')
-#    plt.savefig(r'/Users/Mason/Desktop/heatmap.pdf')
-    
-#    if selection == "1":
-    plt.figure()
-    plt.subplots(sharey = 'col')
-    
-    plt.subplot(311)
-    plt.title('Total Sand')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["sandtotal"]])
-    plt.ylabel('Total Objects')
-    
-    plt.subplot(312)
-#    plt.title('Total Sand Cargo')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["sandcargo"]], color="green")
-    plt.ylabel('Cargo')
-
-    plt.subplot(313)
-#    plt.title('Total Sand Hatch')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["sandhatch"]], color="red")
-    plt.ylabel('HP')
-
-#    if selection == "2":
-    plt.figure()
-    plt.subplots(sharey = 'col')
-
-    plt.subplot(311)
-    plt.title('Total Tele Pieces')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["teleMakes"]])
-    plt.ylabel('Total Objects')
-    
-    plt.subplot(312)
-#    plt.title('Total Tele Cargo')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["telecargo"]], color="green")
-    plt.ylabel('Cargo')
-
-    plt.subplot(313)
-#    plt.title('Total Tele Hatch')
-    plt.scatter(df.loc[[team], ["matchNo"]], df.loc[[team], ["telehatch"]], color="red")
-    plt.ylabel('HP')
-
-
-
 def getDfTeamList(df):
     return(df['teamNo'].drop_duplicates())
 
@@ -717,8 +641,8 @@ def getPicklistBoxplot(df, yvars, teamList):
         for j in i:
             dataArr[k].append(j[0])
     return(dataArr)#.set_xticklabels(teamList.get_values()))
-def getFirstDayReportExcel(mainDf):
     
+def getFirstDayReportExcel(mainDf):   
 #    cycleDf = mainDf[1]
 #    pitDf = readPitScout()
     combineColumn(mainDf)
@@ -841,10 +765,10 @@ def getThatExcel(df, filename):
 
 
 
-def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath):
-    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
+#    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     prematchGraphs(mainDf, cycleDf, team)
-    filename = str(team) + ' Team Report ' + str(today) + '.html'
+    filename = str(team) + ' Team Report.html'
     with open(filename, 'w') as File:
         
         File.write('<html>')
@@ -923,8 +847,9 @@ def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath):
         File.write('</body>')
         File.write('</html>')
               
-        
-
+        shutil.copy(str(team) + ' Team Report.html', todir)
+        shutil.copy(os.path.join(filepath, str(team) + '.jpg'), todir)
+        shutil.copy(str(team) + ' Prematch Graphs.png', todir)
     
     
 def getPicklistHeatmap(mainDf, df, ax, graphVar):
@@ -1053,8 +978,6 @@ def getHeatMap(df, mainDf, team, graphVar, ax):
     try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels=matchNum, vmin=0, vmax=maxShot)
     except:print('data not available')
     
-    
-
 def prematchGraphs(maindf, cycledf, team):
     df = combineColumn(maindf)
     df.set_index("teamNo", inplace = True)
@@ -1109,9 +1032,10 @@ def Main(testmode):
 #        team = int(enterTeam())
         preMatchReport = getPrematchReportDf(mainDf, cycleDf, pitDf)
         filepath = filedialog.askdirectory(title='select directory from team photos')
+        todir = filedialog.askdirectory(title='select directory to send the files')
         team = int(input('Enter Team Number: '))
         while team != 0:
-            getTeamReport(preMatchReport, mainDf.reset_index(), cycleDf.reset_index(), team, filepath)
+            getTeamReport(preMatchReport, mainDf.reset_index(), cycleDf.reset_index(), team, filepath, todir)
             team = int(input('Enter team number or enter 0 to quit: '))
         
     elif selection == '4':
