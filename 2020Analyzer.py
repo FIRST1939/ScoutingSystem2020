@@ -268,7 +268,7 @@ def FindPartners(Matchlist, team = 1939):
     return result
 
             
-def MatchReport(MatchList, PivotDf, Scoutdf, TeamNumber):
+def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
     ''' (dataframe)->dataframe
     (Scouting Data)->PivotTable with upcoming match partners
     Take the scouting data, trim down to only partners and opponents.
@@ -282,141 +282,141 @@ def MatchReport(MatchList, PivotDf, Scoutdf, TeamNumber):
             teams= [1939]
             teams.append(match['allies'])
             teams.append(match['opponents'])
+            LastScouted = max(mainDf['match'])
             if match['match'] > LastScouted:
-                    FileName = 'Match ' + str(match['match']) + ' Pre-match Report.htm'
+                    FileName = 'Match ' + str(match['match']) + ' Pre-match Report.html'
                     with open(FileName, 'w') as File:
-                       ''' <html>
-                        <head>
-                        <meta name="viewport" content="width=device-width, initial-scale=1">
-                        <style>
-                        body {
-                          font-family: Arial;
-                        }
-                        
-                        /* Style the tab */
-                        .tab {
-                          overflow: hidden;
-                          border: 1px solid #ccc;
-                          background-color: #f1f1f1;
-                        }
-                        
-                        /* Style the buttons inside the tab */
-                        .tab button {
-                          background-color: inherit;
-                          float: left;
-                          border: none;
-                          outline: none;
-                          cursor: pointer;
-                          padding: 14px 16px;
-                          transition: 0.3s;
-                          font-size: 17px;
-                        }
-                        
-                        /* Change background color of buttons on hover */
-                        .tab button:hover {
-                          background-color: #ddd;
-                        }
-                        
-                        /* Create an active/current tablink class */
-                        .tab button.active {
-                          background-color: #ccc;
-                        }
-                        
-                        /* Style the tab content */
-                        .tabcontent {
-                          display: none;
-                          padding: 6px 12px;
-                          border: 1px solid #ccc;
-                          border-top: none;
-                        }
-                        .graphSheet{
-                        	width: 894px;
-                        	display: inline-block;
-                        	vertical-align:top
-                        }
-                        .team-card {
-                          width: 400px;
-                          display: inline-block;
-                        }
-                        
-                        .team-card-text {
-                          padding: 0 40px;
-                        }
-                        </style>
-                        </head>
-                        
-                        <body>
-                        
-                        <h2>Prematch Report</h2>
-                        <p>Match: </p>
-                        
-                        <div class="tab">
-                            <button class="tablinks active" onclick="openTab(event, 'Overview')">Overview</button>
-           '''             
-                        #for team in teams:
-'''                            <button class="tablinks" onclick="openTab(event, '1939')">1939</button> #replace 1939 with team
-                        <div id="Overview" class="tabcontent" style="display: block;">
-                        <h3>Overview</h3>
-#                        for team in teams:
-                            <div class="team-card">
-                            <p><img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;"></p>
-                                <div class="team-card-text">
-                                  <p>Team:</p>
-                                  <p>Matches Scouted:</p>
-                                  <p>Average Powercells Scored:</p>
-                                  <p>Avg High Powercells Scored:</p>
-                            	  <p>Tall or Short Bot:</p>
-                            	  <p>Drivetrain:</p>
-                            	  <p>Times Completed Rotational Control:</p>
-                            	  <p>Times Completed Positional Control:</p>
-                            	  <p>Matches Played on Defense:</p>
-                              </div>
-                             </div>'''
-#                        for team in teams:
-                             '''
-                             <div id="1939" class="tabcontent">
-                              <h3>1939</h3>
-                              <div class="team-card">
-                                  <img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;">
-                                  <p>Team:</p>
-                                  <p>Matches Scouted:</p>
-                                  <p>Average Powercells Scored:</p>
-                                  <p>Avg High Powercells Scored:</p>
-                                  <p>Best Shooting Position:</p>
-                            	  <p>Shots Taken There:</p>
-                                  <p>Favorite Shooting Position:</p>
-                            	  <p>Shots Taken There:</p>
-                            	  <p>Accuracy There:</p>
-                            	  <p>Tall or Short Bot:</p>
-                            	  <p>Drivetrain:</p>
-                            	  <p>Times Completed Rotational Control:</p>
-                            	  <p>Times Completed Positional Control:</p>
-                            	  <p>Matches Played on Defense:</p>
-                              </div>
-                              <div class="graphSheet">
-                            	<img src="./1939 Prematch Graphs.png" alt="graph" style="width:894px">
-                              </div>
-                            </div>
-                        '''
-                        '''
-                    <script>
-                    function openTab(evt, tabName) {
-                      var i, tabcontent, tablinks;
-                      tabcontent = document.getElementsByClassName("tabcontent");
-                      for (i = 0; i < tabcontent.length; i++) {
-                        tabcontent[i].style.display = "none";
-                      }
-                      tablinks = document.getElementsByClassName("tablinks");
-                      for (i = 0; i < tablinks.length; i++) {
-                        tablinks[i].className = tablinks[i].className.replace(" active", "");
-                      }
-                      document.getElementById(tabName).style.display = "block";
-                      evt.currentTarget.className += " active";
-                    }
-                    </script>                    
-                    </body>                    
-                    </html>
-        '''
+                        File.write('                        <html>')
+                        File.write('                        <head>')
+                        File.write('                        <meta name="viewport" content="width=device-width, initial-scale=1">')
+                        File.write('                        <style>')
+                        File.write('                        body {')
+                        File.write('                          font-family: Arial;')
+                        File.write('                        }')
+                        File.write('')
+                        File.write('                        /* Style the tab */')
+                        File.write('                        .tab {')
+                        File.write('                          overflow: hidden;')
+                        File.write('                          border: 1px solid #ccc;')
+                        File.write('                          background-color: #f1f1f1;')
+                        File.write('                        }')
+                        File.write('')
+                        File.write('                        /* Style the buttons inside the tab */')
+                        File.write('                        .tab button {')
+                        File.write('                          background-color: inherit;')
+                        File.write('                          float: left;')
+                        File.write('                          border: none;')
+                        File.write('                          outline: none;')
+                        File.write('                          cursor: pointer;')
+                        File.write('                          padding: 14px 16px;')
+                        File.write('                          transition: 0.3s;')
+                        File.write('                          font-size: 17px;')
+                        File.write('                        }')
+                        File.write('')
+                        File.write('                        /* Change background color of buttons on hover */')
+                        File.write('                        .tab button:hover {')
+                        File.write('                          background-color: #ddd;')
+                        File.write('                        }')
+                        File.write('')
+                        File.write('                        /* Create an active/current tablink class */')
+                        File.write('                        .tab button.active {')
+                        File.write('                          background-color: #ccc;')
+                        File.write('                        }')
+                        File.write('')
+                        File.write('                        /* Style the tab content */')
+                        File.write('                        .tabcontent {')
+                        File.write('                          display: none;')
+                        File.write('                          padding: 6px 12px;')
+                        File.write('                          border: 1px solid #ccc;')
+                        File.write('                          border-top: none;')
+                        File.write('                        }')
+                        File.write('                        .graphSheet{')
+                        File.write('                        	width: 894px;')
+                        File.write('                        	display: inline-block;')
+                        File.write('                        	vertical-align:top')
+                        File.write('                        }')
+                        File.write('                        .team-card {')
+                        File.write('                          width: 400px;')
+                        File.write('                          display: inline-block;')
+                        File.write('                        }')
+                        File.write('')
+                        File.write('                        .team-card-text {')
+                        File.write('                          padding: 0 40px;')
+                        File.write('                        }')
+                        File.write('                        </style>')
+                        File.write('                        </head>')
+                        File.write('')
+                        File.write('                        <body>')
+                        File.write('')
+                        File.write('                        <h2>Prematch Report</h2>')
+                        File.write('                        <p>Match: </p>')
+                        File.write('')
+                        File.write('                        <div class="tab">')
+                        File.write('                            <button class="tablinks active" onclick="openTab(event, \'Overview\')">Overview</button>')
+                        File.write('                        ')
+                        File.write('                        #for team in teams:')
+                        File.write('                           <button class="tablinks" onclick="openTab(event, \'1939\')">1939</button> #replace 1939 with team')
+                        File.write('                        <div id="Overview" class="tabcontent" style="display: block;">')
+                        File.write('                        <h3>Overview</h3>')
+                        File.write('#                        for team in teams:')
+                        File.write('                            <div class="team-card">')
+                        File.write('                            <p><img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;"></p>')
+                        File.write('                                <div class="team-card-text">')
+                        File.write('                                  <p>Team:</p>')
+                        File.write('                                  <p>Matches Scouted:</p>')
+                        File.write('                                  <p>Average Powercells Scored:</p>')
+                        File.write('                                  <p>Avg High Powercells Scored:</p>')
+                        File.write('                            	  <p>Tall or Short Bot:</p>')
+                        File.write('                            	  <p>Drivetrain:</p>')
+                        File.write('                            	  <p>Times Completed Rotational Control:</p>')
+                        File.write('                            	  <p>Times Completed Positional Control:</p>')
+                        File.write('                            	  <p>Matches Played on Defense:</p>')
+                        File.write('                              </div>')
+                        File.write('                             </div>')
+                        #                        for team in teams:
+                                                     
+                        File.write('<div id="1939" class="tabcontent">')
+                        File.write('                              <h3>1939</h3>')
+                        File.write('                              <div class="team-card">')
+                        File.write('                                  <img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;">')
+                        File.write('                                  <p>Team:</p>')
+                        File.write('                                  <p>Matches Scouted:</p>')
+                        File.write('                                  <p>Average Powercells Scored:</p>')
+                        File.write('                                  <p>Avg High Powercells Scored:</p>')
+                        File.write('                                  <p>Best Shooting Position:</p>')
+                        File.write('                            	  <p>Shots Taken There:</p>')
+                        File.write('                                  <p>Favorite Shooting Position:</p>')
+                        File.write('                            	  <p>Shots Taken There:</p>')
+                        File.write('                            	  <p>Accuracy There:</p>')
+                        File.write('                            	  <p>Tall or Short Bot:</p>')
+                        File.write('                            	  <p>Drivetrain:</p>')
+                        File.write('                            	  <p>Times Completed Rotational Control:</p>')
+                        File.write('                            	  <p>Times Completed Positional Control:</p>')
+                        File.write('                            	  <p>Matches Played on Defense:</p>')
+                        File.write('                              </div>')
+                        File.write('                              <div class="graphSheet">')
+                        File.write('                            	<img src="./1939 Prematch Graphs.png" alt="graph" style="width:894px">')
+                        File.write('                              </div>')
+                        File.write('                            </div>')
+                        File.write('')
+                        File.write('                    <script>')
+                        File.write('                    function openTab(evt, tabName) {')
+                        File.write('                      var i, tabcontent, tablinks;')
+                        File.write('                      tabcontent = document.getElementsByClassName("tabcontent");')
+                        File.write('                      for (i = 0; i < tabcontent.length; i++) {')
+                        File.write('                        tabcontent[i].style.display = "none";')
+                        File.write('                      }')
+                        File.write('                      tablinks = document.getElementsByClassName("tablinks");')
+                        File.write('                      for (i = 0; i < tablinks.length; i++) {')
+                        File.write('                        tablinks[i].className = tablinks[i].className.replace(" active", "");')
+                        File.write('                      }')
+                        File.write('                      document.getElementById(tabName).style.display = "block";')
+                        File.write('                      evt.currentTarget.className += " active";')
+                        File.write('                    }')
+                        File.write('                    </script>                    ')
+                        File.write('                    </body>                    ')
+                        File.write('                    </html>')
+        
         
 def Day1Report(Scoutdf, PivotDf):
     '''(dataframe)->None
@@ -1078,7 +1078,7 @@ def Main(testmode):
         # #matchNum = FindPartners(MatchList, Team)
         # #MatchReport(Partners, PivotDf, TeamDf, Team)
     elif selection == '3':
-        pass
+        pass 
         
     elif selection == '4':
         mainDf, cycleDf = readScout()
