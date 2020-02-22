@@ -11,9 +11,6 @@ from tkinter import Tk
 from tkinter import Button
 from tkinter import Label
 from tkinter import Checkbutton
-#from tkinter import Canvas
-#from tkinter import BOTH
-#from tkinter import RIGHT
 from tkinter import Text
 from tkinter import Radiobutton
 from tkinter import BooleanVar
@@ -47,7 +44,6 @@ outerGoalMakes = [0,0]
 
 class CounterClass:
     point = 0
-#    root = Tk()
 
     def __init__(self, app, x, y, item, textX, textY, textXSpan):
         self.item = item
@@ -71,9 +67,6 @@ class CounterClass:
         self.Neg1Button = Button(self.app, text = "-", command=self.neg1, bg="red4")
         self.Neg1Button.grid(column = (self.x-1), row = y)
 
-        #self.root.mainloop()
-    
-        
    
     def plus1(self):
         if self.point < 255:
@@ -121,93 +114,76 @@ class lowGoalCounterClass:
         self.Neg5Button = Button(self.app, text = "-5", command=self.madeNeg5, bg="red4")
         self.Neg5Button.grid(column = (self.x+4), row = y)
 
-        self.takenDisplayLabel = Label(self.app, text = self.shotsMissed)
-        self.takenDisplayLabel.grid(column = self.x, row = self.y)
+        self.missedDisplayLabel = Label(self.app, text = self.shotsMissed)
+        self.missedDisplayLabel.grid(column = self.x, row = self.y)
         
 
-        self.takenPlus1Button = Button(self.app, text = "+1", command=self.takenPlus1, bg="green4")
-        self.takenPlus1Button.grid(column = (self.x+1), row = y)
+        self.missedPlus1Button = Button(self.app, text = "+1", command=self.missedPlus1, bg="green4")
+        self.missedPlus1Button.grid(column = (self.x+1), row = y)
 
-        self.takenNeg1Button = Button(self.app, text = "-1", command=self.takenNeg1, bg="red4")
-        self.takenNeg1Button.grid(column = (self.x-1), row = y)
+        self.missedNeg1Button = Button(self.app, text = "-1", command=self.missedNeg1, bg="red4")
+        self.missedNeg1Button.grid(column = (self.x-1), row = y)
 
     
-        self.takenPlus5Button = Button(self.app, text = "+5", command=self.takenPlus5, bg="green4")
-        self.takenPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
+        self.missedPlus5Button = Button(self.app, text = "+5", command=self.missedPlus5, bg="green4")
+        self.missedPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
 
-        self.takenNeg5Button = Button(self.app, text = "-5", command=self.takenNeg5, bg="red4")
-        self.takenNeg5Button.grid(column = (self.x-2), row = y)
+        self.missedNeg5Button = Button(self.app, text = "-5", command=self.missedNeg5, bg="red4")
+        self.missedNeg5Button.grid(column = (self.x-2), row = y)
 
-        #self.root.mainloop()
-    
-        
    
     def madePlus5(self):
         if self.shotsMade < 250:
             self.shotsMade += 5
-        #        self.shotsMissed += 5
             self.madeDisplayLabel["text"]=str(self.shotsMade)
-        #        self.takenDisplayLabel["text"]=str(self.shotsMissed)
         
     def madeNeg5(self):
         if self.shotsMade  >= 5:
             self.shotsMade -= 5
-#            self.shotsMissed -=5
             self.madeDisplayLabel["text"]=str(self.shotsMade)
-#            self.takenDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.shotsMade = 0
             self.shotsMissed = 0
             self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
-    def takenPlus5(self):
+    def missedPlus5(self):
         if self.shotsMissed < 250:
-    #        self.shotsMade += 5
             self.shotsMissed += 5
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
-    def takenNeg5(self):
+    def missedNeg5(self):
         if self.shotsMissed  >5:
-#            self.shotsMade -= 5
             self.shotsMissed -=5
-#            self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         else:
            self.shotsMissed = 0
-           self.takenDisplayLabel["text"]=str(self.shotsMissed)
+           self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
     def madePlus1(self):
         if self.shotsMade < 255:
             self.shotsMade += 1
-    #        self.shotsMissed += 1
             self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
     def madeNeg1(self):
         if self.shotsMade  > 0:
             self.shotsMade -= 1
-#            self.shotsMissed -=1
             self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
             
-    def takenPlus1(self):
+    def missedPlus1(self):
         if self.shotsMissed < 255:
-    #        self.shotsMade += 1
             self.shotsMissed += 1
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
             
-    def takenNeg1(self):
+    def missedNeg1(self):
         if self.shotsMissed  > 0:
-#            self.shotsMade -= 1
             self.shotsMissed -=1
-#            self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
             
     def reinit(self):
-         self.takenDisplayLabel["text"]=str(self.shotsMissed)
+         self.missedDisplayLabel["text"]=str(self.shotsMissed)
          self.madeDisplayLabel["text"]=str(self.shotsMade)
          
 
@@ -261,22 +237,22 @@ class highGoalCounterClass:
         self.outerNeg5Button = Button(self.app, text = "-5", command=self.outerMadeNeg5, bg="red4")
         self.outerNeg5Button.grid(column = (self.x+4), row = y+1)
 
-#taken
-        self.takenDisplayLabel = Label(self.app, text = self.shotsMissed)
-        self.takenDisplayLabel.grid(column = self.x, row = self.y)
+#missed
+        self.missedDisplayLabel = Label(self.app, text = self.shotsMissed)
+        self.missedDisplayLabel.grid(column = self.x, row = self.y)
         
-        self.takenPlus1Button = Button(self.app, text = "+1", command=self.takenPlus1, bg="green4")
-        self.takenPlus1Button.grid(column = (self.x+1), row = y)
+        self.missedPlus1Button = Button(self.app, text = "+1", command=self.missedPlus1, bg="green4")
+        self.missedPlus1Button.grid(column = (self.x+1), row = y)
 
-        self.takenNeg1Button = Button(self.app, text = "-1", command=self.takenNeg1, bg="red4")
-        self.takenNeg1Button.grid(column = (self.x-1), row = y)
+        self.missedNeg1Button = Button(self.app, text = "-1", command=self.missedNeg1, bg="red4")
+        self.missedNeg1Button.grid(column = (self.x-1), row = y)
 
     
-        self.takenPlus5Button = Button(self.app, text = "+5", command=self.takenPlus5, bg="green4")
-        self.takenPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
+        self.missedPlus5Button = Button(self.app, text = "+5", command=self.missedPlus5, bg="green4")
+        self.missedPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
 
-        self.takenNeg5Button = Button(self.app, text = "-5", command=self.takenNeg5, bg="red4")
-        self.takenNeg5Button.grid(column = (self.x-2), row = y)
+        self.missedNeg5Button = Button(self.app, text = "-5", command=self.missedNeg5, bg="red4")
+        self.missedNeg5Button.grid(column = (self.x-2), row = y)
 
 #        self.root.mainloop()
     
@@ -285,107 +261,87 @@ class highGoalCounterClass:
     def innerMadePlus5(self):
         if self.innerShotsMade < 250:
             self.innerShotsMade += 5
-    #        self.shotsMissed += 5
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
     def innerMadeNeg5(self):
         if self.innerShotsMade == 5:
-#            self.shotsMissed -=5
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.innerShotsMade = 0
-#            self.shotsMissed = 0
             self.madeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
             
 
     def innerMadePlus1(self):
         if self.innerShotsMade < 255:
             self.innerShotsMade += 1
-    #        self.shotsMissed += 1
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
     def innerMadeNeg1(self):
         if self.innerShotsMade  > 0:
             self.innerShotsMade -= 1
-#            self.shotsMissed -=1
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
 
 #outer made def
     def outerMadePlus5(self):
         if self.outerShotsMade < 255:
             self.outerShotsMade += 5
-    #        self.shotsMissed += 5
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
     def outerMadeNeg5(self):
         if self.outerShotsMade  >= 5:
             self.outerShotsMade -= 5
-#            self.shotsMissed -=5
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
-#            if self.outerShotsMade <=5 and outerMadeNeg5()=True:
-#                self.outerMadeDisplayLabel =0
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.outerShotsMade = 0
-#            self.shotsMissed = 0
             self.madeDisplayLabel["text"]=str(self.outerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
             
 
     def outerMadePlus1(self):
         self.outerShotsMade += 1
-#        self.shotsMissed += 1
         self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
-        self.takenDisplayLabel["text"]=str(self.shotsMissed)
+        self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
     def outerMadeNeg1(self):
         if self.outerShotsMade  > 0:
             self.outerShotsMade -= 1
-#            self.shotsMissed -=1
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
 
 
-#taken def
-    def takenPlus5(self):
+#missed def
+    def missedPlus5(self):
         if self.shotsMissed < 255:
-    #        self.shotsMade += 5
             self.shotsMissed += 5
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
-    def takenNeg5(self):
+    def missedNeg5(self):
         if self.shotsMissed  >5:
-#            self.shotsMade -= 5
             self.shotsMissed -=5
-#            self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         else:
            self.shotsMissed = 0
-           self.takenDisplayLabel["text"]=str(self.shotsMissed)
+           self.missedDisplayLabel["text"]=str(self.shotsMissed)
                 
-    def takenPlus1(self):
+    def missedPlus1(self):
         if self.shotsMissed < 255:
-    #        self.shotsMade += 1
             self.shotsMissed += 1
-    #        self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
         
-    def takenNeg1(self):
+    def missedNeg1(self):
         if self.shotsMissed  > 0:
-#            self.shotsMade -= 1
             self.shotsMissed -=1
-#            self.madeDisplayLabel["text"]=str(self.shotsMade)
-            self.takenDisplayLabel["text"]=str(self.shotsMissed)
+            self.missedDisplayLabel["text"]=str(self.shotsMissed)
 
     def reinit(self):
-         self.takenDisplayLabel["text"]=str(self.shotsMissed)
+         self.missedDisplayLabel["text"]=str(self.shotsMissed)
          self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
          self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
 
@@ -545,28 +501,13 @@ def sendCycleData(gamePhase):
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
-        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')  
-    
-    sendCycleMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
- 
-    if comboBoxShooterPosTele():
-        sendCycleMSG = False
-        messagebox.showinfo('combo box error','Invalid shooter position')
-    if comboBoxShooterPosAuto():
-        sendCycleMSG = False
-        messagebox.showinfo('combo box error','Invalid shooter position')
-    if comboBoxShooterPosRef():
-        sendCycleMSG = False
-        messagebox.showinfo('combo box error','Invalid shooter position')
+        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
     else:
-        if sendCycleMSG == True:
-#        send data
-#        if sendCycle == False:
-            sendCycleToDatabase(gamePhase)
-            cycleReinit(gamePhase)
-            messagebox.showinfo('Cycle submission','Cycle submission complete :)')
-#        else:
-#            messagebox.showinfo('Cycle submission error','Unable to go over 255')
+        sendCycleToDatabase(gamePhase)
+        cycleReinit(gamePhase)
+        messagebox.showinfo('Cycle submission','Cycle submission complete :)')
+
+    sendCycleToDatabase(gamePhase)
 #
 def getCardValue():
     cardValue=0
@@ -582,22 +523,23 @@ def sendMainData():
     sendMSG = messagebox.askokcancel('Are you sure?', 'If you are ready to send click ok. If you are not ready click cancel, and click send again when you are ready.')
     if comboBoxBarLevel():
         sendMSG = False
+    if comboBoxAutoShooterPos():
+        sendMSG = False
     if comboBoxRotationalCont():
         sendMSG = False
     if comboBoxPositionalControl():
         sendMSG = False
     if comboBoxShooterPosTele():
         sendMSG = False
-
     if sendMSG is True and dontUseThisData_State.get() is False:
         if  (teleLowGoal.shotsMissed != 0 or teleHigh.shotsMissed != 0 or teleLowGoal.shotsMade != 0 or teleHigh.outerShotsMade != 0 or teleHigh.innerShotsMade != 0):
             sendCycleData(1)
         if (autoLow.shotsMissed != 0 or autoHigh.shotsMissed != 0 or autoLow.shotsMade != 0 or autoHigh.outerShotsMade != 0 or autoHigh.innerShotsMade !=0):
             sendCycleData(0)
-        sendMainToDatabase(getCardValue())
         messagebox.showinfo('submitted to database', 'Thanks! Your data was sent to the database ;D')
         autoCycles = 0
         teleCycles = 0
+        sendMainToDatabase(getCardValue())
         reinitscreen()
     elif sendMSG is True and dontUseThisData_State.get() is True:
         messagebox.showinfo('submitted to database', 'Thanks! Your data was deleted ;D')
@@ -695,7 +637,6 @@ nameLBL = Label(preMatch, text = 'Name:')
 nameLBL.grid(column=0, row=0, ipady=17)
 
 teamnum = ttk.Entry(preMatch, width=10)
-#teamnum.bind('<Button-1>' , popup_keyboard)
 teamnum.grid(column=7, row=0)
 teamnumLBL = Label(preMatch, text='  Team# you are with:')
 teamnumLBL.grid(row=0, column=5, columnspan=2)
@@ -715,8 +656,6 @@ fLocation = Radiobutton(preMatch, text = 'F', value = 5, var=autoStartPos)
 fLocation.grid(row=1, column=5)
 gLocation = Radiobutton(preMatch, text = 'G', value = 6, var=autoStartPos)
 gLocation.grid(row=1, column=6, ipadx=14)
-#hLocation = Radiobutton(preMatch, text = 'H', value = 7, var=autoStartPos)
-#hLocation.grid(row=1, column=7, ipadx=17)
 
 startPosImage=Image.open('the map of maps.png')
 startPosPhoto=ImageTk.PhotoImage(startPosImage)
@@ -754,26 +693,13 @@ autoShooterPos.current(0)
 autoShooterPos.grid(column= 5, row= 3, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
-def comboBoxShooterPosAuto():
-    if autoShooterPos.get()== ("A"):
-        return False
-    elif autoShooterPos.get()== ("B"):
-        return False
-    elif autoShooterPos.get()== ("C"):
-        return False
-    elif autoShooterPos.get()== ("D"):
-        return False
-    elif autoShooterPos.get()== ("E"):
-        return False
-    elif autoShooterPos.get()== ("F"):
-        return False
-    elif autoShooterPos.get()== ("G"):
-        return False
-    elif autoShooterPos.get()== ("H"):
+def comboBoxAutoShooterPos():
+    if autoShooterPos.get()== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
         return False
     else:
-        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
+        messagebox.showinfo('combo box error', 'invalid answer for auto shooter position')
         return True
+
 
 autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
 autoEnter.grid(row=4, column=7, rowspan=4, columnspan=6, ipady=15, ipadx=15)
@@ -797,26 +723,6 @@ shooterPosRef.current(0)
 shooterPosRef.grid(column= 7, row= 2, columnspan= 1, ipady=5, ipadx=10)
 shooterPosRef.config(width= 5)
 shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
-def comboBoxShooterPosRef():
-    if shooterPosRef.get()== ("A"):
-        return False
-    elif shooterPosRef.get()== ("B"):
-        return False
-    elif shooterPosRef.get()== ("C"):
-        return False
-    elif shooterPosRef.get()== ("D"):
-        return False
-    elif shooterPosRef.get()== ("E"):
-        return False
-    elif shooterPosRef.get()== ("F"):
-        return False
-    elif shooterPosRef.get()== ("G"):
-        return False
-    elif shooterPosRef.get()== ("H"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
-        return True
 
 #TELEOP pagE
             
@@ -833,11 +739,7 @@ rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
 def comboBoxRotationalCont():
-    if rotationalControl.get()== ("No attempt"):
-        return False
-    elif rotationalControl.get()== ("No"):
-        return False
-    elif rotationalControl.get() == ("Yes"):
+    if rotationalControl.get()== ("No attempt"or"No"or "Yes"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for rotational control')
@@ -851,11 +753,7 @@ positionalControl.current(0)
 positionalControl.grid(column= 9, row= 9, columnspan=5)
 positionalControl.config(width= 5)
 def comboBoxPositionalControl():
-    if positionalControl.get()== ("No attempt"):
-        return False
-    elif positionalControl.get()== ("No"):
-        return False
-    elif positionalControl.get() == ("Yes"):
+    if positionalControl.get()== ("No attempt"or"No"or "Yes"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for positional control')
@@ -870,28 +768,14 @@ shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 shooterPos.bind("<<ComboboxSelected>>", telePositionSet )
 def comboBoxShooterPosTele():
-    if shooterPos.get()== ("A"):
-        return False
-    elif shooterPos.get()== ("B"):
-        return False
-    elif shooterPos.get()== ("C"):
-        return False
-    elif shooterPos.get()== ("D"):
-        return False
-    elif shooterPos.get()== ("E"):
-        return False
-    elif shooterPos.get()== ("F"):
-        return False
-    elif shooterPos.get()== ("G"):
-        return False
-    elif shooterPos.get()== ("H"):
+    if shooterPos.get()== ("A"or "B"or "C"or "D"or"E"or "F"or "G"or "H"):
         return False
     else:
         messagebox.showinfo('combo box error', 'invalid answer for shooter position')
         return True
 
-teleTakenLBL = Label(tele, text='Missed')
-teleTakenLBL.grid(column=1, row=0, columnspan=5)
+teleMissedLBL = Label(tele, text='Missed')
+teleMissedLBL.grid(column=1, row=0, columnspan=5)
 
 teleMadeLBL = Label(tele, text='Made')
 teleMadeLBL.grid(column=7, row=0, columnspan=5)
@@ -930,16 +814,8 @@ barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
 barLevel.config(width= 25)
 def comboBoxBarLevel():
-    if barLevel.get()== ("Any Position When It Was Leveled"):
+    if barLevel.get()== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
         return False
-    elif barLevel.get() == ("Middle Of The Bar"):
-        return False
-    elif barLevel.get() == ("High Side Of The Bar"):
-        return False
-    elif barLevel.get() == ("Low Side Of The Bar"):
-        return False
-    elif barLevel.get() == ( "No Climb"):
-        return False   
     else:
         messagebox.showinfo('combo box error', 'invalid answer for Bar Level')
         return True
