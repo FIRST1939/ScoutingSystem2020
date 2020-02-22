@@ -22,6 +22,7 @@ import pandas as pd
 pd.set_option('display.max_columns', 500)
 pd.options.display.width = 200
 from pprint import pprint
+import numpy as np
 
 def maketeamshotsbypos(cycledf):
     '''
@@ -65,13 +66,15 @@ def maketeamshotsbypos(cycledf):
     
     return result, posmap
 
-def findfavpos(teamshotsbypos):
+def findfavpos(teamshotsbypos, posmap):
     '''
 
     Parameters
     ----------
     teamshotsbypos : pd.DataFrame
         columns=['teamNo', 'highShots', 'accuracy']
+    posmap: list of str
+        contains list of positions from which a team has shot
 
     Returns
     -------
@@ -79,7 +82,23 @@ def findfavpos(teamshotsbypos):
         columns = ['teamNo', 'favPos', 'favShots', 'favAcc']
     
     '''
-    pass
+    print(teamshotsbypos['highShots'])
+    #teamshotsbypos['favPos'] = np.argmax(teamshotsbypos['highShots'].tolist())
+    
+    favlist = []
+    shotlist = []
+    
+    # This is a terrible way of going about this
+    for item in teamshotsbypos['highShots'].tolist():
+        favlist.append(posmap[np.argmax(item)])
+        shotlist.append(np.max(item))
+    
+    teamshotsbypos['favPos'] = favlist
+    teamshotsbypos['favShots'] = shotlist
+    
+    print(teamshotsbypos.head())
+    
+                                                    
 
 def findbestpos(teamshotsbypos):
     '''
@@ -131,7 +150,7 @@ def favoritism(cycledf):
     teamPosShots, posmap = maketeamshotsbypos(cycledf)
     print(teamPosShots.head())
 
-    teamfavs = findfavpos(teamPosShots)
+    teamfavs = findfavpos(teamPosShots, posmap)
     teambests = findbestpos(teamPosShots)
     result = joinfavandbest(teamfavs, teambests)
     
