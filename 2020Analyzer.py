@@ -24,9 +24,11 @@ import matplotlib.ticker as ticker
 
 
 #change makeMatchList so the year is the current year using datetime module.
+
 year = datetime.today().year
+
+
 def makeMatchList(event):
-#def makeMatchList(event, year = 2018):
 
     '''
     Get match list from the Blue Alliance website depending on what event we're 
@@ -67,15 +69,6 @@ def makeMatchList(event):
             Outstr = str(Match).replace('[', '').replace(']', '').replace(' ', '')+'\n'
             File.write(Outstr)
             
-
-# #def piecesMath(TeamDf):
-#     TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
-#     TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
-#     TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
-  
-#     TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
-#     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
-#     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
 
 def combineColumn(mainDf): 
     '''
@@ -184,10 +177,13 @@ def readMatchList():
         
     return result
 
+
 def whoThis():
     choice = input('who is testing : ')
     return choice
+
 pickedchoice = whoThis()
+
 def readScout():
     '''
     Read Scouting Data from a file, fix formatting to numeric where neccessary,
@@ -219,11 +215,8 @@ def readScout():
         
     return mainDf, cycleDf
 
+
 def readPitScout():
-#    FileName = filedialog.askopenfilename(title = 'select pit scouting data file')
-#    with open(FileName, 'r') as ScoutFile:
-#        pitData = pd.read_csv(ScoutFile, sep = '|') 
-#    pitDf = pitData.fillna(value = 0)
     
     if pickedchoice == 'charlie':
         
@@ -239,9 +232,6 @@ def readPitScout():
     
     return pitDf
 
-
-
-    
 
 def FindPartners(Matchlist, team = 1939):    
     '''
@@ -271,7 +261,7 @@ def FindPartners(Matchlist, team = 1939):
                 thisMatch['allies'] = allies
             thisMatch['match'] = match[0] 
             result.append(thisMatch)
-#    print(result['opponents'][0])
+    #print(result['opponents'][0])
     return result
 
             
@@ -386,7 +376,8 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
                         File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
                         File.write('</div>')
                     for team in teams:
-                        prematchGraphs(mainDf, cycleDf, team)                
+                        prematchGraphs(mainDf, cycleDf, team)
+                        
                         File.write('<div id="' + str(team) + '" class="tabcontent">')
                         File.write('                              <h3>' + str(team) + '</h3>')
                         File.write('                              <div class="team-card">')
@@ -431,7 +422,7 @@ def Day1Report(Scoutdf, PivotDf):
     at the Day 1 Scouting meeting
     '''
     PivotDf.to_csv(r'C:\Users\Mason\Desktop\heatmap analyzed data file.csv')
-#    maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
+    maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     with pd.DataFrame.ExcelWriter('1st Day report' + str(today) + '.xlsx') as writer:
         Scoutdf = Scoutdf.sort_values(by = 'team')   
@@ -441,6 +432,7 @@ def Day1Report(Scoutdf, PivotDf):
         tabname = 'Data Table'
         PivotDf.to_excel(writer, tabname, index=False)
     print('Day1Report written to file')
+
 
 def SearchTeam(Scoutdf, PivotDf, TeamNumber, File = None):
     '''
@@ -533,147 +525,8 @@ def SearchTeam(Scoutdf, PivotDf, TeamNumber, File = None):
         # Other Stuff
         File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'crossHABLine', 'defense', 'noAttempt', 'groundPickup', 'touchedRocketLate'], float_format='{0:.0f}'.format, index=False))
         File.write('\n<br>\n')
-        
-\
-                       
-
-# #def TeamStats(TeamDf):
-#     '''
-#     Takes full dataframe, and creates per match calculated values. Creates a pivot
-#     dataframe with overall team statistics
-#     '''
-#     # Normalize column names
-#     # Database renamed match and team to matchNo and teamNo.  We put back.
-#     TeamDf.rename(columns = {'teamNo':'team', 'matchNo': 'match'}, inplace = True)
-    
-#     # Calculate cube usage
-#     TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
-#     TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
-#     TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
-  
-#     TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
-#     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
-#     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
-    
-#     TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
-#     TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
-#     TeamDf['telehatch'] += TeamDf['TeleHatchLRocketHatch']
-    
-#     TeamDf['sandhatch'] = TeamDf['SSCargoHatch'] + TeamDf['SSCargoSSHRocketHatch']
-#     TeamDf['sandhatch'] += TeamDf['SSCargoSSMRocketHatch']
-#     TeamDf['sandhatch'] += TeamDf['SSCargoSSLRocketHatch']
-    
-#     TeamDf['totalscored'] = TeamDf['telecargo'] + TeamDf['sandcargo']
-#     TeamDf['totalscored'] += TeamDf['telehatch']
-#     TeamDf['totalscored'] += TeamDf['sandhatch']
-    
-#     TeamDf['teleMakes'] = TeamDf['telecargo'] + TeamDf['telehatch']
-    
-#     TeamDf['sandTotal'] = TeamDf['sandcargo'] + TeamDf['sandhatch'] 
-    
-#     tempDf = TeamDf[['team', 'reachLvl1','reachLvl2','reachLvl3', 'defense']]
-#     climbDf = pd.pivot_table(tempDf,values=['reachLvl1','reachLvl2','reachLvl3', 'defense'],index=['team'],
-#                              columns=['reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], aggfunc=len, fill_value=0)
-#     print(climbDf)
-#     climbDf.reset_index(inplace = True)
-    
-#     #TeamDf['PostiveComments'] = TeamDf['postCommentsPro'] 
-    
-#     TeamDf['totalmatches'] = 1
-    
-# #    maxScored = pd.pivot_table(TeamDf, values = ['totalscored'], index='team', aggfunc = TeamDf.loc[[team]].max())
-#     AvgTeamPivot = pd.pivot_table(TeamDf, values = ['telecargo', 'sandcargo', 'telehatch', 'sandhatch', 'totalscored'], index = 'team', aggfunc = np.average)
-#     MatchCount = pd.pivot_table(TeamDf, values = ['totalmatches', 'reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], index = 'team', aggfunc = np.count_nonzero)
-#     Comments = pd.pivot_table(TeamDf, values = ['Comments'], index = 'team', aggfunc = lambda x: ' '.join(x))
-    
-#     AvgTeamPivot.reset_index(inplace = True)
-#     MatchCount.reset_index(inplace = True)
-#     Comments.reset_index(inplace = True)
-                                                                               
-#     TeamPivot = pd.merge(AvgTeamPivot, MatchCount, on = 'team')
-    
-#     TeamPivot = pd.merge(TeamPivot, climbDf, on = 'team')
-    
-    
-#     TeamPivot.rename(columns = {"Did not Try": 'noAttempt', "Attempt Level One Climb": 'attemptLvl1', 
-#                                 "Climbed Level One": 'reachLvl1', "Attempt Level Two Climb": 'attemptLvl2',
-#                                 "Climbed Level Two": 'reachLvl2', "Attempt Level Three Climb": 'attemptLvl3',
-#                                 "Climbed Level Three": 'reachLvl3', "Deployed Ramps": 'deployedRamps', 
-#                                 "Attempted Deploying Ramps": 'attemptDeployedRamps', "Used Another Robot": 'usedAnotherRobot',
-#                                 "Lifted Another Robot": 'lift', "Attempted Lifting Another Robot": 'attemptLift'}, inplace = True)
-    
-#     return TeamDf, TeamPivot
-    
-
-# def PickListCargo(TeamDf, PivotDf, lastMatch):
-#     '''
-#     List of teams organized by the order we should pick them. Then catagories 
-#     that rank robotics based on that catagory. Do not pick catagory.
-#     '''
-#     earlyDf = TeamDf[TeamDf.match <= lastMatch]
-#     lateDf = TeamDf[TeamDf.match > lastMatch]
-        
-    
-#     earlytelepivot = pd.pivot_table(earlyDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
-#     latetelepivot = pd.pivot_table(lateDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
-    
-#     earlytelepivot.reset_index(inplace = True)
-#     latetelepivot.reset_index(inplace = True)
-#     print(PivotDf.head())
-#     deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
-    
-    
-#     deltaDf['change'] = deltaDf['telecargo_late'] - deltaDf['telecargo_early']
-#     deltaDf.sort_values('change')  
-    
-#    # deltaDf['HatchChange'] = deltaDf['avgtelehatch_late'] - deltaDf['avgtelehatch_early']
-#    # deltaDf.sort_values('HatchChange')
-    
-#     outfile = 'PicklistCargo.xlsx'
-#     with ExcelWriter(outfile) as writer:
-#         TeamDf = deltaDf.sort_values(by = 'team')   
-#         tabname = 'Raw Data'
-#         TeamDf.to_excel(writer, tabname, index=False)
-#         PivotDf = deltaDf.sort_values(by = ['team'])
-#         tabname = 'Pivot'
-#         PivotDf.to_excel(writer, tabname, index=False)
-#         tabname = 'Changes'
-#         deltaDf.to_excel(writer, tabname)
-        
-# def PickListHatch(TeamDf, PivotDf, lastMatch):
-#     '''
-#     List of teams organized by the order we should pick them. Then catagories 
-#     that rank robotics based on that catagory. Do not pick catagory.
-#     '''
-#     earlyDf = TeamDf[TeamDf.match <= lastMatch]
-#     lateDf = TeamDf[TeamDf.match > lastMatch]
-        
-
-#     earlytelepivot = pd.pivot_table(earlyDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
-#     latetelepivot = pd.pivot_table(lateDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
-    
-#     earlytelepivot.reset_index(inplace = True)
-#     latetelepivot.reset_index(inplace = True)
-#     print(PivotDf.head())
-#     deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
-    
-    
-#     deltaDf['change'] = deltaDf['telehatch_late'] - deltaDf['telehatch_early']
-#     deltaDf.sort_values('change')  
-    
-    
-#     outfile = 'PicklistHatch.xlsx'
-#     with ExcelWriter(outfile) as writer:
-#         TeamDf = deltaDf.sort_values(by = 'team')   
-#         tabname = 'Raw Data'
-#         TeamDf.to_excel(writer, tabname, index=False)
-#         PivotDf = deltaDf.sort_values(by = ['team'])
-#         tabname = 'Pivot'
-#         PivotDf.to_excel(writer, tabname, index=False)
-#         tabname = 'Changes'
-#         deltaDf.to_excel(writer, tabname)
-
      
+
 def enterTeam():
      Team = input('enter team number: ')
      if Team.isdigit():
@@ -683,8 +536,10 @@ def enterTeam():
         print('input error')
         return
 
+
 def getDfTeamList(df):
     return(df['teamNo'].drop_duplicates())
+
 
 def getPicklistBoxplot(df, yvars, teamList):
     df = df.sort_values('teamNo', ascending=True)
@@ -701,9 +556,11 @@ def getPicklistBoxplot(df, yvars, teamList):
             dataArr[k].append(j[0])
     return(dataArr)#.set_xticklabels(teamList.get_values()))
     
+
 def getFirstDayReportExcel(mainDf):   
-#    cycleDf = mainDf[1]
-#    pitDf = readPitScout()
+    #cycleDf = mainDf[1]
+    #pitDf = readPitScout()
+    
     combineColumn(mainDf)
     mainDf_avgpivot = pd.pivot_table(mainDf, index= ['teamNo'], values=['totalMakes', 'autoMakes', 'teleMakes'], aggfunc=np.average)
     mainDf_min = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=min)
@@ -718,7 +575,6 @@ def getFirstDayReportExcel(mainDf):
     path = os.path.abspath(filename)
     directory = os.path.dirname(path)
     print('saved in  ' + str(directory))
-    
 
 
 def getPrematchReportDf(mainDf, cycleDf, pitDf):
@@ -786,13 +642,7 @@ def getPrematchReportDf(mainDf, cycleDf, pitDf):
     
     #ultralist = [matchscouted, avgpcs, avghi, tcrcdf, tcpcdf, mpod, dtdf, bhdf]
     
-#    stg1 = mainDf.join(matchscouted, how='outer', lsuffix='_left', rsuffix='_right')
-#    stg2 = stg1.join(avgpcs, how='outer', lsuffix='_left', rsuffix='_right')
-#    stg3 = stg2.join(avghi, how='outer', lsuffix='_left', rsuffix='_right')
-#    stg4 = stg3.join(tcrcdf, how='outer', lsuffix='_left', rsuffix='_right')
-#    stg5 = stg4.join(tcpcdf, how='outer', lsuffix='_left', rsuffix='_right')
-#    stg6 = stg5.join(dtdf, how='outer', lsuffix='_left', rsuffix='_right')
-#    ultradf = stg6.join(bhdf, how='outer', lsuffix='_left', rsuffix='_right')
+
     
     ultraList = {'Matches Scouted' : mslist, 'Average Pieces Scored' : avgpcslis, 'Average High Goal Makes' : avghils, 'Times Completed Rotation Control' : tcrcls, 'Times Completed Positional Control' : tcpcls, 'Matches Played on Defense' : mpodls}
     
@@ -813,19 +663,14 @@ def getPrematchReportDf(mainDf, cycleDf, pitDf):
     prematchScoutingReportDf.to_excel('prematch scouting report' + str(today) + '.xlsx')
     return prematchScoutingReportDf
 
+
 def getThatExcel(df, filename):
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     df.to_excel((str(filename) + str(today) + '.xlsx'))
 
 
-
-
-
-
-
-
 def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
-#    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     prematchGraphs(mainDf, cycleDf, team)
     filename = str(team) + ' Team Report.html'
     with open(filename, 'w') as File:
@@ -905,11 +750,11 @@ def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
         File.write('</div>')
         File.write('</body>')
         File.write('</html>')
-              
+                
         shutil.copy(str(team) + ' Team Report.html', todir)
         shutil.copy(os.path.join(filepath, str(team) + '.jpg'), todir)
         shutil.copy(str(team) + ' Prematch Graphs.png', todir)
-    
+
     
 def getPicklistHeatmap(mainDf, df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
@@ -961,14 +806,17 @@ def getPicklistBoxplotData(df, graphVar, title, ax):
     ax.set_xticklabels(teamList.get_values())
     ax.boxplot(dataArr) 
 
+
 def getTeamList(df):
     teamList = df['teamNo'].drop_duplicates()
     return(teamList)
+
 
 def initPicklistGraph(teamList):
    fig = plt.figure(tight_layout=True, figsize=(len(teamList), 10))
    gs = gridspec.GridSpec(4, 1)
    return fig, gs
+
 
 def initMatchReportGraph():
    fig = plt.figure(tight_layout=True, figsize=(14, 7))
@@ -1012,6 +860,7 @@ def getHeatMapPivot(df):
     print(fourthmove)
     return fourthmove    
 
+
 def getHeatMap(df, mainDf, team, graphVar, ax):
     maxShot =55
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
@@ -1037,6 +886,7 @@ def getHeatMap(df, mainDf, team, graphVar, ax):
     try: sb.heatmap(highGoalMakesbyMatchDf.loc[[team], :].unstack().stack(1).to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels=matchNum, vmin=0, vmax=maxShot)
     except:print('data not available')
     
+
 def prematchGraphs(maindf, cycledf, team):
     df = combineColumn(maindf)
     df.set_index("teamNo", inplace = True)
@@ -1087,7 +937,7 @@ def Main(testmode):
     elif selection == '4':
         mainDf, cycleDf = readScout()
         pitDf = readPitScout()
-#        team = int(enterTeam())
+ #       team = int(enterTeam())
         preMatchReport = getPrematchReportDf(mainDf, cycleDf, pitDf)
         filepath = filedialog.askdirectory(title='select directory from team photos')
         todir = filedialog.askdirectory(title='select directory to send the files')
