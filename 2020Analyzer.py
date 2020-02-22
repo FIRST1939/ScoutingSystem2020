@@ -291,8 +291,8 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
     
     for match in MatchList:
         teams = [int(TeamNumber)]
-        teams.append(match['allies'])
-        teams.append(match['opponents'])
+        teams.extend(match['allies'])
+        teams.extend(match['opponents'])
         LastScouted = max(mainDf['matchNo'])
         if match['match'] > LastScouted:
                 FileName = 'Match ' + str(match['match']) + ' Pre-match Report.html'
@@ -370,9 +370,9 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
                         File.write('                           <button class="tablinks" onclick="openTab(event,\'' + str(team) + '\')">' + str(team)  + '</button> #replace 1939 with team')
                         File.write('                        <div id="Overview" class="tabcontent" style="display: block;">')
                         File.write('                        <h3>Overview</h3>')
-                        
+                    print(teams)  
                     for team in teams:
-                        team = int(team[0])
+#                        team = team
                         File.write('<div class="team-card">')
                         File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="pic not found for team ' + str(team) + '" style="width:350px;height:400px;">')
                         File.write('      <p>Team:' + str(team) + '</p>')
@@ -386,7 +386,7 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
                         File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
                         File.write('</div>')
                     for team in teams:
-                        prematchGraphs(mainDf, cycleDf, team)                
+                        prematchGraphs(mainDf.reset_index(), cycleDf.reset_index(), team)                
                         File.write('<div id="' + str(team) + '" class="tabcontent">')
                         File.write('                              <h3>' + str(team) + '</h3>')
                         File.write('                              <div class="team-card">')
@@ -534,145 +534,6 @@ def SearchTeam(Scoutdf, PivotDf, TeamNumber, File = None):
         File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'crossHABLine', 'defense', 'noAttempt', 'groundPickup', 'touchedRocketLate'], float_format='{0:.0f}'.format, index=False))
         File.write('\n<br>\n')
         
-\
-                       
-
-# #def TeamStats(TeamDf):
-#     '''
-#     Takes full dataframe, and creates per match calculated values. Creates a pivot
-#     dataframe with overall team statistics
-#     '''
-#     # Normalize column names
-#     # Database renamed match and team to matchNo and teamNo.  We put back.
-#     TeamDf.rename(columns = {'teamNo':'team', 'matchNo': 'match'}, inplace = True)
-    
-#     # Calculate cube usage
-#     TeamDf['telecargo'] = TeamDf['teleCargoCargo'] + TeamDf['TeleCargoHRocketCargo'] 
-#     TeamDf['telecargo'] += TeamDf['TeleCargoMRocketCargo'] 
-#     TeamDf['telecargo'] += TeamDf['TeleCargoLRocketCargo']
-  
-#     TeamDf['sandcargo'] = TeamDf['SSCargoCargo'] + TeamDf['SSCargoSSHRocketCargo']
-#     TeamDf['sandcargo'] += TeamDf['SSCargoSSMRocketCargo']
-#     TeamDf['sandcargo'] += TeamDf['SSCargoSSLRocketCargo']
-    
-#     TeamDf['telehatch'] = TeamDf['teleCargoHatch'] + TeamDf['TeleHatchHRocketHatch']
-#     TeamDf['telehatch'] += TeamDf['TeleHatchMRocketHatch']
-#     TeamDf['telehatch'] += TeamDf['TeleHatchLRocketHatch']
-    
-#     TeamDf['sandhatch'] = TeamDf['SSCargoHatch'] + TeamDf['SSCargoSSHRocketHatch']
-#     TeamDf['sandhatch'] += TeamDf['SSCargoSSMRocketHatch']
-#     TeamDf['sandhatch'] += TeamDf['SSCargoSSLRocketHatch']
-    
-#     TeamDf['totalscored'] = TeamDf['telecargo'] + TeamDf['sandcargo']
-#     TeamDf['totalscored'] += TeamDf['telehatch']
-#     TeamDf['totalscored'] += TeamDf['sandhatch']
-    
-#     TeamDf['teleMakes'] = TeamDf['telecargo'] + TeamDf['telehatch']
-    
-#     TeamDf['sandTotal'] = TeamDf['sandcargo'] + TeamDf['sandhatch'] 
-    
-#     tempDf = TeamDf[['team', 'reachLvl1','reachLvl2','reachLvl3', 'defense']]
-#     climbDf = pd.pivot_table(tempDf,values=['reachLvl1','reachLvl2','reachLvl3', 'defense'],index=['team'],
-#                              columns=['reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], aggfunc=len, fill_value=0)
-#     print(climbDf)
-#     climbDf.reset_index(inplace = True)
-    
-#     #TeamDf['PostiveComments'] = TeamDf['postCommentsPro'] 
-    
-#     TeamDf['totalmatches'] = 1
-    
-# #    maxScored = pd.pivot_table(TeamDf, values = ['totalscored'], index='team', aggfunc = TeamDf.loc[[team]].max())
-#     AvgTeamPivot = pd.pivot_table(TeamDf, values = ['telecargo', 'sandcargo', 'telehatch', 'sandhatch', 'totalscored'], index = 'team', aggfunc = np.average)
-#     MatchCount = pd.pivot_table(TeamDf, values = ['totalmatches', 'reachLvl1', 'reachLvl2', 'reachLvl3', 'defense'], index = 'team', aggfunc = np.count_nonzero)
-#     Comments = pd.pivot_table(TeamDf, values = ['Comments'], index = 'team', aggfunc = lambda x: ' '.join(x))
-    
-#     AvgTeamPivot.reset_index(inplace = True)
-#     MatchCount.reset_index(inplace = True)
-#     Comments.reset_index(inplace = True)
-                                                                               
-#     TeamPivot = pd.merge(AvgTeamPivot, MatchCount, on = 'team')
-    
-#     TeamPivot = pd.merge(TeamPivot, climbDf, on = 'team')
-    
-    
-#     TeamPivot.rename(columns = {"Did not Try": 'noAttempt', "Attempt Level One Climb": 'attemptLvl1', 
-#                                 "Climbed Level One": 'reachLvl1', "Attempt Level Two Climb": 'attemptLvl2',
-#                                 "Climbed Level Two": 'reachLvl2', "Attempt Level Three Climb": 'attemptLvl3',
-#                                 "Climbed Level Three": 'reachLvl3', "Deployed Ramps": 'deployedRamps', 
-#                                 "Attempted Deploying Ramps": 'attemptDeployedRamps', "Used Another Robot": 'usedAnotherRobot',
-#                                 "Lifted Another Robot": 'lift', "Attempted Lifting Another Robot": 'attemptLift'}, inplace = True)
-    
-#     return TeamDf, TeamPivot
-    
-
-# def PickListCargo(TeamDf, PivotDf, lastMatch):
-#     '''
-#     List of teams organized by the order we should pick them. Then catagories 
-#     that rank robotics based on that catagory. Do not pick catagory.
-#     '''
-#     earlyDf = TeamDf[TeamDf.match <= lastMatch]
-#     lateDf = TeamDf[TeamDf.match > lastMatch]
-        
-    
-#     earlytelepivot = pd.pivot_table(earlyDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
-#     latetelepivot = pd.pivot_table(lateDf, values = ['telecargo'], index = 'team', aggfunc = np.average)
-    
-#     earlytelepivot.reset_index(inplace = True)
-#     latetelepivot.reset_index(inplace = True)
-#     print(PivotDf.head())
-#     deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
-    
-    
-#     deltaDf['change'] = deltaDf['telecargo_late'] - deltaDf['telecargo_early']
-#     deltaDf.sort_values('change')  
-    
-#    # deltaDf['HatchChange'] = deltaDf['avgtelehatch_late'] - deltaDf['avgtelehatch_early']
-#    # deltaDf.sort_values('HatchChange')
-    
-#     outfile = 'PicklistCargo.xlsx'
-#     with ExcelWriter(outfile) as writer:
-#         TeamDf = deltaDf.sort_values(by = 'team')   
-#         tabname = 'Raw Data'
-#         TeamDf.to_excel(writer, tabname, index=False)
-#         PivotDf = deltaDf.sort_values(by = ['team'])
-#         tabname = 'Pivot'
-#         PivotDf.to_excel(writer, tabname, index=False)
-#         tabname = 'Changes'
-#         deltaDf.to_excel(writer, tabname)
-        
-# def PickListHatch(TeamDf, PivotDf, lastMatch):
-#     '''
-#     List of teams organized by the order we should pick them. Then catagories 
-#     that rank robotics based on that catagory. Do not pick catagory.
-#     '''
-#     earlyDf = TeamDf[TeamDf.match <= lastMatch]
-#     lateDf = TeamDf[TeamDf.match > lastMatch]
-        
-
-#     earlytelepivot = pd.pivot_table(earlyDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
-#     latetelepivot = pd.pivot_table(lateDf, values = ['telehatch'], index = 'team', aggfunc = np.average)
-    
-#     earlytelepivot.reset_index(inplace = True)
-#     latetelepivot.reset_index(inplace = True)
-#     print(PivotDf.head())
-#     deltaDf = pd.merge(earlytelepivot, latetelepivot, on = 'team', suffixes = ('_early', '_late'))
-    
-    
-#     deltaDf['change'] = deltaDf['telehatch_late'] - deltaDf['telehatch_early']
-#     deltaDf.sort_values('change')  
-    
-    
-#     outfile = 'PicklistHatch.xlsx'
-#     with ExcelWriter(outfile) as writer:
-#         TeamDf = deltaDf.sort_values(by = 'team')   
-#         tabname = 'Raw Data'
-#         TeamDf.to_excel(writer, tabname, index=False)
-#         PivotDf = deltaDf.sort_values(by = ['team'])
-#         tabname = 'Pivot'
-#         PivotDf.to_excel(writer, tabname, index=False)
-#         tabname = 'Changes'
-#         deltaDf.to_excel(writer, tabname)
-
      
 def enterTeam():
      Team = input('enter team number: ')
@@ -906,10 +767,14 @@ def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
         File.write('</body>')
         File.write('</html>')
               
+        
         shutil.copy(str(team) + ' Team Report.html', todir)
-        shutil.copy(os.path.join(filepath, str(team) + '.jpg'), todir)
-        shutil.copy(str(team) + ' Prematch Graphs.png', todir)
-    
+        
+        
+        try: shutil.copy(os.path.join(filepath, str(team) + '.jpg'), todir)
+        except: print('Photo not Found for ' + str(team))
+        try: shutil.copy(str(team) + ' Prematch Graphs.png', todir)
+        except: print('photo not found for ' + str(team))
     
 def getPicklistHeatmap(mainDf, df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
