@@ -422,7 +422,7 @@ def Day1Report(Scoutdf, PivotDf):
     at the Day 1 Scouting meeting
     '''
     PivotDf.to_csv(r'C:\Users\Mason\Desktop\heatmap analyzed data file.csv')
-    maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
+    #maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     with pd.DataFrame.ExcelWriter('1st Day report' + str(today) + '.xlsx') as writer:
         Scoutdf = Scoutdf.sort_values(by = 'team')   
