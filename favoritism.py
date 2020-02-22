@@ -19,9 +19,9 @@ the accuracy there
 for the teams that can't/haven't done high goal, can you just make it so they have 0's for the numbers and their position is "no high goal shots taken"
 """
 import pandas as pd
+pd.set_option('display.max_columns', 500)
+pd.options.display.width = 200
 from pprint import pprint
-
-POSMAP = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
 def maketeamshotsbypos(cycledf):
     '''
@@ -38,9 +38,32 @@ def maketeamshotsbypos(cycledf):
         
         the highshots and accuracy columns each contain a list of numbers
         with values from each position
-            
-    '''
-    pass
+    posmap: list of str
+        contains list of positions from which a team has shot for later use            
+
+    
+    '''    
+    posPivot = pd.pivot_table(cycledf, values=['highGoalMisses','highGoalMakes','highGoalShots'],
+                              index=['teamNo', 'shooterPosition'])
+    
+    posPivot.reset_index(inplace = True)
+    
+    posPivot['accuracy'] = posPivot['highGoalMakes'] / posPivot['highGoalShots']
+    
+    highShots = pd.pivot_table(posPivot, values = 'highGoalMakes', index = 'teamNo', columns = 'shooterPosition').fillna(0)
+    highShotdict = highShots.to_dict(orient='split')
+    posmap = highShotdict['columns']
+    print(highShotdict)
+    reconfigHigh = pd.Series(highShotdict['data'], index=highShotdict['index']).reset_index(name='highShots')
+    
+    acc = pd.pivot_table(posPivot, values = 'accuracy', index = 'teamNo', columns = 'shooterPosition').fillna(0)
+    accdict = acc.to_dict(orient='split')
+    reconfigacc = pd.Series(accdict['data'], index=accdict['index']).reset_index(name='highShots').rename(columns={'index': 'teamNo'})
+    
+    
+    
+    
+    return pd.Series([0,1,2]), posmap
 
 def findfavpos(teamshotsbypos):
     '''
@@ -105,12 +128,15 @@ def favoritism(cycledf):
 
     '''
     print('Starting favorites run')
-    teamPosShots = maketeamshotsbypos(cycledf)
+    teamPosShots, posmap = maketeamshotsbypos(cycledf)
+    print(teamPosShots.head())
+
     teamfavs = findfavpos(teamPosShots)
     teambests = findbestpos(teamPosShots)
     result = joinfavandbest(teamfavs, teambests)
     
     return result
+    
     
 
 #testsample = pd.read_csv(r'C:\Users\stat\Downloads\2020Cycle data with robot types.csv', sep='|')
