@@ -264,7 +264,7 @@ def FindPartners(Matchlist, team = 1939):
                 thisMatch['allies'] = allies
             thisMatch['match'] = match[0] 
             result.append(thisMatch)
-            
+#    print(result['opponents'][0])
     return result
 
             
@@ -276,95 +276,147 @@ def MatchReport(MatchList, PivotDf, Scoutdf, TeamNumber):
     '''
     FileName = 'MatchReport.htm'
     with open(FileName, 'w') as File:
-        File.write('<head>\n  <title>Pre-match scouting Report</title><br>\n')
-        File.write('<link rel="icon" href="RoboticsAvatar2018.png" />') 
-        File.write('<link rel="stylesheet" type="text/css" href="matchrep.css">')
-        File.write('</head>\n')
-        File.write('<body>\n')
-        File.write('<h1><img src="8bit_logo.jpg", width=50, height=60>')
-#        File.write('<style>')
-#        File.write('img{')
-#        File.write('width 100%')
-#        File.write('}')
-        File.write('</style>')
-        File.write('Pre-match scouting Report</h1>\n')
-        File.write('<div class="robot">\n')
-        File.write('<h3>Our Robot' + '</h3>\n')
-        SearchTeam(Scoutdf, PivotDf, TeamNumber, File)
-
-        #print(MatchList[0]['allies'])
-        LastScouted = max(Scoutdf['match'])
         
-        # Prettying up the file output of the match list
-        File.write('<h3>Forthcoming Matches</h3>\n')        
-        
-        File.write('<table border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n')
-        File.write('      <th>Match</th>\n')
-        File.write('      <th>Alliance</th>\n')
-        File.write('      <th>Allies</th>\n')
-        File.write('      <th>Opponents</th>\n')
-        File.write('    </tr>\n  </thead>\n  <tbody>')
-
         
         for match in MatchList:
+            teams= [1939]
+            teams.append(match['allies'])
+            teams.append(match['opponents'])
             if match['match'] > LastScouted:
-                #File.write(str(match) + '\n')
-                File.write('    <tr style="text-align: right;">\n')
-                File.write('      <th><a href=#Match' + str(match['match']) + '>' + str(match['match']) + '</a></th>\n')
-                File.write('      <th>' + match['alliance'] + '</th>\n')
-                File.write('      <th>' + str(match['allies']) + '</th>\n')
-                File.write('      <th>' + str(match['opponents']) + '</th>\n')
-                File.write('    </tr>\n')                
-                File.write('\n')
-        File.write('</table>\n')
-        File.write('</div>\n')
-        #Printing reports for each forthcoming match
-        for match in MatchList:
-            if match['match'] > LastScouted:
-                File.write('<div class="chapter">\n')
-                File.write('<a name=Match' + str(match['match']) + '></a>\n')
-                File.write('<h2>Match ' + str(match['match']) + '</h2>\n')
-                                                               
-                #print(len(PivotDf.columns))
-                us = [TeamNumber]+match['allies']
-                them = match['opponents']                 
-                File.write('<h4>'+ match['alliance']+' Alliance</h4>\n')
-                if any(i in them for i in PivotDf.index.values):
-                    File.write(PivotDf.loc[us].to_html(float_format='{0:.2f}'.format))
-                else:
-                    File.write('Data not available\n')
-                File.write('<h4>'+ match['opposing']+' Alliance</h4>\n')               
-                if any(i in them for i in PivotDf.index.values):                    
-                    File.write(PivotDf.loc[them].to_html(float_format='{0:.2f}'.format))
-                else:
-                    File.write('Data not available\n')
-                
-                File.write('\n<h3>Allies</h3>\n')
-                for ally in match['allies']:
-                    print(match['allies'])
-                    print(ally)
-#                    print(match['ally'])
-                    SearchTeam(Scoutdf, PivotDf, ally, File)
-                    File.write('\n')
-                    File.write('<p><img src="G:\\My Drive\\Team 1939 Shared Folder\\Scouting\\Robot Pics\\2019\\Arkansas\\' + str(ally) +'.jpg" style="width:500px;height:600px;"><p>')
-                    File.write('\n')
-                File.write('\n<h3>Opponents</h3>\n')
-                for oppo in match['opponents']:
-                    print(match['opponents'])
-#                    print(match['oppo'])
-                    SearchTeam(Scoutdf, PivotDf, oppo, File)
-                    File.write('\n')
-                    File.write('<p><img src="G:\\My Drive\\Team 1939 Shared Folder\\Scouting\\Robot Pics\\2019\\Arkansas\\' + str(oppo) +'.jpg" style="width:500px;height:600px;"><p>')
-                    File.write('\n')
-                File.write('</div>\n')
-#                File.write('<p><img src="G:\\My Drive\\Copy of 2019 Pit Scouting (File responses)\\Robot pics\\3937.jpg"><p>')
-                ''' with open ('MatchReport.csv', 'w') as File:
-                    for match in MatchList:
-                    Outstr = str(match)
-                    File.write(Outstr)
-                    '''
-                    
-        File.write('</body>\n')    
+                    FileName = 'Match ' + str(match['match']) + ' Pre-match Report.htm'
+                    with open(FileName, 'w') as File:
+                       ''' <html>
+                        <head>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <style>
+                        body {
+                          font-family: Arial;
+                        }
+                        
+                        /* Style the tab */
+                        .tab {
+                          overflow: hidden;
+                          border: 1px solid #ccc;
+                          background-color: #f1f1f1;
+                        }
+                        
+                        /* Style the buttons inside the tab */
+                        .tab button {
+                          background-color: inherit;
+                          float: left;
+                          border: none;
+                          outline: none;
+                          cursor: pointer;
+                          padding: 14px 16px;
+                          transition: 0.3s;
+                          font-size: 17px;
+                        }
+                        
+                        /* Change background color of buttons on hover */
+                        .tab button:hover {
+                          background-color: #ddd;
+                        }
+                        
+                        /* Create an active/current tablink class */
+                        .tab button.active {
+                          background-color: #ccc;
+                        }
+                        
+                        /* Style the tab content */
+                        .tabcontent {
+                          display: none;
+                          padding: 6px 12px;
+                          border: 1px solid #ccc;
+                          border-top: none;
+                        }
+                        .graphSheet{
+                        	width: 894px;
+                        	display: inline-block;
+                        	vertical-align:top
+                        }
+                        .team-card {
+                          width: 400px;
+                          display: inline-block;
+                        }
+                        
+                        .team-card-text {
+                          padding: 0 40px;
+                        }
+                        </style>
+                        </head>
+                        
+                        <body>
+                        
+                        <h2>Prematch Report</h2>
+                        <p>Match: </p>
+                        
+                        <div class="tab">
+                            <button class="tablinks active" onclick="openTab(event, 'Overview')">Overview</button>
+           '''             
+                        #for team in teams:
+'''                            <button class="tablinks" onclick="openTab(event, '1939')">1939</button> #replace 1939 with team
+                        <div id="Overview" class="tabcontent" style="display: block;">
+                        <h3>Overview</h3>
+#                        for team in teams:
+                            <div class="team-card">
+                            <p><img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;"></p>
+                                <div class="team-card-text">
+                                  <p>Team:</p>
+                                  <p>Matches Scouted:</p>
+                                  <p>Average Powercells Scored:</p>
+                                  <p>Avg High Powercells Scored:</p>
+                            	  <p>Tall or Short Bot:</p>
+                            	  <p>Drivetrain:</p>
+                            	  <p>Times Completed Rotational Control:</p>
+                            	  <p>Times Completed Positional Control:</p>
+                            	  <p>Matches Played on Defense:</p>
+                              </div>
+                             </div>'''
+#                        for team in teams:
+                             '''
+                             <div id="1939" class="tabcontent">
+                              <h3>1939</h3>
+                              <div class="team-card">
+                                  <img src="./254.jpg" alt="r1 pic" style="width:350px;height:400px;">
+                                  <p>Team:</p>
+                                  <p>Matches Scouted:</p>
+                                  <p>Average Powercells Scored:</p>
+                                  <p>Avg High Powercells Scored:</p>
+                                  <p>Best Shooting Position:</p>
+                            	  <p>Shots Taken There:</p>
+                                  <p>Favorite Shooting Position:</p>
+                            	  <p>Shots Taken There:</p>
+                            	  <p>Accuracy There:</p>
+                            	  <p>Tall or Short Bot:</p>
+                            	  <p>Drivetrain:</p>
+                            	  <p>Times Completed Rotational Control:</p>
+                            	  <p>Times Completed Positional Control:</p>
+                            	  <p>Matches Played on Defense:</p>
+                              </div>
+                              <div class="graphSheet">
+                            	<img src="./1939 Prematch Graphs.png" alt="graph" style="width:894px">
+                              </div>
+                            </div>
+                        '''
+                        '''
+                    <script>
+                    function openTab(evt, tabName) {
+                      var i, tabcontent, tablinks;
+                      tabcontent = document.getElementsByClassName("tabcontent");
+                      for (i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = "none";
+                      }
+                      tablinks = document.getElementsByClassName("tablinks");
+                      for (i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                      }
+                      document.getElementById(tabName).style.display = "block";
+                      evt.currentTarget.className += " active";
+                    }
+                    </script>                    
+                    </body>                    
+                    </html>
+        '''
         
 def Day1Report(Scoutdf, PivotDf):
     '''(dataframe)->None
@@ -1025,8 +1077,10 @@ def Main(testmode):
         # Partners = FindPartners(MatchList, Team)
         # #matchNum = FindPartners(MatchList, Team)
         # #MatchReport(Partners, PivotDf, TeamDf, Team)
-        
     elif selection == '3':
+        pass
+        
+    elif selection == '4':
         mainDf, cycleDf = readScout()
         pitDf = readPitScout()
 #        team = int(enterTeam())
@@ -1037,47 +1091,6 @@ def Main(testmode):
         while team != 0:
             getTeamReport(preMatchReport, mainDf.reset_index(), cycleDf.reset_index(), team, filepath, todir)
             team = int(input('Enter team number or enter 0 to quit: '))
-        
-    elif selection == '4':
-        ReadData = readScout()
-        #TeamDf, PivotDf = TeamStats(ReadData)
-        print()
-        #Day1Report(TeamDf, PivotDf)
-    elif selection == '5':
-        ReadData = readScout()
-        #TeamDf, PivotDf = TeamStats(ReadData)
-        lastMatch = int(input('enter last match of Day 1'))
-        print('boo')
-        #print(TeamDf.head())
-        #PickListCargo(TeamDf, PivotDf, lastMatch)
-    elif selection == '6':
-        ReadData = readScout()
-        #TeamDf, PivotDf = TeamStats(ReadData)
-        #lastMatch = int(input('enter last match of Day 1'))
-        print('boo')
-        #print(TeamDf.head())
-        #PickListHatch(TeamDf, PivotDf, lastMatch)
-    elif selection == '9':
 
-        ReadData = readScout()
-
-        #print('entered 9')
-        maindf, cycledf = readScout()
-        #print('readFile')
-        combinedMaindf=combineColumn(maindf)
-        print(combinedMaindf)
-        
-
-        #print(ReadData)
-        #TeamDf, PivotDf = TeamStats(ReadData)
-        
-        print()
-        print('TeamDF')
-        #print(TeamDf)
-        print('\nTeam Pivot')
-        #print(PivotDf)
-    elif selection == 'c':
-        Main, Cycle = readScout()
-        Pit = readPitScout()
-        getPrematchReportDf(Main, Cycle, Pit)
-Main(True)
+#Main(True)
+FindPartners(readMatchList())
