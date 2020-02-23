@@ -218,7 +218,7 @@ def readScout():
         with open(FileName, 'r') as MainFile:
             mainData = pd.read_csv(MainFile, sep = '|') 
         mainDf = mainData.fillna('0')
-        print('pickle rick find me in the code hahaha')
+#        print('pickle rick find me in the code hahaha')
         FileName = filedialog.askopenfilename(title = 'select Cycle Data file')
         with open(FileName, 'r') as CycleFile:
             cycleData = pd.read_csv(CycleFile, sep = '|') 
@@ -248,7 +248,7 @@ def readPitScout():
     return pitDf
 
 
-def FindPartners(Matchlist, team = 5006):    
+def FindPartners(Matchlist, team = 1939):    
     '''
     Takes the Match List from the entire competition and finds the matches we're
     in and finds the teams that are with us.
@@ -278,8 +278,7 @@ def FindPartners(Matchlist, team = 5006):
             result.append(thisMatch)
     #print(result['opponents'][0])
     return result
-
-            
+          
 def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
     ''' (dataframe)->dataframe
     (Scouting Data)->PivotTable with upcoming match partners
@@ -289,6 +288,10 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
     filepath = filedialog.askdirectory(title='select directory for team photos')
     pitDf = readPitScout()
     prematchDf = getPrematchReportDf(mainDf, cycleDf, pitDf)
+    mainDf.reset_index().set_index('teamNo', inplace = True)
+    save = input('Would you like to save the reports to another folder(y/n)?')
+    if save == 'y':
+        todir = filedialog.askdirectory(title='select directory to send the files')
 
     for match in MatchList:
         teams = [int(TeamNumber)]
@@ -384,6 +387,7 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
                             File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
                             File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
                             File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
+                            File.write(mainDf.reset_index().set_index('teamNo').loc[[team], ['climbLevel']].to_html(index=False))
                             File.write('</div>')
                         File.write('</div>')
                         for team in teams:
@@ -401,6 +405,8 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
                             File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
                             File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
                             File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
+                            File.write(mainDf.reset_index().set_index('teamNo').loc[[team], ['climbLevel']].to_html(index=False))
+                            File.write(mainDf.reset_index().set_index('teamNo').loc[[team], ['comments']].to_html(index=False))
                             File.write('  </div>')
                             File.write('  <div class="graphSheet">')
                             File.write('	<img src="./' + str(team) + ' Prematch Graphs.png" alt="graph" style="width:894px">')
@@ -423,7 +429,14 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
                         File.write('                    </script>                    ')
                         File.write('                    </body>                    ')
                         File.write('                    </html>')
-        
+                        if save == 'y':
+                                    shutil.copy('Match ' + str(match['match']) + ' Pre-match Report.html', todir)
+                                    for team in teams:        
+                                        try: shutil.copy(os.path.join(filepath, str(team) + '.jpg'), todir)
+                                        except: print('Photo not Found for ' + str(team))
+                                        try: shutil.copy(str(team) + ' Prematch Graphs.png', todir)
+                                        except: print('photo not found for ' + str(team))
+
         
 def Day1Report(Scoutdf, PivotDf):
     '''(dataframe)->None
@@ -442,98 +455,6 @@ def Day1Report(Scoutdf, PivotDf):
         PivotDf.to_excel(writer, tabname, index=False)
     print('Day1Report written to file')
 
-
-def SearchTeam(Scoutdf, PivotDf, TeamNumber, File = None):
-    '''
-    A Search function where we can find a team and their specific stats.
-    '''
-    print(Scoutdf)
-    if File == None:
-        print('Team:', TeamNumber)
-        
-        if TeamNumber not in PivotDf.team.values:
-            print('Team', TeamNumber, 'is not yet scouted')
-            return
-            
-        PivotDf.reset_index(inplace = True)
-        PivotDf.set_index('team', inplace = True)
-        print('Matches Played =', PivotDf.loc[TeamNumber]['totalmatches'])
-        
-        print('\nMatch Summary')
-        print(PivotDf.loc[TeamNumber].to_dict())
-        print('\nMatch Details')
-        
-        print(Scoutdf[Scoutdf.team == TeamNumber])
-    else :
-        File.write('<h4>Team: ' + str(TeamNumber) + '</h4>\n')
-
-        PivotDf.reset_index(inplace = True)
-                
-        if TeamNumber not in PivotDf.team.values:
-            File.write('\nTeam ' + str(TeamNumber) + ' is not yet scouted\n')
-            PivotDf.set_index('team', inplace = True)
-            return
-            
-        PivotDf.set_index('team', inplace = True)
-        File.write('Matches Played =' + str(PivotDf.loc[TeamNumber]['totalmatches']) + '\n')
-        
-        File.write('\n<h5>Match Summary</h5>\n')
-        temp = PivotDf.loc[TeamNumber].to_dict()
-        if 'index' in temp:
-            del temp['index']
-        File.write(str(temp))
-        File.write('\n<h5>Match Details</h5>\n')
-        
-        # Make pandas stop truncating the long text fields.
-        pd.set_option('display.max_colwidth', -1)
-        
-        # Within each write, I'm specifying columns by number, taking off the
-        # decimal places, and suppressing printing of the index number
-
-        
-        # Comments        
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'Comments', 'scoutName'], float_format='{0:.0f}'.format, index=False, justify='unset'))
-        File.write('\n<br>\n')       
-        
-        #Start Position things
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'startPOS', 'startLeft', 'startRight'], float_format='{0:.0f}'.format, index=False, justify='unset'))
-        File.write('\n<br>\n')
-        
-        # Calculated Fields
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'sandcargo', 'sandhatch', 'telecargo', 'telehatch'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')  
-        
-        # Sandstorm columns
-        # Good Stuff
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'SSCargoSSMRocketCargo', 'SSCargoSSLRocketCargo', 'SSCargoSSHRocketHatch', 'SSCargoSSMRocketHatch', 'SSCargoSSLRocketHatch'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')
-        
-        #Failed Stuff
-        #File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=[1, 2, 3, 5, 9, 13], float_format='{0:.0f}'.format, index=False))
-        #File.write('\n<br>\n')
-        
-        
-        # Teleop Columns
-        # Cube Moving
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'TeleHatchLRocketHatch', 'TeleHatchMRocketHatch', 'TeleHatchHRocketHatch', 'TeleCargoLRocketCargo', 'TeleCargoMRocketCargo', 'TeleCargoHRocketCargo'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')
-        
-        # Climbing and Parking
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'attemptLvl1', 'reachLvl1', 'attemptLvl2', 'reachLvl2', 'attemptLvl3', 'reachLvl3'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')
-        
-        # Ramp and Lift climbing
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'deployedRamps', 'attemptDeployedRamps', 'usedAnotherRobot', 'lift', 'attemptLift'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')
-        
-        
-        # Bad Stuff
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'dangerousSSDriving', 'deadbot', 'techFoul', 'foul'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')
-        
-        # Other Stuff
-        File.write(Scoutdf[Scoutdf.team == TeamNumber].to_html(columns=['match', 'team', 'crossHABLine', 'defense', 'noAttempt', 'groundPickup', 'touchedRocketLate'], float_format='{0:.0f}'.format, index=False))
-        File.write('\n<br>\n')     
 
 def enterTeam():
      Team = input('enter team number: ')
@@ -941,7 +862,7 @@ def Main(testmode):
     elif selection == '2':
         # Team = enterTeam()       
         MainData, CycleData = readScout()
-        MatchReport(FindPartners(readMatchList()), CycleData, MainData, 5006)
+        MatchReport(FindPartners(readMatchList()), CycleData, MainData, 1939)
 
 
     elif selection == '3':
@@ -960,4 +881,3 @@ def Main(testmode):
             team = int(input('Enter team number or enter 0 to quit: '))
 
 Main(True)
-#FindPartners(readMatchList())
