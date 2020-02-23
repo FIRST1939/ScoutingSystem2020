@@ -699,11 +699,11 @@ autoShooterPos.grid(column= 5, row= 3, columnspan= 1, ipady=15, ipadx=10)
 autoShooterPos.config(width= 5)
 autoShooterPos.bind("<<ComboboxSelected>>", autoPositionSet )
 def comboBoxAutoShooterPos():
-    if autoShooterPos.get()== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for auto shooter position')
-        return True
+#    if autoShooterPos.get()== ("A"or "B"or "C"or "D"or "E"or "F"or "G"or "H"):
+    return False
+#    else:
+#        messagebox.showinfo('combo box error', 'invalid answer for auto shooter position')
+#        return True
 
 
 autoEnter = Button(auto, text='enter', command=lambda: sendCycleData(0))
@@ -746,11 +746,11 @@ rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
 rotationalControl.config(width= 5)
 def comboBoxRotationalCont():
-    if rotationalControl.get()== ("No attempt"or"No"or "Yes"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for rotational control')
-        return True
+#    if rotationalControl.get()== ("No attempt"or"No"or "Yes"):
+    return False
+#    else:
+#        messagebox.showinfo('combo box error', 'invalid answer for rotational control')
+#        return True
 #
 positionalControlLBL = Label(tele, text='Has Positional Control?')
 positionalControlLBL.grid(column=6, row=9, columnspan=5)
@@ -761,11 +761,11 @@ positionalControl.current(0)
 positionalControl.grid(column= 9, row= 9, columnspan=5)
 positionalControl.config(width= 5)
 def comboBoxPositionalControl():
-    if positionalControl.get()== ("No attempt"or"No"or "Yes"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for positional control')
-        return True
+#    if positionalControl.get()== ("No attempt"or"No"or "Yes"):
+    return False
+#    else:
+#        messagebox.showinfo('combo box error', 'invalid answer for positional control')
+#        return True
 
 shooterPosLBL = Label(tele, text='Shooter Position')
 shooterPosLBL.grid(column=0, row=8, ipady=23)
@@ -777,11 +777,11 @@ shooterPos.grid(column= 1, row= 8, columnspan=5)
 shooterPos.config(width= 5)
 shooterPos.bind("<<ComboboxSelected>>", telePositionSet )
 def comboBoxShooterPosTele():
-    if shooterPos.get()== ("A"or "B"or "C"or "D"or"E"or "F"or "G"or "H"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
-        return True
+#    if shooterPos.get()== ("A"or "B"or "C"or "D"or"E"or "F"or "G"or "H"):
+    return False
+#    else:
+#        messagebox.showinfo('combo box error', 'invalid answer for shooter position')
+#        return True
 
 teleMissedLBL = Label(tele, text='Missed')
 teleMissedLBL.grid(column=1, row=0, columnspan=5)
@@ -824,11 +824,11 @@ barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
 barLevel.config(width= 25)
 def comboBoxBarLevel():
-    if barLevel.get()== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
-        return False
-    else:
-        messagebox.showinfo('combo box error', 'invalid answer for Bar Level')
-        return True
+#    if barLevel.get()== ("Any Position When It Was Leveled"or "Middle Of The Bar"or "High Side Of The Bar"or "Low Side Of The Bar"or "No Climb"):
+    return False
+#    else:
+#        messagebox.showinfo('combo box error', 'invalid answer for Bar Level')
+#        return True
 
 climbFrom = IntVar()
 climbFromLBL = Label(endGame, text='Where on the bar did they climb?')
