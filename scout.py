@@ -53,13 +53,13 @@ class CounterClass:
         self.textX = textX
         self.textY = textY
         self.textXSpan = textXSpan
-        
+
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY, columnspan=self.textXSpan)
-       
+
 
         self.DisplayLabel = Label(self.app, text = self.point)
         self.DisplayLabel.grid(column = self.x, row = self.y)
-        
+
 
         self.Plus1Button = Button(self.app, text = "+", command=self.plus1, bg="green4")
         self.Plus1Button.grid(column = (self.x+1), row = y)
@@ -67,18 +67,18 @@ class CounterClass:
         self.Neg1Button = Button(self.app, text = "-", command=self.neg1, bg="red4")
         self.Neg1Button.grid(column = (self.x-1), row = y)
 
-   
+
     def plus1(self):
         if self.point < 255:
             self.point += 1
             self.DisplayLabel["text"]=str(self.point)
 
-        
+
     def neg1(self):
         if self.point  > 0:
             self.point -= 1
             self.DisplayLabel["text"]=str(self.point)
-    
+
     def reinit(self):
         self.DisplayLabel["text"]=str(self.point)
 
@@ -94,13 +94,13 @@ class lowGoalCounterClass:
         self.y = y
         self.textX = textX
         self.textY = textY
-        
+
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY)
         self.spaceLBL = Label(self.app, text='                        Low  ').grid(column=x+3, row=y)
 
         self.madeDisplayLabel = Label(self.app, text = self.shotsMade)
         self.madeDisplayLabel.grid(column = (self.x+6), row = self.y)
-        
+
 
         self.Plus1Button = Button(self.app, text = "+1", command=self.madePlus1, bg="green4")
         self.Plus1Button.grid(column = (self.x+7), row = y)
@@ -116,7 +116,7 @@ class lowGoalCounterClass:
 
         self.missedDisplayLabel = Label(self.app, text = self.shotsMissed)
         self.missedDisplayLabel.grid(column = self.x, row = self.y)
-        
+
 
         self.missedPlus1Button = Button(self.app, text = "+1", command=self.missedPlus1, bg="green4")
         self.missedPlus1Button.grid(column = (self.x+1), row = y)
@@ -124,19 +124,19 @@ class lowGoalCounterClass:
         self.missedNeg1Button = Button(self.app, text = "-1", command=self.missedNeg1, bg="red4")
         self.missedNeg1Button.grid(column = (self.x-1), row = y)
 
-    
+
         self.missedPlus5Button = Button(self.app, text = "+5", command=self.missedPlus5, bg="green4")
         self.missedPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
 
         self.missedNeg5Button = Button(self.app, text = "-5", command=self.missedNeg5, bg="red4")
         self.missedNeg5Button.grid(column = (self.x-2), row = y)
 
-   
+
     def madePlus5(self):
         if self.shotsMade < 250:
             self.shotsMade += 5
             self.madeDisplayLabel["text"]=str(self.shotsMade)
-        
+
     def madeNeg5(self):
         if self.shotsMade  >= 5:
             self.shotsMade -= 5
@@ -146,12 +146,12 @@ class lowGoalCounterClass:
             self.shotsMissed = 0
             self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def missedPlus5(self):
         if self.shotsMissed < 250:
             self.shotsMissed += 5
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def missedNeg5(self):
         if self.shotsMissed  >5:
             self.shotsMissed -=5
@@ -159,33 +159,33 @@ class lowGoalCounterClass:
         else:
            self.shotsMissed = 0
            self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def madePlus1(self):
         if self.shotsMade < 255:
             self.shotsMade += 1
             self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def madeNeg1(self):
         if self.shotsMade  > 0:
             self.shotsMade -= 1
             self.madeDisplayLabel["text"]=str(self.shotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-            
+
     def missedPlus1(self):
         if self.shotsMissed < 255:
             self.shotsMissed += 1
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-            
+
     def missedNeg1(self):
         if self.shotsMissed  > 0:
             self.shotsMissed -=1
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-            
+
     def reinit(self):
          self.missedDisplayLabel["text"]=str(self.shotsMissed)
          self.madeDisplayLabel["text"]=str(self.shotsMade)
-         
+
 
 
 class highGoalCounterClass:
@@ -200,11 +200,11 @@ class highGoalCounterClass:
         self.y = y
         self.textX = textX
         self.textY = textY
-        
+
         self.textLbl = Label(self.app, text = item).grid(column=textX, row=textY)
         self.spaceLBL = Label(self.app, text='                        Outer ').grid(column=x+3, row=y+1)
         self.spaceLBL2 = Label(self.app, text='                        Inner ').grid(column=x+3, row=y)
-       
+
 #inner made
         self.innerMadeDisplayLabel = Label(self.app, text = self.innerShotsMade)
         self.innerMadeDisplayLabel.grid(column = (self.x+6), row = self.y)
@@ -223,7 +223,7 @@ class highGoalCounterClass:
 
 #outer made
         self.outerMadeDisplayLabel = Label(self.app, text = self.outerShotsMade)
-        self.outerMadeDisplayLabel.grid(column = (self.x+6), row = self.y+1)        
+        self.outerMadeDisplayLabel.grid(column = (self.x+6), row = self.y+1)
 
         self.outerPlus1Button = Button(self.app, text = "+1", command=self.outerMadePlus1, bg="green4")
         self.outerPlus1Button.grid(column = (self.x+7), row = y+1)
@@ -240,14 +240,14 @@ class highGoalCounterClass:
 #missed
         self.missedDisplayLabel = Label(self.app, text = self.shotsMissed)
         self.missedDisplayLabel.grid(column = self.x, row = self.y)
-        
+
         self.missedPlus1Button = Button(self.app, text = "+1", command=self.missedPlus1, bg="green4")
         self.missedPlus1Button.grid(column = (self.x+1), row = y)
 
         self.missedNeg1Button = Button(self.app, text = "-1", command=self.missedNeg1, bg="red4")
         self.missedNeg1Button.grid(column = (self.x-1), row = y)
 
-    
+
         self.missedPlus5Button = Button(self.app, text = "+5", command=self.missedPlus5, bg="green4")
         self.missedPlus5Button.grid(column = (self.x+2), row = y, sticky='W')
 
@@ -255,15 +255,15 @@ class highGoalCounterClass:
         self.missedNeg5Button.grid(column = (self.x-2), row = y)
 
 #        self.root.mainloop()
-    
-        
-#inner made def   
+
+
+#inner made def
     def innerMadePlus5(self):
         if self.innerShotsMade < 250:
             self.innerShotsMade += 5
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def innerMadeNeg5(self):
         if self.innerShotsMade == 5:
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
@@ -272,14 +272,14 @@ class highGoalCounterClass:
             self.innerShotsMade = 0
             self.madeDisplayLabel["text"]=str(self.innerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-            
+
 
     def innerMadePlus1(self):
         if self.innerShotsMade < 255:
             self.innerShotsMade += 1
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def innerMadeNeg1(self):
         if self.innerShotsMade  > 0:
             self.innerShotsMade -= 1
@@ -292,7 +292,7 @@ class highGoalCounterClass:
             self.outerShotsMade += 5
             self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def outerMadeNeg5(self):
         if self.outerShotsMade  >= 5:
             self.outerShotsMade -= 5
@@ -302,13 +302,13 @@ class highGoalCounterClass:
             self.outerShotsMade = 0
             self.madeDisplayLabel["text"]=str(self.outerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-            
+
 
     def outerMadePlus1(self):
         self.outerShotsMade += 1
         self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
         self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def outerMadeNeg1(self):
         if self.outerShotsMade  > 0:
             self.outerShotsMade -= 1
@@ -321,7 +321,7 @@ class highGoalCounterClass:
         if self.shotsMissed < 255:
             self.shotsMissed += 5
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def missedNeg5(self):
         if self.shotsMissed  >5:
             self.shotsMissed -=5
@@ -329,12 +329,12 @@ class highGoalCounterClass:
         else:
            self.shotsMissed = 0
            self.missedDisplayLabel["text"]=str(self.shotsMissed)
-                
+
     def missedPlus1(self):
         if self.shotsMissed < 255:
             self.shotsMissed += 1
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
-        
+
     def missedNeg1(self):
         if self.shotsMissed  > 0:
             self.shotsMissed -=1
@@ -353,7 +353,7 @@ def getTeam():
     print(team_no)
     global teamno
     teamno = team_no
-    
+
 def getNextMatch():
    new_match_no = match_dbconn.getNextMatch();
    print('new match %s',new_match_no)
@@ -379,9 +379,9 @@ def cycleReinit(gamePhase):
         autoHigh.outerShotsMade = 0
         autoCycles += 1
         autoLow.reinit()
-        autoHigh.reinit()  
+        autoHigh.reinit()
         print('auto reinitialized')
-        
+
     else:
         teleLowGoal.shotsMissed = 0
         teleHigh.shotsMissed = 0
@@ -399,11 +399,11 @@ def sendMainToDatabase(cards):
     global lowGoalMakes
     global innerGoalMakes
     global outerGoalMakes
-	
+
     # Remove Line Breaks from comments
     comments.replace('\n',' ').replace('\r','')
-	
-    match_dbconn.setMatchScout(match_no, 
+
+    match_dbconn.setMatchScout(match_no,
                                teamno,
                                scoutName.get(),
                                teamnum.get(),
@@ -441,7 +441,7 @@ def sendMainToDatabase(cards):
                                recoveredFromDead_State.get(),
                                cards
                                )
-    
+
 def sendCycleToDatabase(gamePhase):
     print('send to database function ran')
     global autoCycles
@@ -451,7 +451,7 @@ def sendCycleToDatabase(gamePhase):
     global lowGoalMakes
     global innerGoalMakes
     global outerGoalMakes
-    if gamePhase == 0: 
+    if gamePhase == 0:
         if lowGoalMisses[0] + autoLow.shotsMissed <= 255:
             lowGoalMisses[0] += autoLow.shotsMissed
         if highGoalMisses[0] + autoHigh.shotsMissed <= 255:
@@ -462,10 +462,10 @@ def sendCycleToDatabase(gamePhase):
             outerGoalMakes[0] += autoHigh.outerShotsMade
         if innerGoalMakes[0] + autoHigh.innerShotsMade <= 255:
             innerGoalMakes[0] += autoHigh.innerShotsMade
-        
+
         match_dbconn.setMatchCycle(autoCycles,
-                                   match_no, 
-                                   teamno, 
+                                   match_no,
+                                   teamno,
                                    autoShooterPos.get(),
                                    autoLow.shotsMissed,
                                    autoHigh.shotsMissed,
@@ -476,7 +476,7 @@ def sendCycleToDatabase(gamePhase):
         print('Sent auto to database')
         autoCycles = (autoCycles+1)
         print('increment autoCycles complete')
-    else: 
+    else:
         if lowGoalMisses[1] + teleLowGoal.shotsMissed <= 255:
             lowGoalMisses[1] += teleLowGoal.shotsMissed
         if highGoalMisses[1] + teleHigh.shotsMissed <= 255:
@@ -488,8 +488,8 @@ def sendCycleToDatabase(gamePhase):
         if innerGoalMakes[1] + teleHigh.innerShotsMade <=255:
             innerGoalMakes[1] += teleHigh.innerShotsMade
         match_dbconn.setMatchCycle(teleCycles,
-                                   match_no, 
-                                   teamno, 
+                                   match_no,
+                                   teamno,
                                    shooterPos.get(),
                                    teleLowGoal.shotsMissed,
                                    teleHigh.shotsMissed,
@@ -499,13 +499,13 @@ def sendCycleToDatabase(gamePhase):
                                    gamePhase)
         print('Sent tele cycles to database')
         teleCycles = (teleCycles+1)
-#       
+#
 def sendCycleData(gamePhase):
-        
+
     if  (gamePhase == 1 and teleLowGoal.shotsMissed == 0 and teleHigh.shotsMissed == 0 and teleLowGoal.shotsMade == 0 and teleHigh.outerShotsMade == 0 and teleHigh.innerShotsMade == 0):
         messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     elif (gamePhase == 0 and autoLow.shotsMissed == 0 and autoHigh.shotsMissed == 0 and autoLow.shotsMade == 0 and autoHigh.outerShotsMade == 0 and autoHigh.innerShotsMade ==0):
-        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')    
+        messagebox.showinfo('No data', 'You haven\'t recorded any shots for this cycle yet')
     else:
         sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
@@ -520,7 +520,7 @@ def getCardValue():
     if redCard_State.get() !=0:
         cardValue=2
     return cardValue
-#                         
+#
 def sendMainData():
     global autoCycles
     global teleCycles
@@ -550,7 +550,7 @@ def sendMainData():
         autoCycles = 0
         teleCycles = 0
         reinitscreen()
-        
+
 def screenClear():
     pass
 #
@@ -604,7 +604,7 @@ def telePositionSet(event):
 
 #print(teamno)
 #opening tkinter
-window = Tk() 
+window = Tk()
 window.geometry('800x480')
 
 #window.title('scouting app 2020')
@@ -692,7 +692,7 @@ autoBallsPickedUp = CounterClass(auto, 4, 6, 'Balls Picked Up', 0, 6, 3)
 autoShooterPos = Label(auto, text='Shooter Position')
 autoShooterPos.grid(column=0, row=3, columnspan=6, ipady=15, ipadx=10)
 autoShooterPos = ttk.Combobox(auto)
-autoShooterPost.state('readonly')
+autoShooterPost['state'] = ("readonly")
 autoShooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 autoShooterPos.current(0)
 autoShooterPos.grid(column= 5, row= 3, columnspan= 1, ipady=15, ipadx=10)
@@ -723,7 +723,7 @@ refLabel.grid(column=0, row=0, columnspan=5, rowspan=5)
 shooterPosRef = Label(reference, text='Shooter Position')
 shooterPosRef.grid(column=7, row=1, columnspan=6, ipady=15, ipadx=10)
 shooterPosRef = ttk.Combobox(reference)
-shooterPosRef.state('readonly')
+shooterPosRef['state'] = ("readonly")
 shooterPosRef['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 shooterPosRef.current(0)
 shooterPosRef.grid(column= 7, row= 2, columnspan= 1, ipady=5, ipadx=10)
@@ -731,7 +731,7 @@ shooterPosRef.config(width= 5)
 shooterPosRef.bind("<<ComboboxSelected>>", refImagePositionSet )
 
 #TELEOP pagE
-            
+
 teleFoul = CounterClass(tele, 3, 10, 'Foul', 0, 10, 1)
 teleTechFoul = CounterClass(tele, 9, 10, 'Tech Foul', 6, 10, 1)
 teleLowGoal = lowGoalCounterClass(tele, 3, 1, 'Low', 0, 1)
@@ -740,7 +740,7 @@ teleHigh = highGoalCounterClass(tele, 3, 2, 'High', 0, 2)
 rotationalControlLBL = Label(tele, text='Has Rotational Control?')
 rotationalControlLBL.grid(column=0, row=9, ipady=23)
 rotationalControl = ttk.Combobox(tele)
-rotationalControl.state('readonly')
+rotationalControl['state'] = ("readonly")
 rotationalControl['values']= ("No attempt","No", "Yes")
 rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
@@ -755,7 +755,7 @@ def comboBoxRotationalCont():
 positionalControlLBL = Label(tele, text='Has Positional Control?')
 positionalControlLBL.grid(column=6, row=9, columnspan=5)
 positionalControl = ttk.Combobox(tele)
-positionalControl.state('readonly')
+positionalControl['state'] = ("readonly")
 positionalControl['values']= ("No attempt", "No", "Yes")
 positionalControl.current(0)
 positionalControl.grid(column= 9, row= 9, columnspan=5)
@@ -770,7 +770,7 @@ def comboBoxPositionalControl():
 shooterPosLBL = Label(tele, text='Shooter Position')
 shooterPosLBL.grid(column=0, row=8, ipady=23)
 shooterPos = ttk.Combobox(tele)
-shooterPos.state('readonly')
+shooterPos['state'] = ("readonly")
 shooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 shooterPos.current(0)
 shooterPos.grid(column= 1, row= 8, columnspan=5)
@@ -818,7 +818,7 @@ leveledBar.grid(column= 3, row= 3, columnspan=4)
 barLevelLBL = Label(endGame, text='Where was the bar during the climb?')
 barLevelLBL.grid(column=0, row=5, ipady=23)
 barLevel = ttk.Combobox(endGame)
-barLevel.state('readonly')
+barLevel['state'] = ("readonly")
 barLevel['values']= ("Any Position When It Was Leveled", "Middle Of The Bar", "High Side Of The Bar", "Low Side Of The Bar", "No Climb")
 barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
