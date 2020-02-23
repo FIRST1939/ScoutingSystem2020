@@ -3,7 +3,7 @@
 """
 Created on Thu Jan 17 19:06:04 2019
                                     
-@author: Saketh, Sriram, Charlie
+@author: Saketh, Sriram, Charlie, Mason
 """
 
 import os
@@ -156,7 +156,10 @@ def readMatchList():
     #     FileName = r'C:\Users\Saketh\Documents\GitHub\2019-Scouting-Analyzer\MatchList-nyut.csv'
     if pickedchoice == 'charlie':
            FileName = (r"C:\Users\charl\Downloads\Test data match list - Sheet1.csv")
-   
+           
+    elif pickedchoice == 'm':
+        FileName = (r"C:\Users\Mason\Downloads\Test data match list - Sheet1 (4).csv")
+
     else:
        
            FileName = filedialog.askopenfilename(title = 'select MatchList file')
@@ -201,6 +204,14 @@ def readScout():
         
         cycleData = pd.read_csv(r"C:\Users\charl\Downloads\very cool scripts folder\CycleData.csv", sep = '|')
         cycleDf = cycleData.fillna('0')
+        
+    elif pickedchoice == 'm':
+        mainData = pd.read_csv(r"C:\Users\Mason\Downloads\2020 test data sheet with robot types - Main Data with robot types (1).csv", sep= '|')
+        mainDf = mainData.fillna('0')
+        
+        
+        cycleData = pd.read_csv(r"C:\Users\Mason\Downloads\2020 test data sheet with robot types - Cycle data with robot types (1).csv", sep = '|')
+        cycleDf = cycleData.fillna('0')
     else:
         
         FileName = filedialog.askopenfilename(title = 'select Main Data file')
@@ -222,6 +233,10 @@ def readPitScout():
         
         pitDf = pd.read_csv(r'C:\Users\charl\Downloads\very cool scripts folder\PitData.csv', sep= '|')
         pitDf = pitDf.fillna('0')
+        
+    elif pickedchoice == 'm':
+        pitDf = pd.read_csv(r'C:\Users\Mason\Downloads\Pit Scouting (Responses) - Form Responses 1 (1).csv', sep= ',')
+        pitDf = pitDf.fillna('0')
 
     else:
         
@@ -233,7 +248,7 @@ def readPitScout():
     return pitDf
 
 
-def FindPartners(Matchlist, team = 1939):    
+def FindPartners(Matchlist, team = 5006):    
     '''
     Takes the Match List from the entire competition and finds the matches we're
     in and finds the teams that are with us.
@@ -274,11 +289,7 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
     filepath = filedialog.askdirectory(title='select directory for team photos')
     pitDf = readPitScout()
     prematchDf = getPrematchReportDf(mainDf, cycleDf, pitDf)
-    
-    
-    
-    
-    
+
     for match in MatchList:
         teams = [int(TeamNumber)]
         teams.extend(match['allies'])
@@ -287,132 +298,131 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
         if match['match'] > LastScouted:
                 FileName = 'Match ' + str(match['match']) + ' Pre-match Report.html'
                 with open(FileName, 'w') as File:
-                    File.write('                        <html>')
-                    File.write('                        <head>')
-                    File.write('                        <meta name="viewport" content="width=device-width, initial-scale=1">')
-                    File.write('                        <style>')
-                    File.write('                        body {')
-                    File.write('                          font-family: Arial;')
-                    File.write('                        }')
-                    File.write('')
-                    File.write('                        /* Style the tab */')
-                    File.write('                        .tab {')
-                    File.write('                          overflow: hidden;')
-                    File.write('                          border: 1px solid #ccc;')
-                    File.write('                          background-color: #f1f1f1;')
-                    File.write('                        }')
-                    File.write('')
-                    File.write('                        /* Style the buttons inside the tab */')
-                    File.write('                        .tab button {')
-                    File.write('                          background-color: inherit;')
-                    File.write('                          float: left;')
-                    File.write('                          border: none;')
-                    File.write('                          outline: none;')
-                    File.write('                          cursor: pointer;')
-                    File.write('                          padding: 14px 16px;')
-                    File.write('                          transition: 0.3s;')
-                    File.write('                          font-size: 17px;')
-                    File.write('                        }')
-                    File.write('')
-                    File.write('                        /* Change background color of buttons on hover */')
-                    File.write('                        .tab button:hover {')
-                    File.write('                          background-color: #ddd;')
-                    File.write('                        }')
-                    File.write('')
-                    File.write('                        /* Create an active/current tablink class */')
-                    File.write('                        .tab button.active {')
-                    File.write('                          background-color: #ccc;')
-                    File.write('                        }')
-                    File.write('')
-                    File.write('                        /* Style the tab content */')
-                    File.write('                        .tabcontent {')
-                    File.write('                          display: none;')
-                    File.write('                          padding: 6px 12px;')
-                    File.write('                          border: 1px solid #ccc;')
-                    File.write('                          border-top: none;')
-                    File.write('                        }')
-                    File.write('                        .graphSheet{')
-                    File.write('                        	width: 894px;')
-                    File.write('                        	display: inline-block;')
-                    File.write('                        	vertical-align:top')
-                    File.write('                        }')
-                    File.write('                        .team-card {')
-                    File.write('                          width: 400px;')
-                    File.write('                          display: inline-block;')
-                    File.write('                        }')
-                    File.write('')
-                    File.write('                        .team-card-text {')
-                    File.write('                          padding: 0 40px;')
-                    File.write('                        }')
-                    File.write('                        </style>')
-                    File.write('                        </head>')
-                    File.write('')
-                    File.write('                        <body>')
-                    File.write('')
-                    File.write('                        <h2>Prematch Report</h2>')
-                    File.write('                        <p>Match: ' + str(match['match']) + '</p>')
-                    File.write('')
-                    File.write('                        <div class="tab">')
-                    File.write('                            <button class="tablinks active" onclick="openTab(event, \'Overview\')">Overview</button>')
-                    File.write('                        ')
-                    for team in teams:
+                        File.write('<html>')
                         
-                        File.write('                           <button class="tablinks" onclick="openTab(event,\'' + str(team) + '\')">' + str(team)  + '</button> #replace 1939 with team')
+                        File.write('<head>')
+                        File.write('<meta name="viewport" content="width=device-width, initial-scale=1">')
+                        File.write('<style>')
+                        File.write('body {')
+                        File.write('  font-family: Arial;')
+                        File.write('}')
+                        
+                        #/* Style the tab */
+                        File.write('.tab {')
+                        File.write('  overflow: hidden;')
+                        File.write('  border: 1px solid #ccc;')
+                        File.write('  background-color: #f1f1f1;')
+                        File.write('}')
+                        
+                        #/* Style the buttons inside the tab */
+                        File.write('.tab button {')
+                        File.write('  background-color: inherit;')
+                        File.write('  float: left;')
+                        File.write('  border: none;')
+                        File.write('  outline: none;')
+                        File.write('  cursor: pointer;')
+                        File.write('  padding: 14px 16px;')
+                        File.write('  transition: 0.3s;')
+                        File.write('  font-size: 17px;')
+                        File.write('}')
+                        
+                        #/* Change background color of buttons on hover */
+                        File.write('.tab button:hover {')
+                        File.write('  background-color: #ddd;')
+                        File.write('}')
+                        
+                        #/* Create an active/current tablink class */
+                        File.write('.tab button.active {')
+                        File.write('  background-color: #ccc;')
+                        File.write('}')
+                        
+                        #/* Style the tab content */
+                        File.write('.tabcontent {')
+                        File.write('  display: none;')
+                        File.write('  padding: 6px 12px;')
+                        File.write('  border: 1px solid #ccc;')
+                        File.write('  border-top: none;')
+                        File.write('}')
+                        File.write('.graphSheet{')
+                        File.write('	width: 894px;')
+                        File.write('	display: inline-block;')
+                        File.write('	vertical-align:top')
+                        File.write('}')
+                        File.write('.team-card {')
+                        File.write('  width: 400px;')
+                        File.write('  display: inline-block;')
+                        File.write('}')
+                        
+                        File.write('.team-card-text {')
+                        File.write('  padding: 0 40px;')
+                        File.write('}')
+                        File.write('</style>')
+
+                        File.write('</head>')
+                        File.write('<body>')
+                        File.write('<h2>Prematch Report</h2>')
+                        File.write('<p>Match: ' + str(match['match']) + '</p>')
+                        
+                        File.write('<div class="tab">')
+                        File.write('  <button class="tablinks active" onclick="openTab(event, \'Overview\')">Overview</button>')
+                        for team in teams:
+                            File.write('<button class="tablinks" onclick="openTab(event, \'' + str(team)+'\')">' + str(team) + '</button>\n')
+                        File.write('</div>')   
                         File.write('                        <div id="Overview" class="tabcontent" style="display: block;">')
                         File.write('                        <h3>Overview</h3>')
-                    print(teams)  
-                    for team in teams:
+#                    print(teams)  
+                        for team in teams:
 #                        team = team
-                        File.write('<div class="team-card">')
-                        File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="pic not found for team ' + str(team) + '" style="width:350px;height:400px;">')
-                        File.write('      <p>Team:' + str(team) + '</p>')
-                        File.write('      <p>Matches Scouted: ' + str(prematchDf.at[team, 'Matches Scouted'])+ ' </p>')
-                        File.write('      <p>Average Powercells Scored: '+ str(prematchDf.at[team, 'Average Pieces Scored']) + '</p>')
-                        File.write('      <p>Avg High Powercells Scored: ' + str(prematchDf.at[team, 'Average High Goal Makes'])+'</p>')
-                        File.write('	  <p>Tall or Short Bot: ' + str(prematchDf.at[team, 'bot height']) + '</p>')
-                        File.write('	  <p>Drivetrain: ' + str(prematchDf.at[team, 'drivetrain']) + '</p>')
-                        File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
-                        File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
-                        File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
+                            File.write('<div class="team-card">')
+                            File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="pic not found for team ' + str(team) + '" style="width:350px;height:400px;">')
+                            File.write('      <p>Team:' + str(team) + '</p>')
+                            File.write('      <p>Matches Scouted: ' + str(prematchDf.at[team, 'Matches Scouted'])+ ' </p>')
+                            File.write('      <p>Average Powercells Scored: '+ str(prematchDf.at[team, 'Average Pieces Scored']) + '</p>')
+                            File.write('      <p>Avg High Powercells Scored: ' + str(prematchDf.at[team, 'Average High Goal Makes'])+'</p>')
+                            File.write('	  <p>Tall or Short Bot: ' + str(prematchDf.at[team, 'bot height']) + '</p>')
+                            File.write('	  <p>Drivetrain: ' + str(prematchDf.at[team, 'drivetrain']) + '</p>')
+                            File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
+                            File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
+                            File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
+                            File.write('</div>')
                         File.write('</div>')
-                    for team in teams:
-                        prematchGraphs(mainDf.reset_index(), cycleDf.reset_index(), team)                
-                        File.write('<div id="' + str(team) + '" class="tabcontent">')
-                        File.write('                              <h3>' + str(team) + '</h3>')
-                        File.write('                              <div class="team-card">')
-                        File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="pic not found for team ' + str(team) + '" style="width:350px;height:400px;">')
-                        File.write('      <p>Team:' + str(team) + '</p>')
-                        File.write('      <p>Matches Scouted: ' + str(prematchDf.at[team, 'Matches Scouted'])+ ' </p>')
-                        File.write('      <p>Average Powercells Scored: '+ str(prematchDf.at[team, 'Average Pieces Scored']) + '</p>')
-                        File.write('      <p>Avg High Powercells Scored: ' + str(prematchDf.at[team, 'Average High Goal Makes'])+'</p>')
-                        File.write('	  <p>Tall or Short Bot: ' + str(prematchDf.at[team, 'bot height']) + '</p>')
-                        File.write('	  <p>Drivetrain: ' + str(prematchDf.at[team, 'drivetrain']) + '</p>')
-                        File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
-                        File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
-                        File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
-                        File.write('                              </div>')
-                        File.write('                              <div class="graphSheet">')
-                        File.write('                            	<img src="./' + str(team) + ' Prematch Graphs.png" alt="graph" style="width:894px">')
-                        File.write('                              </div>')
-                        File.write('                            </div>')
-                        File.write('')
-                    File.write('                    <script>')
-                    File.write('                    function openTab(evt, tabName) {')
-                    File.write('                      var i, tabcontent, tablinks;')
-                    File.write('                      tabcontent = document.getElementsByClassName("tabcontent");')
-                    File.write('                      for (i = 0; i < tabcontent.length; i++) {')
-                    File.write('                        tabcontent[i].style.display = "none";')
-                    File.write('                      }')
-                    File.write('                      tablinks = document.getElementsByClassName("tablinks");')
-                    File.write('                      for (i = 0; i < tablinks.length; i++) {')
-                    File.write('                        tablinks[i].className = tablinks[i].className.replace(" active", "");')
-                    File.write('                      }')
-                    File.write('                      document.getElementById(tabName).style.display = "block";')
-                    File.write('                      evt.currentTarget.className += " active";')
-                    File.write('                    }')
-                    File.write('                    </script>                    ')
-                    File.write('                    </body>                    ')
-                    File.write('                    </html>')
+                        for team in teams:
+                            prematchGraphs(mainDf.reset_index(), cycleDf.reset_index(), team)                
+                            File.write('                            <div id="' + str(team) + '" class="tabcontent">')
+                            File.write('  <h3>' + str(team) + '</h3>')
+                            File.write('  <div class="team-card">')
+                            File.write('      <img src=\"' + os.path.join(filepath, str(team) + '.jpg') + '\" alt="pic not found for team ' + str(team) + '" style="width:350px;height:400px;">')
+                            File.write('      <p>Team: ' + str(team) + '</p>')
+                            File.write('      <p>Matches Scouted: ' + str(prematchDf.at[team, 'Matches Scouted']) + '</p>')
+                            File.write('      <p>Average Powercells Scored: '+ str(prematchDf.at[team, 'Average Pieces Scored']) + '</p>')
+                            File.write('      <p>Avg High Powercells Scored: ' + str(prematchDf.at[team, 'Average High Goal Makes'])+'</p>')
+                            File.write('	  <p>Tall or Short Bot: ' + str(prematchDf.at[team, 'bot height']) + '</p>')
+                            File.write('	  <p>Drivetrain: ' + str(prematchDf.at[team, 'drivetrain']) + '</p>')
+                            File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
+                            File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
+                            File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
+                            File.write('  </div>')
+                            File.write('  <div class="graphSheet">')
+                            File.write('	<img src="./' + str(team) + ' Prematch Graphs.png" alt="graph" style="width:894px">')
+                            File.write('  </div>')
+                            File.write('</div>')
+                        File.write('                    <script>')
+                        File.write('                    function openTab(evt, tabName) {')
+                        File.write('                      var i, tabcontent, tablinks;')
+                        File.write('                      tabcontent = document.getElementsByClassName("tabcontent");')
+                        File.write('                      for (i = 0; i < tabcontent.length; i++) {')
+                        File.write('                        tabcontent[i].style.display = "none";')
+                        File.write('                      }')
+                        File.write('                      tablinks = document.getElementsByClassName("tablinks");')
+                        File.write('                      for (i = 0; i < tablinks.length; i++) {')
+                        File.write('                        tablinks[i].className = tablinks[i].className.replace(" active", "");')
+                        File.write('                      }')
+                        File.write('                      document.getElementById(tabName).style.display = "block";')
+                        File.write('                      evt.currentTarget.className += " active";')
+                        File.write('                    }')
+                        File.write('                    </script>                    ')
+                        File.write('                    </body>                    ')
+                        File.write('                    </html>')
         
         
 def Day1Report(Scoutdf, PivotDf):
@@ -838,7 +848,7 @@ def picklistGraphs(df, cycleDf):
     getPicklistBoxplotData(df, 'autoMakes', 'Total Auto Shots Made', ax3)
     getPicklistHeatmap(df, cycleDf, ax4, 'highGoalMakes')
     plt.savefig(input('Event name: ') + ' Picklist Graphs')
-    plt.show()
+#    plt.show()
 
 
 def getPrematchScatterPlot(df, team, graphVar, ax):
@@ -855,12 +865,12 @@ def getPrematchScatterPlot(df, team, graphVar, ax):
   
 def getHeatMapPivot(df):
     firstmove = pd.pivot_table(df, index=['matchNo','teamNo','cycle'], columns='shooterPosition',aggfunc=np.sum).fillna(0)
-    print(firstmove)
+#    print(firstmove)
     secondmove = firstmove.groupby(axis=0,level=['matchNo','teamNo'])
     thirdmove = secondmove.sum()
-    print(thirdmove)
+#    print(thirdmove)
     fourthmove = thirdmove.swaplevel(i='matchNo',j='teamNo').sort_index()
-    print(fourthmove)
+#    print(fourthmove)
     return fourthmove    
 
 
@@ -914,7 +924,7 @@ def prematchGraphs(maindf, cycledf, team):
     ax6.title.set_position([.5, 1.2])
     ax7.title.set_position([.5, 1.2])
     plt.savefig(str(team) + ' Prematch Graphs')
-    plt.show()
+#    plt.show()
    
     
 def Main(testmode):
@@ -931,7 +941,7 @@ def Main(testmode):
     elif selection == '2':
         # Team = enterTeam()       
         MainData, CycleData = readScout()
-        MatchReport(FindPartners(readMatchList()), CycleData, MainData, 1939)
+        MatchReport(FindPartners(readMatchList()), CycleData, MainData, 5006)
 
 
     elif selection == '3':
