@@ -399,6 +399,10 @@ def sendMainToDatabase(cards):
     global lowGoalMakes
     global innerGoalMakes
     global outerGoalMakes
+	
+    # Remove Line Breaks from comments
+    comments.replace('\n',' ').replace('\r','')
+	
     match_dbconn.setMatchScout(match_no, 
                                teamno,
                                scoutName.get(),
@@ -688,6 +692,7 @@ autoBallsPickedUp = CounterClass(auto, 4, 6, 'Balls Picked Up', 0, 6, 3)
 autoShooterPos = Label(auto, text='Shooter Position')
 autoShooterPos.grid(column=0, row=3, columnspan=6, ipady=15, ipadx=10)
 autoShooterPos = ttk.Combobox(auto)
+autoShooterPost.state('readonly')
 autoShooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 autoShooterPos.current(0)
 autoShooterPos.grid(column= 5, row= 3, columnspan= 1, ipady=15, ipadx=10)
@@ -718,6 +723,7 @@ refLabel.grid(column=0, row=0, columnspan=5, rowspan=5)
 shooterPosRef = Label(reference, text='Shooter Position')
 shooterPosRef.grid(column=7, row=1, columnspan=6, ipady=15, ipadx=10)
 shooterPosRef = ttk.Combobox(reference)
+shooterPosRef.state('readonly')
 shooterPosRef['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 shooterPosRef.current(0)
 shooterPosRef.grid(column= 7, row= 2, columnspan= 1, ipady=5, ipadx=10)
@@ -734,6 +740,7 @@ teleHigh = highGoalCounterClass(tele, 3, 2, 'High', 0, 2)
 rotationalControlLBL = Label(tele, text='Has Rotational Control?')
 rotationalControlLBL.grid(column=0, row=9, ipady=23)
 rotationalControl = ttk.Combobox(tele)
+rotationalControl.state('readonly')
 rotationalControl['values']= ("No attempt","No", "Yes")
 rotationalControl.current(0)
 rotationalControl.grid(column= 1, row= 9, columnspan=5)
@@ -748,6 +755,7 @@ def comboBoxRotationalCont():
 positionalControlLBL = Label(tele, text='Has Positional Control?')
 positionalControlLBL.grid(column=6, row=9, columnspan=5)
 positionalControl = ttk.Combobox(tele)
+positionalControl.state('readonly')
 positionalControl['values']= ("No attempt", "No", "Yes")
 positionalControl.current(0)
 positionalControl.grid(column= 9, row= 9, columnspan=5)
@@ -762,6 +770,7 @@ def comboBoxPositionalControl():
 shooterPosLBL = Label(tele, text='Shooter Position')
 shooterPosLBL.grid(column=0, row=8, ipady=23)
 shooterPos = ttk.Combobox(tele)
+shooterPos.state('readonly')
 shooterPos['values']= ("A", "B", "C", "D", "E", "F", "G", "H")
 shooterPos.current(0)
 shooterPos.grid(column= 1, row= 8, columnspan=5)
@@ -809,6 +818,7 @@ leveledBar.grid(column= 3, row= 3, columnspan=4)
 barLevelLBL = Label(endGame, text='Where was the bar during the climb?')
 barLevelLBL.grid(column=0, row=5, ipady=23)
 barLevel = ttk.Combobox(endGame)
+barLevel.state('readonly')
 barLevel['values']= ("Any Position When It Was Leveled", "Middle Of The Bar", "High Side Of The Bar", "Low Side Of The Bar", "No Climb")
 barLevel.current(0)
 barLevel.grid(column= 3, row= 5, columnspan=6)
