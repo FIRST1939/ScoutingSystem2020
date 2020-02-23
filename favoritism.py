@@ -49,14 +49,14 @@ def maketeamshotsbypos(cycledf):
     
     posPivot.reset_index(inplace = True)
     
-    print(posPivot.head())
+    #print(posPivot.head())
     
     posPivot['accuracy'] = posPivot['highGoalMakes'] / posPivot['highGoalShots']
     
     highShots = pd.pivot_table(posPivot, values = 'highGoalMakes', index = 'teamNo', columns = 'shooterPosition').fillna(0)
     highShotdict = highShots.to_dict(orient='split')
     posmap = highShotdict['columns']
-    print(highShotdict)
+    #print(highShotdict)
     reconfigHigh = pd.Series(highShotdict['data'], index=highShotdict['index']).reset_index(name='highShots').rename(columns={'index': 'teamNo'})
     
     acc = pd.pivot_table(posPivot, values = 'accuracy', index = 'teamNo', columns = 'shooterPosition').fillna(0)
@@ -208,31 +208,64 @@ def joinfavandbest(favdf, bestdf):
     '''
     return pd.merge(favdf, bestdf, on='teamNo', how='inner', suffixes = ('Most','Best'))
 
-def favoritism(cycledf):
+def addmissingteams(df, teamlist):
+    '''
+    
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        columns = ['teamNo', 'posMost', 'shotsMost', 'accMost', 'posBest', 'shotsBest', 'accBest']
+    teamlist : list of int
+        list of all teams at the regional
+
+    Returns
+    -------
+    result : pd.DataFrame
+        df but with lines added for teams with no cycle data
+
+    '''
+    
+    cycleteams = df['teamNo'].drop_duplicates().tolist()
+    
+    
+    for team in teamlist:
+        if team not in cycleteams:
+            nulldf = pd.DataFrame({'teamNo':team, 'posMost':'NA', 'shotsMost':0, 'accMost':0, 'posBest':'NA', 'shotsBest':0, 'accBest':0}, index=[0])
+            df = pd.concat([df,nulldf], ignore_index=True)
+    
+    df = df.set_index('teamNo').sort_index().reset_index()
+    return df
+    
+    
+    
+def favoritism(cycledf, teamlist):
     '''
     Parameters
     ----------
     cycledf : pd.DataFrame
         Contains cycle data from database and math columns for high goal makes and shots taken.
+    teamlist: list of int
+        list of all teams at the regional
 
     Returns
     -------
     teamprefdf: pd.DataFrame
-        columns = ['teamNo', 'favPos', 'favShots', 'favAcc', 'bestPos', 'bestShots', 'bestAcc]
+        columns = ['teamNo', 'posMost', 'shotsMost', 'accMost', 'posBest', 'shotsBest', 'accBest']
 
     '''
     print('Starting favorites run')
     teamPosShots, posmap = maketeamshotsbypos(cycledf)
-    print(teamPosShots.head())
-
+    
     teamfavs = findpos(teamPosShots, posmap, 'highShots')
-    print(teamfavs.head())
+    
     teambests = findpos(teamPosShots, posmap, 'accuracy')
-    print(teambests.head())
-    result = joinfavandbest(teamfavs, teambests)
+
+    combodf = joinfavandbest(teamfavs, teambests)
     
-    print(result.keys().tolist())
-    
+    result = addmissingteams(combodf, teamlist)
+   
+    print(result)
     return result
     
     
@@ -355,10 +388,12 @@ testdata =  [[1, 1, 1939, 0, 'E', 0, 0, 0, 3, 0, 0, 3, 3],
           [100, 4, 1785, 5, 'B', 0, 3, 0, 2, 0, 1, 2, 5],
           [101, 4, 1785, 6, 'B', 0, 3, 0, 2, 0, 1, 2, 5]]
 
+testteams = [16, 937, 1678, 1785, 1810, 1939, 1986, 2001, 2468, 4499, 4959, 5006, 5098, 5809, 8002]
+
 testsample = pd.DataFrame(testdata, columns=columns)
-print(testsample.head())
+#print(testsample.head())
     
-favoritism(testsample)    
+favoritism(testsample, testteams)    
     
     
     
