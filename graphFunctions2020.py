@@ -112,7 +112,7 @@ def getPicklistHeatmap(mainDf, df, ax, graphVar):
         if team not in teams:
             #df.append([0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0])
 
-            newdfentry = pd.DataFrame({'id': [df['id'].max()],'matchNo':[0], 'teamNo':[team], 'cycle':[0], 'shooterPosition':[0], 'lowGoalMisses':[0],
+            newdfentry = pd.DataFrame({'id': [df['id'].max()],'matchNo':[0], 'teamNo':[team], 'cycle':[0], 'shooterPosition':['A'], 'lowGoalMisses':[0],
                                                'highGoalMisses':[0], 'lowGoalMakes':[0], 'outerGoalMakes':[0], 'innerGoalMakes':[0],
                                                'gamePhase':[0], 'highGoalMakes':[0]})
             
