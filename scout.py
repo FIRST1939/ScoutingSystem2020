@@ -401,8 +401,8 @@ def sendMainToDatabase(cards):
     global outerGoalMakes
 
     # Remove Line Breaks from comments
-    comments.replace('\n',' ')
-    comments.replace('\r','')
+    # comments.replace('\n',' ')
+    # comments.replace('\r','')
 
     match_dbconn.setMatchScout(match_no,
                                teamno,
