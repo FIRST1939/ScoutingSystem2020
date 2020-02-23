@@ -509,7 +509,7 @@ def sendCycleData(gamePhase):
     else:
         sendCycleToDatabase(gamePhase)
         cycleReinit(gamePhase)
-        messagebox.showinfo('Cycle submission','Cycle submission complete :)')
+#        sgebox.showinfo('Cycle submission','Cycle submission complete :)')
 
     sendCycleToDatabase(gamePhase)
 #
@@ -546,7 +546,7 @@ def sendMainData():
         sendMainToDatabase(getCardValue())
         reinitscreen()
     elif sendMSG is True and dontUseThisData_State.get() is True:
-        messagebox.showinfo('submitted to database', 'Thanks! Your data was deleted ;D')
+        messagebox.showinfo('Data Entry', 'Thanks for not submitting incorrect data. Your data was deleted ;D')
         autoCycles = 0
         teleCycles = 0
         reinitscreen()
