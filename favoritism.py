@@ -68,6 +68,46 @@ def maketeamshotsbypos(cycledf):
     
     return result, posmap
 
+def findpos(teamshotsbypos, posmap, mostwhat):
+    '''
+    Parameters
+    ----------
+    teamshotsbypos : pd.DataFrame
+        columns=['teamNo', 'highShots', 'accuracy']
+    posmap: list of str
+        contains list of positions from which a team has shot
+    mostwhat : str
+        field name (of highshots or accuracy) to calculate on
+
+    Returns
+    -------
+    resultdf : pd.DataFrame
+        columns = ['teamNo', 'pos', 'shots', 'acc']
+
+    '''
+    
+    poslist = []
+    shotlist = []
+    acclist = []
+       
+    highshots = teamshotsbypos['highShots'].tolist()
+    accs = teamshotsbypos['accuracy'].tolist()
+    
+    # This is a terrible way of going about this
+    for index in range(len(highshots)):
+        posidx = np.argmax(teamshotsbypos[mostwhat].tolist()[index])
+        poslist.append(posmap[posidx])
+        shotlist.append(highshots[index][posidx])
+        acclist.append(accs[index][posidx])
+    
+    teamshotsbypos['pos'] = poslist
+    teamshotsbypos['shots'] = shotlist
+    teamshotsbypos['acc'] = acclist
+    
+    #print(teamshotsbypos.head())
+    
+    return teamshotsbypos[['teamNo', 'pos', 'shots', 'acc']]
+
 def findfavpos(teamshotsbypos, posmap):
     '''
 
@@ -84,7 +124,7 @@ def findfavpos(teamshotsbypos, posmap):
         columns = ['teamNo', 'favPos', 'favShots', 'favAcc']
     
     '''
-    print(teamshotsbypos['highShots'])
+    #print(teamshotsbypos['highShots'])
     #teamshotsbypos['favPos'] = np.argmax(teamshotsbypos['highShots'].tolist())
     
     favlist = []
@@ -106,18 +146,20 @@ def findfavpos(teamshotsbypos, posmap):
     teamshotsbypos['favShots'] = shotlist
     teamshotsbypos['favAcc'] = acclist
     
-    print(teamshotsbypos.head())
+    #print(teamshotsbypos.head())
     
     return teamshotsbypos[['teamNo', 'favPos', 'favShots', 'favAcc']]
     
                                                     
 
-def findbestpos(teamshotsbypos):
+def findbestpos(teamshotsbypos, posmap):
     '''
     Parameters
     ----------
     teamshotsbypos : pd.DataFrame
         Contains cycle data from database and math columns for high goal makes and shots taken.
+    posmap: list of str
+        contains list of positions from which a team has shot
 
     Returns
     -------
@@ -125,7 +167,28 @@ def findbestpos(teamshotsbypos):
         columns = ['teamNo', 'bestPos', 'bestShots', 'bestAcc']
 
     '''
-    pass
+    bestlist = []
+    shotlist = []
+    acclist = []
+    
+    highshots = teamshotsbypos['highShots'].tolist()
+    accs = teamshotsbypos['accuracy'].tolist()
+    
+    # This is a terrible way of going about this
+    for index in range(len(accs)):
+        favidx = np.argmax(accs[index])
+        bestlist.append(posmap[favidx])
+        acclist.append(np.max(accs[index]))
+        shotlist.append(highshots[index][favidx])
+    
+    
+    teamshotsbypos['bestPos'] = bestlist
+    teamshotsbypos['bestShots'] = shotlist
+    teamshotsbypos['bestAcc'] = acclist
+    
+    #print(teamshotsbypos.head())
+    
+    return teamshotsbypos[['teamNo', 'bestPos', 'bestShots', 'bestAcc']]
 
 def joinfavandbest(favdf, bestdf):
     '''
@@ -143,7 +206,7 @@ def joinfavandbest(favdf, bestdf):
         Join of favdf and bestdf on team
 
     '''
-    pass
+    return pd.merge(favdf, bestdf, on='teamNo', how='inner', suffixes = ('Most','Best'))
 
 def favoritism(cycledf):
     '''
@@ -162,10 +225,13 @@ def favoritism(cycledf):
     teamPosShots, posmap = maketeamshotsbypos(cycledf)
     print(teamPosShots.head())
 
-    teamfavs = findfavpos(teamPosShots, posmap)
+    teamfavs = findpos(teamPosShots, posmap, 'highShots')
     print(teamfavs.head())
-    teambests = findbestpos(teamPosShots)
+    teambests = findpos(teamPosShots, posmap, 'accuracy')
+    print(teambests.head())
     result = joinfavandbest(teamfavs, teambests)
+    
+    print(result.keys().tolist())
     
     return result
     
