@@ -89,16 +89,26 @@ def findfavpos(teamshotsbypos, posmap):
     
     favlist = []
     shotlist = []
+    acclist = []
+    
+    highshots = teamshotsbypos['highShots'].tolist()
+    accs = teamshotsbypos['accuracy'].tolist()
     
     # This is a terrible way of going about this
-    for item in teamshotsbypos['highShots'].tolist():
-        favlist.append(posmap[np.argmax(item)])
-        shotlist.append(np.max(item))
+    for index in range(len(highshots)):
+        favidx = np.argmax(highshots[index])
+        favlist.append(posmap[favidx])
+        shotlist.append(np.max(highshots[index]))
+        acclist.append(accs[index][favidx])
+    
     
     teamshotsbypos['favPos'] = favlist
     teamshotsbypos['favShots'] = shotlist
+    teamshotsbypos['favAcc'] = acclist
     
     print(teamshotsbypos.head())
+    
+    return teamshotsbypos[['teamNo', 'favPos', 'favShots', 'favAcc']]
     
                                                     
 
@@ -153,6 +163,7 @@ def favoritism(cycledf):
     print(teamPosShots.head())
 
     teamfavs = findfavpos(teamPosShots, posmap)
+    print(teamfavs.head())
     teambests = findbestpos(teamPosShots)
     result = joinfavandbest(teamfavs, teambests)
     
