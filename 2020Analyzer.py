@@ -604,7 +604,7 @@ def getThatExcel(df, filename):
 
 
 def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
-    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
+#    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
     prematchGraphs(mainDf, cycleDf, team)
     filename = str(team) + ' Team Report.html'
     with open(filename, 'w') as File:
@@ -698,13 +698,27 @@ def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
 def getPicklistHeatmap(mainDf, df, ax, graphVar):
     df['highGoalMakes'] = df['innerGoalMakes'] + df['outerGoalMakes']
     pprint(df)
-    for team in mainDf['teamNo'].drop_duplicates().to_numpy():
-        passer = False
-        for cycleTeam in df['teamNo'].drop_duplicates().to_numpy():
-            if team == cycleTeam:
-                passer = True
-        if passer == False:
-            df.append([[0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0]])
+    ''' FIX ME VICTORIA
+        THE APPEND DOESN'T WORK'''
+    mainteams = mainDf['teamNo'].drop_duplicates().to_numpy()
+    teams = df['teamNo'].drop_duplicates().to_numpy()
+
+    for team in mainteams:
+        if team not in teams:
+            #df.append([0, 0, team, 0, 'A', 0, 0, 0, 0, 0, 0])
+
+            newdfentry = pd.DataFrame({'id': [df['id'].max()],'matchNo':[0], 'teamNo':[team], 'cycle':[0], 'shooterPosition':['A'], 'lowGoalMisses':[0],
+                                               'highGoalMisses':[0], 'lowGoalMakes':[0], 'outerGoalMakes':[0], 'innerGoalMakes':[0],
+                                               'gamePhase':[0], 'highGoalMakes':[0]})
+            
+            print('\n', newdfentry, '\n')
+            
+            df = pd.concat([df, newdfentry], ignore_index=True)
+            print(team)
+ 
+    print()
+    print(df.tail())
+    print(df['teamNo'].drop_duplicates())
     
     df = df.sort_values('teamNo', ascending=True)
     highGoalMakesbyMatchDf = getHeatMapPivot(df.loc[:,['matchNo','teamNo','cycle','shooterPosition', graphVar]])
@@ -712,7 +726,7 @@ def getPicklistHeatmap(mainDf, df, ax, graphVar):
     print(cookedDf.stack(1).unstack(level=0))
     yLabels=['A']
     for position in df['shooterPosition'].sort_values().values:
-        print(position)
+#        print(position)
         passer = False    
         for label in yLabels:
             if label == position:
@@ -750,10 +764,22 @@ def getTeamList(df):
     teamList = df['teamNo'].drop_duplicates()
     return(teamList)
 
+def getClimbHeatMap(mainData, ax):
+    mainData['climbCounter'] = 1
+    climbData = mainData.set_index('teamNo').loc[:, ['climbLevel', 'climbCounter']]
+    climbData = pd.pivot_table(climbData.reset_index(), index=['teamNo', 'climbLevel'], aggfunc=sum)
+    climbSums = pd.pivot_table(climbData.reset_index(), index='teamNo', columns= 'climbLevel', aggfunc=sum, margins=True)
+    climbSums.fillna(0, inplace=True)
+    climbSums.drop('All', inplace=True)
+    xLabels = climbSums.index.to_series().values
+    climbSums = climbSums.stack(1).unstack(level=0)
+    climbSums.drop('No Climb', inplace=True)  
+    yLabels = climbSums.index.to_series().values
+    sb.heatmap(climbSums.to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels = xLabels)
 
 def initPicklistGraph(teamList):
    fig = plt.figure(tight_layout=True, figsize=(len(teamList), 10))
-   gs = gridspec.GridSpec(4, 1)
+   gs = gridspec.GridSpec(5, 1)
    return fig, gs
 
 
@@ -769,12 +795,14 @@ def picklistGraphs(df, cycleDf):
     ax2 = fig.add_subplot(gs[1, 0])
     ax3 = fig.add_subplot(gs[2, 0])
     ax4 = fig.add_subplot(gs[3, 0])
+    ax5 = fig.add_subplot(gs[4, 0])
     getPicklistBoxplotData(df, 'totalMakes', 'Total Shots Made', ax1)
     getPicklistBoxplotData(df, 'highGoalMakes', 'Total High Shots Made', ax2)
     getPicklistBoxplotData(df, 'autoMakes', 'Total Auto Shots Made', ax3)
     getPicklistHeatmap(df, cycleDf, ax4, 'highGoalMakes')
+    getClimbHeatMap(df, ax5)
     plt.savefig(input('Event name: ') + ' Picklist Graphs')
-#    plt.show()
+    plt.show()
 
 
 def getPrematchScatterPlot(df, team, graphVar, ax):
@@ -871,7 +899,9 @@ def Main(testmode):
 
 
     elif selection == '3':
-        pass 
+        mainDf, cycleDf = readScout()
+        getFirstDayReportExcel(mainDf)
+        picklistGraphs(mainDf, cycleDf)
         
     elif selection == '4':
         mainDf, cycleDf = readScout()
