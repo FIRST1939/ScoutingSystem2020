@@ -491,24 +491,19 @@ def getPicklistBoxplot(df, yvars, teamList):
     return(dataArr)#.set_xticklabels(teamList.get_values()))
     
 
-def getFirstDayReportExcel(mainDf):   
+def getFirstDayReportExcel(mainDf, df):   
     #cycleDf = mainDf[1]
     #pitDf = readPitScout()
-    
+    mainData = df
+    mainData['climbCounter'] = 1
+    climbData = mainData.set_index('teamNo').loc[:, ['climbLevel', 'climbCounter']]
+    climbData = pd.pivot_table(climbData.reset_index(), index=['teamNo', 'climbLevel'], aggfunc=sum)
+    climbSums = pd.pivot_table(climbData.reset_index(), index='teamNo', columns= 'climbLevel', aggfunc=sum, margins=True)
+    climbSums.fillna(0, inplace=True)
+    climbSums.drop('All', inplace=True)
     combineColumn(mainDf)
-    mainDf_avgpivot = pd.pivot_table(mainDf, index= ['teamNo'], values=['totalMakes', 'autoMakes', 'teleMakes'], aggfunc=np.average)
-    mainDf_min = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=min)
-    mainDf_max = pd.pivot_table(mainDf, index=['teamNo'], values=['totalMakes'], aggfunc=max)
-    mainDf_nonzerocount = pd.pivot_table(mainDf, index=['teamNo'], values=['matchNo', 'defense', 'cards'], aggfunc=np.count_nonzero)
     
-    merged = [mainDf_avgpivot,mainDf_min,mainDf_max,mainDf_nonzerocount]
-    mergedDf = pd.concat(merged, axis=1)
-    today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
-    filename = 'merged mainDf' + str(today) + '.xlsx'
-    mergedDf.to_excel(filename, sheet_name= 'merged mainDf', index=True)
-    path = os.path.abspath(filename)
-    directory = os.path.dirname(path)
-    print('saved in  ' + str(directory))
+    
 
 
 def getPrematchReportDf(mainDf, cycleDf, pitDf):
@@ -677,6 +672,8 @@ def getTeamReport(prematchDf, mainDf, cycleDf, team, filepath, todir):
         File.write('	  <p>Times Completed Rotational Control: ' + str(prematchDf.at[team, 'Times Completed Rotation Control' ]) + '</p>')
         File.write('	  <p>Times Completed Positional Control: ' + str(prematchDf.at[team,'Times Completed Positional Control' ]) + '</p>')
         File.write('	  <p>Matches Played on Defense: ' + str(prematchDf.at[team, 'Matches Played on Defense']) +   '</p>')
+        File.write(mainDf.reset_index().set_index('teamNo').loc[[team], ['climbLevel']].to_html(index=False))
+        File.write(mainDf.reset_index().set_index('teamNo').loc[[team], ['comments']].to_html(index=False))
         File.write('</div>')
 
         File.write('<div class="graphSheet">')
@@ -747,6 +744,7 @@ def getPicklistBoxplotData(df, graphVar, title, ax):
     data = []
     dataArr = []
     k=0
+    ax.figure.set_size_inches(len(teamList), 10)
     for team in teamList:
         data.append(df.loc[[team], [graphVar]].get_values())
     for i in data:
@@ -778,7 +776,7 @@ def getClimbHeatMap(mainData, ax):
     sb.heatmap(climbSums.to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels = xLabels)
 
 def initPicklistGraph(teamList):
-   fig = plt.figure(tight_layout=True, figsize=(len(teamList), 10))
+   fig = plt.figure(tight_layout=True, figsize=((len(teamList)+2), 10))
    gs = gridspec.GridSpec(5, 1)
    return fig, gs
 
@@ -900,7 +898,8 @@ def Main(testmode):
 
     elif selection == '3':
         mainDf, cycleDf = readScout()
-        getFirstDayReportExcel(mainDf)
+        getPrematchReportDf(mainDf, cycleDf, pitDf)
+        getFirstDayReportExcel()
         picklistGraphs(mainDf, cycleDf)
         
     elif selection == '4':
@@ -915,4 +914,5 @@ def Main(testmode):
             getTeamReport(preMatchReport, mainDf.reset_index(), cycleDf.reset_index(), team, filepath, todir)
             team = int(input('Enter team number or enter 0 to quit: '))
 
-Main(True)
+#Main(True)
+mainDf, cycleDf = readScout()
