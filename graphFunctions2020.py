@@ -163,13 +163,27 @@ def getPicklistBoxplotData(df, graphVar, title, ax):
     ax.set_xticklabels(teamList.get_values())
     ax.boxplot(dataArr) 
 
+def getClimbHeatMap(mainData, ax):
+    mainData['climbCounter'] = 1
+    climbData = mainData.set_index('teamNo').loc[:, ['climbLevel', 'climbCounter']]
+    climbData = pd.pivot_table(climbData.reset_index(), index=['teamNo', 'climbLevel'], aggfunc=sum)
+    climbSums = pd.pivot_table(climbData.reset_index(), index='teamNo', columns= 'climbLevel', aggfunc=sum, margins=True)
+    climbSums.fillna(0, inplace=True)
+    climbSums.drop('All', inplace=True)
+    xLabels = climbSums.index.to_series().values
+    climbSums = climbSums.stack(1).unstack(level=0)
+    climbSums.drop('No Climb', inplace=True)  
+    yLabels = climbSums.index.to_series().values
+    sb.heatmap(climbSums.to_numpy(), cmap="YlGn", ax=ax, annot=True, yticklabels=yLabels, xticklabels = xLabels)
+
+
 def getTeamList(df):
     teamList = df['teamNo'].drop_duplicates()
     return(teamList)
 
 def initPicklistGraph(teamList):
    fig = plt.figure(tight_layout=True, figsize=(len(teamList), 10))
-   gs = gridspec.GridSpec(4, 1)
+   gs = gridspec.GridSpec(5, 1)
    return fig, gs
 
 def initMatchReportGraph():
@@ -184,10 +198,12 @@ def picklistGraphs(df, cycleDf):
     ax2 = fig.add_subplot(gs[1, 0])
     ax3 = fig.add_subplot(gs[2, 0])
     ax4 = fig.add_subplot(gs[3, 0])
+    ax5 = fig.add_subplot(gs[4, 0])
     getPicklistBoxplotData(df, 'totalMakes', 'Total Shots Made', ax1)
     getPicklistBoxplotData(df, 'highGoalMakes', 'Total High Shots Made', ax2)
     getPicklistBoxplotData(df, 'autoMakes', 'Total Auto Shots Made', ax3)
     getPicklistHeatmap(df, cycleDf, ax4, 'highGoalMakes')
+    getClimbHeatMap(df, ax5)
     plt.savefig(input('Event name: ') + ' Picklist Graphs')
     plt.show()
 
@@ -206,7 +222,7 @@ def getPrematchScatterPlot(df, team, graphVar, ax):
   
 def getHeatMapPivot(df):
     firstmove = pd.pivot_table(df, index=['matchNo','teamNo','cycle'], columns='shooterPosition',aggfunc=np.sum).fillna(0)
-#    print(firstmove)
+    print(firstmove)
     secondmove = firstmove.groupby(axis=0,level=['matchNo','teamNo'])
     thirdmove = secondmove.sum()
 #    print(thirdmove)
