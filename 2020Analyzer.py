@@ -490,18 +490,203 @@ def getPicklistBoxplot(df, yvars, teamList):
             dataArr[k].append(j[0])
     return(dataArr)#.set_xticklabels(teamList.get_values()))
     
+def maketeamshotsbypos(cycledf):
+    '''
 
-def getFirstDayReportExcel(mainDf, df):   
+    Parameters
+    ----------
+    cycledf : pd.DataFrame
+        Contains cycle data from database and math columns for high goal makes and shots taken.
+
+    Returns
+    -------
+    teamshotsbypos: pd.DataFrame
+        columns=['teamNo', 'highShots', 'accuracy']
+        
+        the highshots and accuracy columns each contain a list of numbers
+        with values from each position
+    posmap: list of str
+        contains list of positions from which a team has shot for later use            
+
+    
+    '''    
+    posPivot = pd.pivot_table(cycledf, values=['highGoalMisses','highGoalMakes','highGoalShots'],
+                              index=['teamNo', 'shooterPosition'], aggfunc = np.sum)
+    
+    posPivot.reset_index(inplace = True)
+    
+    #print(posPivot.head())
+    
+    posPivot['accuracy'] = posPivot['highGoalMakes'] / posPivot['highGoalShots']
+    
+    highShots = pd.pivot_table(posPivot, values = 'highGoalMakes', index = 'teamNo', columns = 'shooterPosition').fillna(0)
+    highShotdict = highShots.to_dict(orient='split')
+    posmap = highShotdict['columns']
+    #print(highShotdict)
+    reconfigHigh = pd.Series(highShotdict['data'], index=highShotdict['index']).reset_index(name='highShots').rename(columns={'index': 'teamNo'})
+    
+    acc = pd.pivot_table(posPivot, values = 'accuracy', index = 'teamNo', columns = 'shooterPosition').fillna(0)
+    accdict = acc.to_dict(orient='split')
+    reconfigacc = pd.Series(accdict['data'], index=accdict['index']).reset_index(name='accuracy').rename(columns={'index': 'teamNo'})
+    
+    result = pd.merge(reconfigHigh, reconfigacc, on='teamNo')
+    
+    
+    return result, posmap
+
+def findpos(teamshotsbypos, posmap, mostwhat):
+    '''
+    Parameters
+    ----------
+    teamshotsbypos : pd.DataFrame
+        columns=['teamNo', 'highShots', 'accuracy']
+    posmap: list of str
+        contains list of positions from which a team has shot
+    mostwhat : str
+        field name (of highshots or accuracy) to calculate on
+
+    Returns
+    -------
+    resultdf : pd.DataFrame
+        columns = ['teamNo', 'pos', 'shots', 'acc']
+
+    '''
+    
+    poslist = []
+    shotlist = []
+    acclist = []
+       
+    highshots = teamshotsbypos['highShots'].tolist()
+    accs = teamshotsbypos['accuracy'].tolist()
+    
+    # This is a terrible way of going about this
+    for index in range(len(highshots)):
+        posidx = np.argmax(teamshotsbypos[mostwhat].tolist()[index])
+        poslist.append(posmap[posidx])
+        shotlist.append(highshots[index][posidx])
+        acclist.append(accs[index][posidx])
+    
+    teamshotsbypos['pos'] = poslist
+    teamshotsbypos['shots'] = shotlist
+    teamshotsbypos['acc'] = acclist
+    
+    #print(teamshotsbypos.head())
+    
+    return teamshotsbypos[['teamNo', 'pos', 'shots', 'acc']]
+
+
+
+def joinfavandbest(favdf, bestdf):
+    '''
+    Parameters
+    ----------
+    favdf : pd.DataFrame
+        columns = ['teamNo', 'favPos', 'favShots', 'favAcc']
+    bestdf : pd.DataFrame
+        columns = ['teamNo', 'bestPos', 'bestShots', 'bestAcc']
+
+    Returns
+    -------
+    teamprefdf : pd.DataFrame
+    
+        Join of favdf and bestdf on team
+
+    '''
+    return pd.merge(favdf, bestdf, on='teamNo', how='inner', suffixes = ('Most','Best'))
+
+def addmissingteams(df, teamlist):
+    '''
+    
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        columns = ['teamNo', 'posMost', 'shotsMost', 'accMost', 'posBest', 'shotsBest', 'accBest']
+    teamlist : list of int
+        list of all teams at the regional
+
+    Returns
+    -------
+    result : pd.DataFrame
+        df but with lines added for teams with no cycle data
+
+    '''
+    
+    cycleteams = df['teamNo'].drop_duplicates().tolist()
+    
+    
+    for team in teamlist:
+        if team not in cycleteams:
+            nulldf = pd.DataFrame({'teamNo':team, 'posMost':'NA', 'shotsMost':0, 'accMost':0, 'posBest':'NA', 'shotsBest':0, 'accBest':0}, index=[0])
+            df = pd.concat([df,nulldf], ignore_index=True)
+    
+    df = df.set_index('teamNo').sort_index().reset_index()
+    return df
+    
+    
+def favoritism(cycledf, teamlist):
+    '''
+    Parameters
+    ----------
+    cycledf : pd.DataFrame
+        Contains cycle data from database and math columns for high goal makes and shots taken.
+    teamlist: list of int
+        list of all teams at the regional
+
+    Returns
+    -------
+    teamprefdf: pd.DataFrame
+        columns = ['teamNo', 'posMost', 'shotsMost', 'accMost', 'posBest', 'shotsBest', 'accBest']
+
+    '''
+    print('Starting favorites run')
+    teamPosShots, posmap = maketeamshotsbypos(cycledf)
+    
+    teamfavs = findpos(teamPosShots, posmap, 'highShots')
+    
+    teambests = findpos(teamPosShots, posmap, 'accuracy')
+
+    combodf = joinfavandbest(teamfavs, teambests)
+    
+    result = addmissingteams(combodf, teamlist)
+   
+    print(result)
+    return result
+
+def getFirstDayReportExcel(mainDf, cycleDf, pitDf):   
     #cycleDf = mainDf[1]
     #pitDf = readPitScout()
-    mainData = df
+    mainData = mainDf
+    cycleDf['highGoalMakes'] = cycleDf['outerGoalMakes'] + cycleDf['innerGoalMakes']
+    cycleDf['highGoalShots'] = cycleDf['highGoalMakes'] + cycleDf['highGoalMisses']
+    favortieSpotDf = favoritism(cycleDf,  getTeamList(mainData))
+    cookedDf = getPrematchReportDf(mainDf, cycleDf, pitDf)
     mainData['climbCounter'] = 1
     climbData = mainData.set_index('teamNo').loc[:, ['climbLevel', 'climbCounter']]
     climbData = pd.pivot_table(climbData.reset_index(), index=['teamNo', 'climbLevel'], aggfunc=sum)
     climbSums = pd.pivot_table(climbData.reset_index(), index='teamNo', columns= 'climbLevel', aggfunc=sum, margins=True)
     climbSums.fillna(0, inplace=True)
     climbSums.drop('All', inplace=True)
-    combineColumn(mainDf)
+    outfile = '1st Day report.xlsx'
+    firstDayReport = pd.merge(cookedDf, climbSums, on='teamNo')
+    firstDayReport = pd.merge(firstDayReport, favortieSpotDf, on='teamNo')
+#    firstDayReport['Willing to Play Defense'] = pitDf['Are they willing to play defense if requested?']
+#    firstDayReport['Anti-defensive capabilites'] = pitDf['Do they have anti-defense capabilities( a parking brake, shooting from a protected zone or wall, etc.)']
+#    pprint(firstDayReport)
+    with pd.ExcelWriter(outfile) as writer:
+        mainDf = mainDf.sort_values(by = 'teamNo')   
+        tabname = 'Raw Main Data'
+        mainDf.to_excel(writer, tabname, index=False)
+        cycleDf = cycleDf.sort_values(by = 'teamNo')
+        tabname = 'Raw Cycle Data'
+        cycleDf.to_excel(writer, tabname, index=False)
+#        pitDf = pitDf.sort_values(by = 'Team number of the team you are scouting(not 1939 unless you are scouting us)')
+        tabname = 'Raw Pit Data'
+        pitDf.to_excel(writer, tabname, index=False)
+        firstDayReport = firstDayReport.sort_values(by = 'teamNo')
+        tabname = 'Analyzed Data'
+        firstDayReport.to_excel(writer, tabname, index=False)
+#    print('Day1Report written to file')
     
     
 
@@ -898,8 +1083,9 @@ def Main(testmode):
 
     elif selection == '3':
         mainDf, cycleDf = readScout()
-        getPrematchReportDf(mainDf, cycleDf, pitDf)
-        getFirstDayReportExcel()
+        pitDf = readPitScout()
+#        getPrematchReportDf
+        getFirstDayReportExcel(mainDf, cycleDf, pitDf)
         picklistGraphs(mainDf, cycleDf)
         
     elif selection == '4':
@@ -914,5 +1100,5 @@ def Main(testmode):
             getTeamReport(preMatchReport, mainDf.reset_index(), cycleDf.reset_index(), team, filepath, todir)
             team = int(input('Enter team number or enter 0 to quit: '))
 
-#Main(True)
-mainDf, cycleDf = readScout()
+Main(True)
+#mainDf, cycleDf = readScout()
