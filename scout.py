@@ -9,7 +9,7 @@ Created on Thu Jan 16 16:34:18 2020
 #imports
 from tkinter import Tk
 from tkinter import Button
-from tkinter import Label
+from tkinter import Label;
 from tkinter import Checkbutton
 from tkinter import Text
 from tkinter import Radiobutton
@@ -265,12 +265,13 @@ class highGoalCounterClass:
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
 
     def innerMadeNeg5(self):
-        if self.innerShotsMade == 5:
+        if self.innerShotsMade >= 5:
+            self.innerShotsMade -= 5
             self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.innerShotsMade = 0
-            self.madeDisplayLabel["text"]=str(self.innerShotsMade)
+            self.innerMadeDisplayLabel["text"]=str(self.innerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
 
 
@@ -300,7 +301,7 @@ class highGoalCounterClass:
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
         else:
             self.outerShotsMade = 0
-            self.madeDisplayLabel["text"]=str(self.outerShotsMade)
+            self.outerMadeDisplayLabel["text"]=str(self.outerShotsMade)
             self.missedDisplayLabel["text"]=str(self.shotsMissed)
 
 
