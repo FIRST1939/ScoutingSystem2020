@@ -298,7 +298,7 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
         teams.extend(match['allies'])
         teams.extend(match['opponents'])
         LastScouted = max(mainDf['matchNo'])
-        if match['match'] == 53:
+        if match['match'] > LastScouted:
                 FileName = 'Match ' + str(match['match']) + ' Pre-match Report.html'
                 with open(FileName, 'w') as File:
                         File.write('<html>')
@@ -731,7 +731,7 @@ def getPrematchReportDf(mainDf, cycleDf, pitDf):
     
     botheight = pitDf['Tall or Short bot?']
     teamList = mainDf['teamNo']
-    pitTeamList = pitDf['Team number of the team you are scouting(not 1939 unless you are scouting us)']
+    pitTeamList = pitDf['Team number of team you are scouting']
 
     #bottype = pd.pivot_table(pitDf, columns = ['Tall or Short bot?'], index = ['Team number of team you are scouting'])
     heightdict = {'teamNo' : pitTeamList, 'bot height' : botheight}
