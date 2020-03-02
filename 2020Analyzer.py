@@ -297,14 +297,8 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
         teams = [int(TeamNumber)]
         teams.extend(match['allies'])
         teams.extend(match['opponents'])
-<<<<<<< Updated upstream
         LastScouted = max(mainDf['matchNo'])
         if match['match'] == 53:
-=======
-#        LastScouted = max(int(mainDf['matchNo']))
-        LastScouted=68
-        if int(match['match']) == int(LastScouted):
->>>>>>> Stashed changes
                 FileName = 'Match ' + str(match['match']) + ' Pre-match Report.html'
                 with open(FileName, 'w') as File:
                         File.write('<html>')
@@ -676,8 +670,8 @@ def getFirstDayReportExcel(mainDf, cycleDf, pitDf):
     outfile = '1st Day report.xlsx'
     firstDayReport = pd.merge(cookedDf, climbSums, on='teamNo')
     firstDayReport = pd.merge(firstDayReport, favortieSpotDf, on='teamNo')
-    firstDayReport['Willing to Play Defense'] = pitDf['Are they willing to play defense if requested?']
-    firstDayReport['Anti-defensive capabilites'] = pitDf['Do they have anti-defense capabilities( a parking brake, shooting from a protected zone or wall, etc.)']
+#    firstDayReport['Willing to Play Defense'] = pitDf['Are they willing to play defense if requested?']
+#    firstDayReport['Anti-defensive capabilites'] = pitDf['Do they have anti-defense capabilities( a parking brake, shooting from a protected zone or wall, etc.)']
 #    pprint(firstDayReport)
     with pd.ExcelWriter(outfile) as writer:
         mainDf = mainDf.sort_values(by = 'teamNo')   
@@ -686,6 +680,7 @@ def getFirstDayReportExcel(mainDf, cycleDf, pitDf):
         cycleDf = cycleDf.sort_values(by = 'teamNo')
         tabname = 'Raw Cycle Data'
         cycleDf.to_excel(writer, tabname, index=False)
+#        pitDf = pitDf.sort_values(by = 'Team number of the team you are scouting(not 1939 unless you are scouting us)')
         tabname = 'Raw Pit Data'
         pitDf.to_excel(writer, tabname, index=False)
         firstDayReport = firstDayReport.sort_values(by = 'teamNo')
