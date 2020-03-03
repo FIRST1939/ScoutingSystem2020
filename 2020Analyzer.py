@@ -198,11 +198,11 @@ def readScout():
 
     if pickedchoice == 'charlie':
         
-        mainData = pd.read_csv(r"C:\Users\charl\Downloads\very cool scripts folder\MainData.csv", sep= '|')
+        mainData = pd.read_csv(r"E:\Greater KC\matchMainScoutData.csv", sep= '|')
         mainDf = mainData.fillna('0')
         
         
-        cycleData = pd.read_csv(r"C:\Users\charl\Downloads\very cool scripts folder\CycleData.csv", sep = '|')
+        cycleData = pd.read_csv(r"E:\Greater KC\matchCycleScoutData.csv", sep = '|')
         cycleDf = cycleData.fillna('0')
         
     elif pickedchoice == 'm':
@@ -235,14 +235,14 @@ def readPitScout():
         pitDf = pitDf.fillna('0')
         
     elif pickedchoice == 'm':
-        pitDf = pd.read_csv(r'C:\Users\Mason\Downloads\Pit Scouting (Responses) - Form Responses 1 (1).csv', sep= ',')
+        pitDf = pd.read_csv(r'C:\Users\Mason\Downloads\Pit Scouting (Responses) - Form Responses 1 (1).csv', sep= '|')
         pitDf = pitDf.fillna('0')
 
     else:
         
         FileName = filedialog.askopenfilename(title = 'select Pit Data file')
         with open(FileName, 'r') as PitFile:
-            pitDf = pd.read_csv(PitFile, sep = ',') 
+            pitDf = pd.read_csv(PitFile, sep = '|') 
         pitDf = pitDf.fillna('0')
     
     return pitDf
@@ -298,7 +298,7 @@ def MatchReport(MatchList, cycleDf, mainDf, TeamNumber):
         teams.extend(match['allies'])
         teams.extend(match['opponents'])
         LastScouted = max(mainDf['matchNo'])
-        if match['match'] > LastScouted:
+        if int(match['match']) > LastScouted:
                 FileName = 'Match ' + str(match['match']) + ' Pre-match Report.html'
                 with open(FileName, 'w') as File:
                         File.write('<html>')
@@ -448,6 +448,7 @@ def Day1Report(Scoutdf, PivotDf):
     Take Scouting data and analyze it by creating a report that will be presented
     at the Day 1 Scouting meeting
     '''
+    filepath = askopenfilename()
     PivotDf.to_csv(r'C:\Users\Mason\Desktop\heatmap analyzed data file.csv')
     #maxScored.to_csv(r'C:\Users\Mason\Desktop\maxScored.csv')
     today = datetime.today().strftime('%Y-%m-%d-%H-%M-%S')
