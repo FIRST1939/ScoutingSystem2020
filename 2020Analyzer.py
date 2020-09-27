@@ -750,9 +750,9 @@ def Main(testmode):
              lowGoalBoxplot = getPicklistBoxplot(readData, 'lowGoalMakesAuto', teamList)
          #getPicklistHeatMap
         #gridspec picklist graph
-        subTotalGraph.plot(boxplot(totalMakesBoxplot))
-        highGoalGraph.plot(boxplot(highGoalBoxplot))
-        lowGoalGraph.plot(boxplot(lowGoalBoxplot))
+        subTotalGraph.plot(plt.boxplot(totalMakesBoxplot))
+        highGoalGraph.plot(plt.boxplot(highGoalBoxplot))
+        lowGoalGraph.plot(plt.boxplot(lowGoalBoxplot))
 
         eventTitle = input('Enter the event name you want displayed in the name of the file:')
         if selection == '1':
