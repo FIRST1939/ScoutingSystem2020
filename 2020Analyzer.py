@@ -446,6 +446,9 @@ def TeamStats(TeamDf):
     # Normalize column names
     # Database renamed match and team to matchNo and teamNo.  We put back.
     TeamDf = pd.DataFrame(TeamDf)
+
+    #note: this code is commented because it may be important and deleting it sounds like a bad idea
+    '''
     TeamDf.rename(columns = {'teamNo':'team', 'matchNo': 'match'}, inplace = True)
 
     # Calculate cube usage
@@ -503,6 +506,13 @@ def TeamStats(TeamDf):
                                 "Climbed Level Three": 'reachLvl3', "Deployed Ramps": 'deployedRamps',
                                 "Attempted Deploying Ramps": 'attemptDeployedRamps', "Used Another Robot": 'usedAnotherRobot',
                                 "Lifted Another Robot": 'lift', "Attempted Lifting Another Robot": 'attemptLift'}, inplace = True)
+
+    '''
+
+    global debug
+    debug = TeamDf
+    global debug1
+    debug1 = combineColumn(TeamDf)
 
     return TeamDf, TeamPivot
 
@@ -712,7 +722,7 @@ def Main(testmode):
         print(df)
 #        getTeamScatterplot(Team, df)
     elif selection == '4':
-        ReadData = readScout()
+        ReadData = readScout()[0] #there's two, one for main data with robot types, ad then another for cycle daya with robot types. this may or may not break when given real data.
         TeamDf, PivotDf = TeamStats(ReadData)
         Day1Report(TeamDf, PivotDf)
     elif selection == '5':
