@@ -445,7 +445,9 @@ def TeamStats(TeamDf):
     '''
     # Normalize column names
     # Database renamed match and team to matchNo and teamNo.  We put back.
-    TeamDf = pd.Data TeamDf #FIX THIS
+    global debug
+    debug = TeamDf
+    TeamDf = pd.DataFrame(TeamDf) #FIX THIS
     TeamDf.rename(columns = {'teamNo':'team', 'matchNo': 'match'}, inplace = True)
 
     # Calculate cube usage
