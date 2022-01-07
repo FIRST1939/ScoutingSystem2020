@@ -35,6 +35,9 @@ import sys
 #from time import sleep
 from PIL import ImageTk, Image
 
+from socket import gethostname, gethostbyname
+
+
 #global vars
 global autoCycles
 global teleCycles
@@ -837,7 +840,33 @@ send.grid(row=5, column=2, ipady=13, ipadx=80)
 if len(sys.argv) > 1:
    position = sys.argv[1]
 else:
-   position='R1'
+   hostname = gethostname()
+   ip = gethostbyname(hostname)
+   
+   piID = ip[-2:]
+   
+   colorNumber = piID[0]
+   number = piID[1] #note that this is a string
+   
+   #convert the color id part which currently is either '1','2','3','4' into 'R','B',special bosspi stuff, special bosstop stuff
+   position = None
+   if colorNumber == '1':
+      color = 'R'
+   elif colorNumber == '2':
+      color = 'B'
+   elif colorNumber == '3':
+      position = input("This is bosspi. Input the position you want it to be: ")
+   elif colorNumber == '4':
+      position = input("You probably don't want to run scout.py on bosstop. If you do, input the position you want this to be: ")
+   else:
+      position = input("the ip is not one of the known ips. input the position you want: ")
+   
+   
+   if number not in ['1', '2', '3']:
+      print('the number of the pi is probably incorrect. for reference, the position is %s and the number is %s' % ( (color+number), number ))
+   
+   if position==None: #aka if colorNumber=='1' or if colorNumber=='2' as those are the only cases that don't already assign a position
+      position = color+number
    
 match_no='2'
 getNextMatch()
