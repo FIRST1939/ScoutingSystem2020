@@ -1,7 +1,7 @@
 import mysql.connector as mariadb
 
 #mariadb_connection = mariadb.connect(user='mscout',password='mscout',host='localhost',database='match_scout')
-mariadb_connection = mariadb.connect(user='mscout',password='mscout',host='192.168.100.31',database='match_scout')
+mariadb_connection = mariadb.connect(user='mscout',password='mscout',host='192.168.100.41',database='match_scout')
 cursor = mariadb_connection.cursor()
 
 
