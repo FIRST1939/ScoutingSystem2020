@@ -832,10 +832,13 @@ dontUseThisData.grid(column= 0, row= 5)
 send = Button(postMatch, text='Send to database', command=reinitscreen)
 send.grid(row=5, column=2, ipady=13, ipadx=80)
 
+#the following code is how the pi's know which position they are, as in whether they are R1,R2,R3,B1,B2,B3
+#position is a global variable here.
 if len(sys.argv) > 1:
    position = sys.argv[1]
 else:
    position='R1'
+   
 match_no='2'
 getNextMatch()
 
